@@ -1,0 +1,14 @@
+flutter_native_splash:
+  color: "#0A0E61"
+  image: "assets/logos/logopartalert.png"
+  branding: "assets/logos/brandingforparkalert.png"
+
+  android_12:
+    color: "#0A0E61"
+
+    image: "assets/logos/logopartalert.png"
+    branding: "assets/logos/brandingforparkalert.png"
+
+  web: false
+  android: true
+  ios: true
