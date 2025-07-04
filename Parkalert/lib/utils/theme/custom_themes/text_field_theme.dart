@@ -13,20 +13,20 @@ class TTextFormFieldTheme {
     labelStyle: const TextStyle().copyWith(
       fontSize: TSizes.fontSizeMd,
       color: TColors.textPrimary,
-      fontFamily: 'Urbanist',
+      fontFamily: 'Nunito',
     ),
     hintStyle: const TextStyle().copyWith(
       fontSize: TSizes.fontSizeSm,
       color: TColors.textSecondary,
-      fontFamily: 'Urbanist',
+      fontFamily: 'Nunito',
     ),
     errorStyle: const TextStyle().copyWith(
       fontStyle: FontStyle.normal,
-      fontFamily: 'Urbanist',
+      fontFamily: 'Nunito',
     ),
     floatingLabelStyle: const TextStyle().copyWith(
       color: TColors.textSecondary,
-      fontFamily: 'Urbanist',
+      fontFamily: 'Nunito',
     ),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(TSizes.inputFieldRadius),
@@ -58,16 +58,16 @@ class TTextFormFieldTheme {
     labelStyle: const TextStyle().copyWith(
       fontSize: TSizes.fontSizeMd,
       color: TColors.white,
-      fontFamily: 'Urbanist',
+      fontFamily: 'Nunito',
     ),
     hintStyle: const TextStyle().copyWith(
       fontSize: TSizes.fontSizeSm,
       color: TColors.white,
-      fontFamily: 'Urbanist',
+      fontFamily: 'Nunito',
     ),
     floatingLabelStyle: const TextStyle().copyWith(
       color: TColors.white.withOpacity(0.8),
-      fontFamily: 'Urbanist',
+      fontFamily: 'Nunito',
     ),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(TSizes.inputFieldRadius),

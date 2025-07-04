@@ -1,4 +1,4 @@
-import 'package:Parkalert/features/authentication/controllers.onboarding/onboarding_controller.dart';
+import 'package:Parkalert/features/authentication/controllers/onboarding/onboarding_controller.dart';
 import 'package:Parkalert/utils/constants/sizes.dart';
 import 'package:Parkalert/utils/device/device_utility.dart';
 import 'package:flutter/material.dart';

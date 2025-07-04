@@ -24,7 +24,7 @@ class TOutlinedButtonTheme {
         fontSize: 16,
         color: TColors.black,
         fontWeight: FontWeight.w600,
-        fontFamily: 'Urbanist',
+        fontFamily: 'Nunito',
       ),
     ),
   );
@@ -45,7 +45,7 @@ class TOutlinedButtonTheme {
         fontSize: 16,
         color: TColors.textWhite,
         fontWeight: FontWeight.w600,
-        fontFamily: 'Urbanist',
+        fontFamily: 'Nunito',
       ),
     ),
   );

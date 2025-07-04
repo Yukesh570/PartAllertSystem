@@ -23,7 +23,7 @@ class TElevatedButtonTheme {
         fontSize: 16,
         color: TColors.textWhite,
         fontWeight: FontWeight.w500,
-        fontFamily: 'Urbanist',
+        fontFamily: 'Nunito',
       ),
     ),
   );
@@ -45,7 +45,7 @@ class TElevatedButtonTheme {
         fontSize: 16,
         color: TColors.textWhite,
         fontWeight: FontWeight.w600,
-        fontFamily: 'Urbanist',
+        fontFamily: 'Nunito',
       ),
     ),
   );

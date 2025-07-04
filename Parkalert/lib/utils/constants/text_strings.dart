@@ -40,6 +40,11 @@ class TTexts {
   static const String username = "Username";
   static const String phoneNo = "Phone Number";
   static const String rememberMe = "Remember Me";
+  static const String termsandconditions =
+      "I agree to the Terms and Conditions";
+  static const String inform = "I want to be kept informed about ParkAlert";
+  static const String language = "Select Language";
+
   static const String forgetPassword = "Forget Password?";
   static const String signIn = "Sign In";
   static const String createAccount = "Create Account";
@@ -53,7 +58,7 @@ class TTexts {
   static const String resendEmailIn = "Resend email in";
 
   // -- Authentication Headings
-  static const String loginTitle = "Welcome back,";
+  static const String loginTitle = "Your Information";
   static const String loginSubTitle =
       "Discover Limitless Choices and Unmatched Convenience.";
   static const String signupTitle = "Let’s create your account";

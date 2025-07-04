@@ -1,4 +1,4 @@
-import 'package:Parkalert/features/authentication/controllers.onboarding/onboarding_controller.dart';
+import 'package:Parkalert/features/authentication/controllers/onboarding/onboarding_controller.dart';
 import 'package:Parkalert/features/authentication/screen/onboarding/widgets/onboarding_page.dart';
 import 'package:Parkalert/features/authentication/screen/onboarding/widgets/onboarding_skip.dart';
 import 'package:Parkalert/features/authentication/screen/onboarding/widgets/onboaring_dot_navigation.dart';
@@ -45,6 +45,7 @@ class OnBoardingScreen extends StatelessWidget {
                 title: TTexts.onBoardingTitle3,
                 subTitle: TTexts.onBoardingSubTitle3,
               ),
+
               // You can add more onboarding pages here
             ],
           ),
@@ -67,7 +68,10 @@ class OnBoardingNextButton extends StatelessWidget {
       right: TSizes.defaultSpace,
       bottom: TDeviceUtils.getBottomNavigationBarHeight(),
       child: ElevatedButton(
-        onPressed: () => OnBoardingController.instance.nextPage(),
+        onPressed: () {
+          print("OnBoardingNextButton pressed!");
+          OnBoardingController.instance.nextPage();
+        },
         style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
           backgroundColor: dark ? TColors.primary : TColors.dark,

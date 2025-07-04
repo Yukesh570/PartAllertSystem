@@ -20,7 +20,7 @@ class TAppBarTheme {
       fontSize: 18.0,
       fontWeight: FontWeight.w600,
       color: TColors.black,
-      fontFamily: 'Urbanist',
+      fontFamily: 'Nunito',
     ),
   );
   static const darkAppBarTheme = AppBarTheme(
@@ -35,7 +35,7 @@ class TAppBarTheme {
       fontSize: 18.0,
       fontWeight: FontWeight.w600,
       color: TColors.white,
-      fontFamily: 'Urbanist',
+      fontFamily: 'Nunito',
     ),
   );
 }

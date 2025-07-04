@@ -49,20 +49,35 @@ flutter:
     - assets/logos/
 
   fonts:
-    - family: Poppins
+    - family: Nunito
       fonts:
-        - asset: assets/fonts/Poppins/Poppins-Light.ttf
+        - asset: assets/fonts/Nunito/Nunito-Light.ttf
           weight: 300
-        - asset: assets/fonts/Poppins/Poppins-Regular.ttf
+        - asset: assets/fonts/Nunito/Nunito-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Poppins/Poppins-Italic.ttf
+        - asset: assets/fonts/Nunito/Nunito-Italic.ttf
           style: italic
-        - asset: assets/fonts/Poppins/Poppins-Medium.ttf
+        - asset: assets/fonts/Nunito/Nunito-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Poppins/Poppins-MediumItalic.ttf
+        - asset: assets/fonts/Nunito/Nunito-MediumItalic.ttf
           style: italic
           weight: 500
-        - asset: assets/fonts/Poppins/Poppins-SemiBold.ttf
+        - asset: assets/fonts/Nunito/Nunito-SemiBold.ttf
           weight: 600
-        - asset: assets/fonts/Poppins/Poppins-Bold.ttf
+        - asset: assets/fonts/Nunito/Nunito-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Nunito/Nunito-ExtraLight.ttf
+          weight: 200
+        - asset: assets/fonts/Nunito/Nunito-LightItalic.ttf
+          style: italic
+          weight: 300
+        - asset: assets/fonts/Nunito/Nunito-SemiBoldItalic.ttf
+          style: italic
+          weight: 600
+        - asset: assets/fonts/Nunito/Nunito-BoldItalic.ttf
+          style: italic
+          weight: 700
+        - asset: assets/fonts/Nunito/Nunito-ExtraBold.ttf
           weight: 800
+        - asset: assets/fonts/Nunito/Nunito-Black.ttf
+          weight: 900

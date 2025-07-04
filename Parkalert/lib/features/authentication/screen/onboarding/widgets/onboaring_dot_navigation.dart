@@ -1,4 +1,4 @@
-import 'package:Parkalert/features/authentication/controllers.onboarding/onboarding_controller.dart';
+import 'package:Parkalert/features/authentication/controllers/onboarding/onboarding_controller.dart';
 import 'package:Parkalert/utils/constants/colors.dart';
 import 'package:Parkalert/utils/constants/sizes.dart';
 import 'package:Parkalert/utils/device/device_utility.dart';
@@ -11,6 +11,8 @@ class onBoardingDotNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("object");
+
     final controller = OnBoardingController.instance;
     final dark = THelperFunctions.isDarkMode(context);
     return Positioned(
