@@ -1,4 +1,5 @@
 import 'package:Parkalert/common/widgets/login_signUp/form_divider.dart';
+import 'package:Parkalert/common/widgets/login_signUp/socialButton.dart';
 import 'package:Parkalert/utils/constants/colors.dart';
 import 'package:Parkalert/utils/constants/sizes.dart';
 import 'package:Parkalert/utils/constants/text_strings.dart';
@@ -70,121 +71,20 @@ class _InformationState extends State<Information> {
                   ),
                 ),
                 SizedBox(height: 16.0),
-                Form(
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        expands: false,
-                        decoration: InputDecoration(
-                          labelText: TTexts.firstName,
-                          prefixIcon: Icon(Iconsax.user),
-                        ),
-                      ),
-                      SizedBox(height: 16.0),
-                      TextFormField(
-                        expands: false,
-                        decoration: InputDecoration(
-                          labelText: TTexts.lastName,
-                          prefixIcon: Icon(Iconsax.user),
-                        ),
-                      ),
-                      SizedBox(height: 16.0),
-                      TextFormField(
-                        expands: false,
-                        decoration: InputDecoration(
-                          labelText: TTexts.email,
-                          prefixIcon: Icon(Iconsax.direct),
-                        ),
-                      ),
-                      SizedBox(height: 16.0),
-                      TextFormField(
-                        expands: false,
-                        decoration: InputDecoration(
-                          labelText: TTexts.phoneNo,
-                          prefixIcon: Icon(Iconsax.call),
-                        ),
-                      ),
-                      SizedBox(height: 16.0),
-                    ],
+                InformationForm(),
+                AgreePolicyTextChoice(dark: dark),
+                SizedBox(height: 16.0),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text(TTexts.createAccount),
                   ),
                 ),
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: Checkbox(value: false, onChanged: (value) {}),
-                        ),
-                        Expanded(
-                          child: Text.rich(
-                            (TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: '${TTexts.iAgreeTo} ',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                                TextSpan(
-                                  text: '${TTexts.privacyPolicy} ',
-                                  style: Theme.of(context).textTheme.bodyMedium!
-                                      .apply(
-                                        color: dark
-                                            ? Colors.white
-                                            : Theme.of(
-                                                context,
-                                              ).colorScheme.primary,
-                                        decoration: TextDecoration.underline,
-                                        decorationColor: dark
-                                            ? Colors.white
-                                            : TColors.primary,
-                                      ),
-                                ),
-                                TextSpan(
-                                  text: '${TTexts.and} ',
-                                  style: Theme.of(context).textTheme.bodySmall,
-                                ),
-                                TextSpan(
-                                  text: TTexts.termsOfUse,
-                                  style: Theme.of(context).textTheme.bodyMedium!
-                                      .apply(
-                                        color: dark
-                                            ? Colors.white
-                                            : TColors.primary,
-                                        decoration: TextDecoration.underline,
-                                        decorationColor: dark
-                                            ? Colors.white
-                                            : Theme.of(
-                                                context,
-                                              ).colorScheme.primary,
-                                      ),
-                                ),
-                              ],
-                            )),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.0),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: Checkbox(value: false, onChanged: (value) {}),
-                        ),
-                        Expanded(
-                          child: Text(
-                            TTexts.inform,
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
+                SizedBox(height: 16.0),
+                formDivider(),
+                SizedBox(height: 16.0),
+                SocialButtons(),
                 // Text(
                 //   'This is the information screen where you can find details about the app.',
                 //   style: Theme.of(context).textTheme.headlineMedium,
@@ -194,6 +94,128 @@ class _InformationState extends State<Information> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class AgreePolicyTextChoice extends StatelessWidget {
+  const AgreePolicyTextChoice({super.key, required this.dark});
+
+  final bool dark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 24,
+              height: 24,
+              child: Checkbox(value: false, onChanged: (value) {}),
+            ),
+            Expanded(
+              child: Text.rich(
+                (TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '${TTexts.iAgreeTo} ',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    TextSpan(
+                      text: '${TTexts.privacyPolicy} ',
+                      style: Theme.of(context).textTheme.bodyMedium!.apply(
+                        color: dark
+                            ? Colors.white
+                            : Theme.of(context).colorScheme.primary,
+                        decoration: TextDecoration.underline,
+                        decorationColor: dark ? Colors.white : TColors.primary,
+                      ),
+                    ),
+                    TextSpan(
+                      text: '${TTexts.and} ',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                    TextSpan(
+                      text: TTexts.termsOfUse,
+                      style: Theme.of(context).textTheme.bodyMedium!.apply(
+                        color: dark ? Colors.white : TColors.primary,
+                        decoration: TextDecoration.underline,
+                        decorationColor: dark
+                            ? Colors.white
+                            : Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                )),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16.0),
+        Row(
+          children: [
+            SizedBox(
+              width: 24,
+              height: 24,
+              child: Checkbox(value: false, onChanged: (value) {}),
+            ),
+            Expanded(
+              child: Text(
+                TTexts.inform,
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class InformationForm extends StatelessWidget {
+  const InformationForm({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      child: Column(
+        children: [
+          TextFormField(
+            expands: false,
+            decoration: InputDecoration(
+              labelText: TTexts.firstName,
+              prefixIcon: Icon(Iconsax.user),
+            ),
+          ),
+          SizedBox(height: 16.0),
+          TextFormField(
+            expands: false,
+            decoration: InputDecoration(
+              labelText: TTexts.lastName,
+              prefixIcon: Icon(Iconsax.user),
+            ),
+          ),
+          SizedBox(height: 16.0),
+          TextFormField(
+            expands: false,
+            decoration: InputDecoration(
+              labelText: TTexts.email,
+              prefixIcon: Icon(Iconsax.direct),
+            ),
+          ),
+          SizedBox(height: 16.0),
+          TextFormField(
+            expands: false,
+            decoration: InputDecoration(
+              labelText: TTexts.phoneNo,
+              prefixIcon: Icon(Iconsax.call),
+            ),
+          ),
+          SizedBox(height: 16.0),
+        ],
       ),
     );
   }
