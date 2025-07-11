@@ -1,0 +1,60 @@
+{
+  "@@locale": "nl",
+
+  "and": "en",
+  "skip": "Overslaan",
+  "done": "Klaar",
+  "submit": "Verzenden",
+  "appName": "T Winkel",
+  "tContinue": "Doorgaan",
+
+  "onBoardingTitle1": "Kies je product",
+  "onBoardingTitle2": "Selecteer betaalmethode",
+  "onBoardingTitle3": "Bezorging aan de deur",
+
+  "onBoardingSubTitle1": "Welkom in een wereld van eindeloze keuzes - jouw perfecte product wacht!",
+  "onBoardingSubTitle2": "Voor naadloze transacties, kies je betalingsmethode - jouw gemak, onze prioriteit!",
+  "onBoardingSubTitle3": "Van onze deur tot de jouwe - snel, veilig en contactloos bezorgd!",
+
+  "firstName": "Voornaam",
+  "lastName": "Achternaam",
+  "email": "E-mailadres",
+  "password": "Wachtwoord",
+  "newPassword": "Nieuw wachtwoord",
+  "username": "Gebruikersnaam",
+  "phoneNo": "Telefoonnummer",
+  "rememberMe": "Onthoud mij",
+  "termsandconditions": "Ik ga akkoord met de algemene voorwaarden",
+  "inform": "Ik wil op de hoogte gehouden worden over ParkAlert",
+  "language": "Selecteer taal",
+
+  "forgetPassword": "Wachtwoord vergeten?",
+  "signIn": "Inloggen",
+  "createAccount": "Account aanmaken",
+  "orSignInWith": "of inloggen met",
+  "orSignUpWith": "of aanmelden met",
+  "iAgreeTo": "Ik ga akkoord met",
+  "privacyPolicy": "Privacybeleid",
+  "termsOfUse": "Gebruiksvoorwaarden",
+  "verificationCode": "Verificatiecode",
+  "resendEmail": "E-mail opnieuw verzenden",
+  "resendEmailIn": "E-mail opnieuw verzenden in",
+  "appTitle":"Uw informatie"
+
+  "loginTitle": "Je informatie",
+  "loginSubTitle": "Ontdek eindeloze keuzes en ongeëvenaard gemak.",
+  "signupTitle": "Laten we je account aanmaken",
+  "forgetPasswordTitle": "Wachtwoord vergeten",
+  "forgetPasswordSubTitle": "Maak je geen zorgen, het kan gebeuren. Vul je e-mailadres in en we sturen je een link om je wachtwoord opnieuw in te stellen.",
+  "changeYourPasswordTitle": "E-mail voor wachtwoordherstel verzonden",
+  "changeYourPasswordSubTitle": "De veiligheid van je account is onze prioriteit! We hebben je een veilige link gestuurd om je wachtwoord te wijzigen.",
+  "confirmEmail": "Bevestig je e-mailadres!",
+  "confirmEmailSubTitle": "Gefeliciteerd! Bevestig je e-mail om te beginnen met winkelen en geniet van persoonlijke aanbiedingen.",
+  "emailNotReceivedMessage": "E-mail niet ontvangen? Controleer je spam of verstuur opnieuw.",
+  "yourAccountCreatedTitle": "Je account is succesvol aangemaakt!",
+  "yourAccountCreatedSubTitle": "Welkom! Je account is aangemaakt. Geniet van moeiteloos online winkelen!",
+
+  "popularProducts": "Populaire producten",
+  "homeAppbarTitle": "Mooie dag om te winkelen",
+  "homeAppbarSubTitle": "Taimoor Sikander"
+}

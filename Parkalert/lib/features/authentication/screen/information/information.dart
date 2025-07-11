@@ -1,14 +1,22 @@
 import 'package:Parkalert/common/widgets/login_signUp/form_divider.dart';
 import 'package:Parkalert/common/widgets/login_signUp/socialButton.dart';
+import 'package:Parkalert/features/authentication/controllers/information_controller.dart';
+import 'package:Parkalert/features/authentication/screen/information/widget/agreePolicy.dart';
+import 'package:Parkalert/features/authentication/screen/information/widget/informationForm.dart';
+import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/utils/constants/colors.dart';
 import 'package:Parkalert/utils/constants/sizes.dart';
 import 'package:Parkalert/utils/constants/text_strings.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 class Information extends StatefulWidget {
-  const Information({super.key});
+  final Function(Locale) onLocaleChange;
+  const Information({Key? key, required this.onLocaleChange}) : super(key: key);
 
   @override
   State<Information> createState() => _InformationState();
@@ -16,11 +24,37 @@ class Information extends StatefulWidget {
 
 class _InformationState extends State<Information> {
   String? selectedLang; // No language selected initially
+
+  void changeLanguage(String langCode) {
+    print("Language changed to: $langCode");
+    setState(() {
+      selectedLang = langCode;
+    });
+    print("selectedLang: $selectedLang");
+
+    widget.onLocaleChange(Locale(langCode.toLowerCase()));
+  }
+
   @override
   Widget build(BuildContext context) {
+    final InformationController controller = Get.put(
+      InformationController(),
+    ); // registers controller
+
+    final loc = AppLocalizations.of(context);
+    if (loc == null) {
+      // This means localization isn't yet loaded or context is not in a localized widget tree
+      return const Center(child: CircularProgressIndicator());
+    }
     final dark = Theme.of(context).brightness == Brightness.dark;
+    final Map<String, String> languages = {
+      "EN": "en",
+      "FR": "fr",
+      "ES": "es",
+      "DU": "nl",
+    };
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Center(child: Text(loc.appTitle))),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(TSizes.defaultSpace),
@@ -44,7 +78,7 @@ class _InformationState extends State<Information> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  TTexts.language,
+                  loc.language,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                     color: dark
                         ? const Color.fromARGB(255, 233, 232, 232)
@@ -56,16 +90,16 @@ class _InformationState extends State<Information> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: ["NL", "EN", "ES", "DU", "FR"].map((lang) {
+                    children: languages.entries.map((entry) {
+                      final label = entry.key;
+                      final code = entry.value;
                       return _LanguageChip(
-                        label: lang,
+                        label: label,
                         dark: dark,
-                        isSelected: selectedLang == lang,
-                        onTap: () {
-                          setState(() {
-                            selectedLang = lang;
-                          });
-                        },
+                        isSelected: selectedLang == code,
+                        onTap: () => changeLanguage(
+                          code,
+                        ), // Update the selected language
                       );
                     }).toList(),
                   ),
@@ -77,8 +111,10 @@ class _InformationState extends State<Information> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text(TTexts.createAccount),
+                    onPressed: () {
+                      controller.InfonextPage();
+                    },
+                    child: Text(loc.createAccount),
                   ),
                 ),
                 SizedBox(height: 16.0),
@@ -94,128 +130,6 @@ class _InformationState extends State<Information> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class AgreePolicyTextChoice extends StatelessWidget {
-  const AgreePolicyTextChoice({super.key, required this.dark});
-
-  final bool dark;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 24,
-              height: 24,
-              child: Checkbox(value: false, onChanged: (value) {}),
-            ),
-            Expanded(
-              child: Text.rich(
-                (TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '${TTexts.iAgreeTo} ',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    TextSpan(
-                      text: '${TTexts.privacyPolicy} ',
-                      style: Theme.of(context).textTheme.bodyMedium!.apply(
-                        color: dark
-                            ? Colors.white
-                            : Theme.of(context).colorScheme.primary,
-                        decoration: TextDecoration.underline,
-                        decorationColor: dark ? Colors.white : TColors.primary,
-                      ),
-                    ),
-                    TextSpan(
-                      text: '${TTexts.and} ',
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
-                    TextSpan(
-                      text: TTexts.termsOfUse,
-                      style: Theme.of(context).textTheme.bodyMedium!.apply(
-                        color: dark ? Colors.white : TColors.primary,
-                        decoration: TextDecoration.underline,
-                        decorationColor: dark
-                            ? Colors.white
-                            : Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ],
-                )),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 16.0),
-        Row(
-          children: [
-            SizedBox(
-              width: 24,
-              height: 24,
-              child: Checkbox(value: false, onChanged: (value) {}),
-            ),
-            Expanded(
-              child: Text(
-                TTexts.inform,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class InformationForm extends StatelessWidget {
-  const InformationForm({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      child: Column(
-        children: [
-          TextFormField(
-            expands: false,
-            decoration: InputDecoration(
-              labelText: TTexts.firstName,
-              prefixIcon: Icon(Iconsax.user),
-            ),
-          ),
-          SizedBox(height: 16.0),
-          TextFormField(
-            expands: false,
-            decoration: InputDecoration(
-              labelText: TTexts.lastName,
-              prefixIcon: Icon(Iconsax.user),
-            ),
-          ),
-          SizedBox(height: 16.0),
-          TextFormField(
-            expands: false,
-            decoration: InputDecoration(
-              labelText: TTexts.email,
-              prefixIcon: Icon(Iconsax.direct),
-            ),
-          ),
-          SizedBox(height: 16.0),
-          TextFormField(
-            expands: false,
-            decoration: InputDecoration(
-              labelText: TTexts.phoneNo,
-              prefixIcon: Icon(Iconsax.call),
-            ),
-          ),
-          SizedBox(height: 16.0),
-        ],
       ),
     );
   }
@@ -247,7 +161,7 @@ class _LanguageChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 48,
+        width: 65,
         height: 48,
         margin: const EdgeInsets.symmetric(horizontal: 6),
         decoration: BoxDecoration(

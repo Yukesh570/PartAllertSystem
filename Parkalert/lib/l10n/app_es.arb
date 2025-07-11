@@ -1,0 +1,60 @@
+{
+  "@@locale": "es",
+
+  "and": "y",
+  "skip": "Omitir",
+  "done": "Hecho",
+  "submit": "Enviar",
+  "appName": "T Tienda",
+  "tContinue": "Continuar",
+
+  "onBoardingTitle1": "Elige tu producto",
+  "onBoardingTitle2": "Selecciona método de pago",
+  "onBoardingTitle3": "Entrega en tu puerta",
+
+  "onBoardingSubTitle1": "¡Bienvenido a un mundo de opciones ilimitadas, tu producto perfecto te espera!",
+  "onBoardingSubTitle2": "Para transacciones sin problemas, elige tu forma de pago - ¡tu comodidad es nuestra prioridad!",
+  "onBoardingSubTitle3": "¡De nuestra puerta a la tuya - entrega rápida, segura y sin contacto!",
+
+  "firstName": "Nombre",
+  "lastName": "Apellido",
+  "email": "Correo electrónico",
+  "password": "Contraseña",
+  "newPassword": "Nueva contraseña",
+  "username": "Nombre de usuario",
+  "phoneNo": "Número de teléfono",
+  "rememberMe": "Recuérdame",
+  "termsandconditions": "Acepto los Términos y Condiciones",
+  "inform": "Quiero recibir información sobre ParkAlert",
+  "language": "Seleccionar idioma",
+
+  "forgetPassword": "¿Olvidaste tu contraseña?",
+  "signIn": "Iniciar sesión",
+  "createAccount": "Crear cuenta",
+  "orSignInWith": "o iniciar sesión con",
+  "orSignUpWith": "o registrarse con",
+  "iAgreeTo": "Acepto",
+  "privacyPolicy": "Política de privacidad",
+  "termsOfUse": "Términos de uso",
+  "verificationCode": "Código de verificación",
+  "resendEmail": "Reenviar correo",
+  "resendEmailIn": "Reenviar correo en",\
+  "appTitle": "Tu Información",
+
+  "loginTitle": "Tu información",
+  "loginSubTitle": "Descubre opciones ilimitadas y comodidad inigualable.",
+  "signupTitle": "Vamos a crear tu cuenta",
+  "forgetPasswordTitle": "Olvidaste tu contraseña",
+  "forgetPasswordSubTitle": "No te preocupes, a veces pasa. Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.",
+  "changeYourPasswordTitle": "Correo de restablecimiento enviado",
+  "changeYourPasswordSubTitle": "¡Tu seguridad es nuestra prioridad! Te hemos enviado un enlace seguro para cambiar tu contraseña.",
+  "confirmEmail": "¡Verifica tu correo!",
+  "confirmEmailSubTitle": "¡Felicidades! Verifica tu correo para comenzar a comprar y obtener ofertas personalizadas.",
+  "emailNotReceivedMessage": "¿No recibiste el correo? Revisa tu bandeja de spam o vuelve a enviarlo.",
+  "yourAccountCreatedTitle": "¡Cuenta creada con éxito!",
+  "yourAccountCreatedSubTitle": "Bienvenido a tu destino de compras: tu cuenta está lista. ¡Disfruta comprando sin esfuerzo!",
+
+  "popularProducts": "Productos populares",
+  "homeAppbarTitle": "Buen día para comprar",
+  "homeAppbarSubTitle": "Taimoor Sikander"
+}

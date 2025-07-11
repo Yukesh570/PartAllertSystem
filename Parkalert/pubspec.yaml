@@ -29,6 +29,8 @@ dependencies:
   #state management
   get: ^4.7.2
   get_storage: ^2.1.1
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +44,7 @@ flutter_launcher_icons:
   image_path: "assets/logos/iconlogo.png"
 flutter:
   uses-material-design: true
+  generate: true
 
   assets:
     - assets/images/on_boarding_images/

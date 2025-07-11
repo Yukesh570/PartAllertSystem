@@ -1,0 +1,60 @@
+{
+  "@@locale": "fr",
+
+  "and": "et",
+  "skip": "Passer",
+  "done": "Terminé",
+  "submit": "Soumettre",
+  "appName": "T Boutique",
+  "tContinue": "Continuer",
+
+  "onBoardingTitle1": "Choisissez votre produit",
+  "onBoardingTitle2": "Sélectionnez le mode de paiement",
+  "onBoardingTitle3": "Livraison à votre porte",
+
+  "onBoardingSubTitle1": "Bienvenue dans un monde de choix illimités - votre produit parfait vous attend !",
+  "onBoardingSubTitle2": "Pour des transactions sans souci, choisissez votre méthode de paiement - votre confort est notre priorité !",
+  "onBoardingSubTitle3": "De notre porte à la vôtre - Livraison rapide, sécurisée et sans contact !",
+
+  "firstName": "Prénom",
+  "lastName": "Nom de famille",
+  "email": "E-mail",
+  "password": "Mot de passe",
+  "newPassword": "Nouveau mot de passe",
+  "username": "Nom d'utilisateur",
+  "phoneNo": "Numéro de téléphone",
+  "rememberMe": "Se souvenir de moi",
+  "termsandconditions": "J'accepte les Termes et Conditions",
+  "inform": "Je souhaite être informé(e) de ParkAlert",
+  "language": "Choisir la langue",
+
+  "forgetPassword": "Mot de passe oublié ?",
+  "signIn": "Se connecter",
+  "createAccount": "Créer un compte",
+  "orSignInWith": "ou se connecter avec",
+  "orSignUpWith": "ou s'inscrire avec",
+  "iAgreeTo": "J'accepte",
+  "privacyPolicy": "Politique de confidentialité",
+  "termsOfUse": "Conditions d'utilisation",
+  "verificationCode": "Code de vérification",
+  "resendEmail": "Renvoyer l'e-mail",
+  "resendEmailIn": "Renvoyer l'e-mail dans",
+  "appTitle":"Vos informations"
+
+  "loginTitle": "Vos informations",
+  "loginSubTitle": "Découvrez des choix illimités et un confort inégalé.",
+  "signupTitle": "Créons votre compte",
+  "forgetPasswordTitle": "Mot de passe oublié",
+  "forgetPasswordSubTitle": "Pas d'inquiétude, cela arrive. Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+  "changeYourPasswordTitle": "E-mail de réinitialisation envoyé",
+  "changeYourPasswordSubTitle": "La sécurité de votre compte est notre priorité ! Nous vous avons envoyé un lien sécurisé pour changer votre mot de passe.",
+  "confirmEmail": "Vérifiez votre adresse e-mail !",
+  "confirmEmailSubTitle": "Félicitations ! Vérifiez votre e-mail pour commencer à faire vos achats et profiter d'offres personnalisées.",
+  "emailNotReceivedMessage": "Vous n'avez pas reçu l'e-mail ? Vérifiez vos spams ou renvoyez-le.",
+  "yourAccountCreatedTitle": "Votre compte a été créé avec succès !",
+  "yourAccountCreatedSubTitle": "Bienvenue ! Votre compte est prêt. Profitez d'une expérience de shopping fluide en ligne !",
+
+  "popularProducts": "Produits populaires",
+  "homeAppbarTitle": "Bonne journée pour faire du shopping",
+  "homeAppbarSubTitle": "Taimoor Sikander"
+}
