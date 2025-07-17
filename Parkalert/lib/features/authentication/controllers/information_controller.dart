@@ -1,3 +1,4 @@
+import 'package:Parkalert/features/authentication/screen/map/map.dart';
 import 'package:Parkalert/features/authentication/screen/onboarding/onboarding.dart';
 import 'package:get/get.dart';
 
@@ -7,6 +8,6 @@ class InformationController extends GetxController {
   //variable
 
   void InfonextPage() {
-    Get.offAll(OnBoardingScreen());
+    Get.offAll(Mappage());
   }
 }
