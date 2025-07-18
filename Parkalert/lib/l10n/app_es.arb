@@ -38,7 +38,7 @@
   "termsOfUse": "Términos de uso",
   "verificationCode": "Código de verificación",
   "resendEmail": "Reenviar correo",
-  "resendEmailIn": "Reenviar correo en",\
+  "resendEmailIn": "Reenviar correo en",
   "appTitle": "Tu Información",
 
   "loginTitle": "Tu información",
@@ -56,5 +56,16 @@
 
   "popularProducts": "Productos populares",
   "homeAppbarTitle": "Buen día para comprar",
-  "homeAppbarSubTitle": "Taimoor Sikander"
+  "homeAppbarSubTitle": "Taimoor Sikander",
+
+
+  "alerts": "Alertas",
+  "freezones": "Zonas libres",
+  "activity": "Actividad",
+  "yourInformation": "Tu información",
+  "howParkAlertWorks": "Cómo funciona ParkAlert",
+  "frequentlyAskedQuestions": "Preguntas frecuentes",
+  "termsAndConditions": "Términos y condiciones",
+  "privacyPolicyMenu": "Política de privacidad",
+  "exitParkAlert": "Salir de ParkAlert"
 }

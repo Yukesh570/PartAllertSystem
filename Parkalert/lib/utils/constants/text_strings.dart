@@ -84,4 +84,15 @@ class TTexts {
   // -- Home
   static const String homeAppbarTitle = "Good day for shopping";
   static const String homeAppbarSubTitle = "Taimoor Sikander";
+
+  // -- Drawer/Menu Texts
+  static const String alerts = "Alerts";
+  static const String freezones = "Freezones";
+  static const String activity = "Activity";
+  static const String yourInformation = "Your information";
+  static const String howParkAlertWorks = "How ParkAlert works";
+  static const String frequentlyAskedQuestions = "Frequently asked questions";
+  static const String termsAndConditions = "Terms and conditions";
+  static const String privacyPolicyMenu = "Privacy policy";
+  static const String exitParkAlert = "Exit ParkAlert";
 }

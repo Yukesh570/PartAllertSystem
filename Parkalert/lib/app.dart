@@ -1,5 +1,5 @@
-import 'package:Parkalert/features/authentication/screen/information/information.dart';
-import 'package:Parkalert/features/authentication/screen/onboarding/onboarding.dart';
+import 'package:Parkalert/features/screen/information/information.dart';
+import 'package:Parkalert/features/screen/onboarding/onboarding.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:Parkalert/utils/theme/theme.dart';

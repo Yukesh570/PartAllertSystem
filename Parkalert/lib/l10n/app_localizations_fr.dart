@@ -36,16 +36,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onBoardingTitle3 => 'Livraison à votre porte';
 
   @override
-  String get onBoardingSubTitle1 =>
-      'Bienvenue dans un monde de choix illimités - votre produit parfait vous attend !';
+  String get onBoardingSubTitle1 => 'Bienvenue dans un monde de choix illimités - votre produit parfait vous attend !';
 
   @override
-  String get onBoardingSubTitle2 =>
-      'Pour des transactions sans souci, choisissez votre méthode de paiement - votre confort est notre priorité !';
+  String get onBoardingSubTitle2 => 'Pour des transactions sans souci, choisissez votre méthode de paiement - votre confort est notre priorité !';
 
   @override
-  String get onBoardingSubTitle3 =>
-      'De notre porte à la vôtre - Livraison rapide, sécurisée et sans contact !';
+  String get onBoardingSubTitle3 => 'De notre porte à la vôtre - Livraison rapide, sécurisée et sans contact !';
 
   @override
   String get firstName => 'Prénom';
@@ -114,11 +111,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get resendEmailIn => 'Renvoyer l\'e-mail dans';
 
   @override
+  String get appTitle => 'Vos informations';
+
+  @override
   String get loginTitle => 'Vos informations';
 
   @override
-  String get loginSubTitle =>
-      'Découvrez des choix illimités et un confort inégalé.';
+  String get loginSubTitle => 'Découvrez des choix illimités et un confort inégalé.';
 
   @override
   String get signupTitle => 'Créons votre compte';
@@ -127,33 +126,28 @@ class AppLocalizationsFr extends AppLocalizations {
   String get forgetPasswordTitle => 'Mot de passe oublié';
 
   @override
-  String get forgetPasswordSubTitle =>
-      'Pas d\'inquiétude, cela arrive. Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.';
+  String get forgetPasswordSubTitle => 'Pas d\'inquiétude, cela arrive. Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.';
 
   @override
   String get changeYourPasswordTitle => 'E-mail de réinitialisation envoyé';
 
   @override
-  String get changeYourPasswordSubTitle =>
-      'La sécurité de votre compte est notre priorité ! Nous vous avons envoyé un lien sécurisé pour changer votre mot de passe.';
+  String get changeYourPasswordSubTitle => 'La sécurité de votre compte est notre priorité ! Nous vous avons envoyé un lien sécurisé pour changer votre mot de passe.';
 
   @override
   String get confirmEmail => 'Vérifiez votre adresse e-mail !';
 
   @override
-  String get confirmEmailSubTitle =>
-      'Félicitations ! Vérifiez votre e-mail pour commencer à faire vos achats et profiter d\'offres personnalisées.';
+  String get confirmEmailSubTitle => 'Félicitations ! Vérifiez votre e-mail pour commencer à faire vos achats et profiter d\'offres personnalisées.';
 
   @override
-  String get emailNotReceivedMessage =>
-      'Vous n\'avez pas reçu l\'e-mail ? Vérifiez vos spams ou renvoyez-le.';
+  String get emailNotReceivedMessage => 'Vous n\'avez pas reçu l\'e-mail ? Vérifiez vos spams ou renvoyez-le.';
 
   @override
   String get yourAccountCreatedTitle => 'Votre compte a été créé avec succès !';
 
   @override
-  String get yourAccountCreatedSubTitle =>
-      'Bienvenue ! Votre compte est prêt. Profitez d\'une expérience de shopping fluide en ligne !';
+  String get yourAccountCreatedSubTitle => 'Bienvenue ! Votre compte est prêt. Profitez d\'une expérience de shopping fluide en ligne !';
 
   @override
   String get popularProducts => 'Produits populaires';
@@ -163,6 +157,31 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get homeAppbarSubTitle => 'Taimoor Sikander';
+
   @override
-  String get appTitle => 'Vos informations';
+  String get alerts => 'Alertes';
+
+  @override
+  String get freezones => 'Zones libres';
+
+  @override
+  String get activity => 'Activité';
+
+  @override
+  String get yourInformation => 'Vos informations';
+
+  @override
+  String get howParkAlertWorks => 'Comment fonctionne ParkAlert';
+
+  @override
+  String get frequentlyAskedQuestions => 'Questions fréquentes';
+
+  @override
+  String get termsAndConditions => 'Termes et conditions';
+
+  @override
+  String get privacyPolicyMenu => 'Politique de confidentialité';
+
+  @override
+  String get exitParkAlert => 'Quitter ParkAlert';
 }

@@ -1,0 +1,196 @@
+import 'package:Parkalert/features/controllers/drawerController.dart';
+import 'package:Parkalert/features/controllers/navItems/main_controller.dart';
+import 'package:Parkalert/features/screen/navItems/freezones/freezone.dart';
+import 'package:Parkalert/l10n/app_localizations.dart';
+import 'package:Parkalert/utils/constants/colors.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+class navButton extends StatelessWidget {
+  const navButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final drawerCtrl = Get.put(DrawerControllerX());
+
+    final MainController controller = Get.put(MainController());
+    final loc = AppLocalizations.of(context);
+    if (loc == null) {
+      // This means localization isn't yet loaded or context is not in a localized widget tree
+      return const Center(child: CircularProgressIndicator());
+    }
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    // Define a common TextStyle for menu items
+    TextStyle menuTextStyle({
+      required bool isDark,
+      required String isSelected,
+      required String routeName,
+    }) {
+      return TextStyle(
+        fontSize: 18,
+        color: isSelected == routeName
+            ? Colors.blueAccent
+            : (isDark ? Colors.white : TColors.dark.withOpacity(0.87)),
+        fontWeight: isSelected == routeName ? FontWeight.bold : FontWeight.w500,
+      );
+    }
+
+    return Drawer(
+      backgroundColor: isDark ? TColors.dark : Colors.white,
+      child: ListView(
+        padding: EdgeInsets.only(top: 30, bottom: 20),
+        children: [
+          // Optional header or logo here:
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(vertical: 20.0),
+          //   child: Center(child: Text('ParkAlert', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: isDark ? Colors.white : TColors.dark))),
+          // ),
+          Obx(() {
+            final isSelected = drawerCtrl.currentRoute.value;
+            return Column(
+              children: [
+                _buildListTile(
+                  icon: Icons.notifications_active_outlined,
+                  label: loc.alerts,
+                  style: menuTextStyle(
+                    isDark: isDark,
+                    isSelected: isSelected,
+                    routeName: '/alerts',
+                  ),
+                  isDark: isDark,
+                  onTap: () => controller.alertPage(),
+                ),
+
+                _buildListTile(
+                  icon: Icons.location_on_outlined,
+                  label: loc.freezones,
+                  style: menuTextStyle(
+                    isDark: isDark,
+                    isSelected: isSelected,
+                    routeName: '/freezones',
+                  ),
+                  isDark: isDark,
+                  onTap: () => controller.freezone(),
+                ),
+
+                _buildListTile(
+                  icon: Icons.timeline_outlined,
+                  label: loc.activity,
+                  style: menuTextStyle(
+                    isDark: isDark,
+                    isSelected: isSelected,
+                    routeName: '/activity',
+                  ),
+                  isDark: isDark,
+                  onTap: () => controller.activityPage(),
+                ),
+
+                Divider(color: isDark ? Colors.white30 : Colors.black12),
+
+                _buildListTile(
+                  icon: Icons.info_outline,
+                  label: loc.yourInformation,
+                  style: menuTextStyle(
+                    isDark: isDark,
+                    isSelected: isSelected,
+                    routeName: '/yourinfo',
+                  ),
+                  isDark: isDark,
+                  onTap: () => controller.yourinfo(),
+                ),
+
+                _buildListTile(
+                  icon: Icons.help_outline,
+                  label: loc.howParkAlertWorks,
+                  style: menuTextStyle(
+                    isDark: isDark,
+                    isSelected: isSelected,
+                    routeName: '/working',
+                  ),
+                  isDark: isDark,
+                  onTap: () => controller.working(),
+                ),
+
+                _buildListTile(
+                  icon: Icons.question_answer_outlined,
+                  label: loc.frequentlyAskedQuestions,
+                  style: menuTextStyle(
+                    isDark: isDark,
+                    isSelected: isSelected,
+                    routeName: '/questions',
+                  ),
+                  isDark: isDark,
+                  onTap: () => controller.question(),
+                ),
+
+                Divider(color: isDark ? Colors.white30 : Colors.black12),
+
+                _buildListTile(
+                  icon: Icons.description_outlined,
+                  label: loc.termsAndConditions,
+                  style: menuTextStyle(
+                    isDark: isDark,
+                    isSelected: isSelected,
+                    routeName: '/terms',
+                  ),
+                  isDark: isDark,
+                  onTap: () => controller.termsandconditions(),
+                ),
+
+                _buildListTile(
+                  icon: Icons.lock_outline,
+                  label: loc.privacyPolicyMenu,
+                  style: menuTextStyle(
+                    isDark: isDark,
+                    isSelected: isSelected,
+                    routeName: '/privacy',
+                  ),
+                  isDark: isDark,
+                  onTap: () => controller.privacyPage(),
+                ),
+
+                Divider(color: isDark ? Colors.white30 : Colors.black12),
+
+                _buildListTile(
+                  icon: Icons.exit_to_app,
+                  label: 'Exit ParkAlert',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: (isDark
+                        ? Colors.white
+                        : TColors.dark.withOpacity(0.87)),
+                  ),
+
+                  isDark: isDark,
+                  onTap: () {
+                    // Add exit/logout logic here
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListTile({
+    required IconData icon,
+    required String label,
+    required TextStyle style,
+    required bool isDark,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: isDark ? Colors.white : TColors.dark),
+      title: Text(label, style: style),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      hoverColor: isDark ? Colors.white12 : Colors.black12,
+      onTap: onTap,
+    );
+  }
+}

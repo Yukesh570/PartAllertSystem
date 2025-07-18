@@ -36,16 +36,13 @@ class AppLocalizationsNl extends AppLocalizations {
   String get onBoardingTitle3 => 'Bezorging aan de deur';
 
   @override
-  String get onBoardingSubTitle1 =>
-      'Welkom in een wereld van eindeloze keuzes - jouw perfecte product wacht!';
+  String get onBoardingSubTitle1 => 'Welkom in een wereld van eindeloze keuzes - jouw perfecte product wacht!';
 
   @override
-  String get onBoardingSubTitle2 =>
-      'Voor naadloze transacties, kies je betalingsmethode - jouw gemak, onze prioriteit!';
+  String get onBoardingSubTitle2 => 'Voor naadloze transacties, kies je betalingsmethode - jouw gemak, onze prioriteit!';
 
   @override
-  String get onBoardingSubTitle3 =>
-      'Van onze deur tot de jouwe - snel, veilig en contactloos bezorgd!';
+  String get onBoardingSubTitle3 => 'Van onze deur tot de jouwe - snel, veilig en contactloos bezorgd!';
 
   @override
   String get firstName => 'Voornaam';
@@ -114,6 +111,9 @@ class AppLocalizationsNl extends AppLocalizations {
   String get resendEmailIn => 'E-mail opnieuw verzenden in';
 
   @override
+  String get appTitle => 'Uw informatie';
+
+  @override
   String get loginTitle => 'Je informatie';
 
   @override
@@ -126,34 +126,28 @@ class AppLocalizationsNl extends AppLocalizations {
   String get forgetPasswordTitle => 'Wachtwoord vergeten';
 
   @override
-  String get forgetPasswordSubTitle =>
-      'Maak je geen zorgen, het kan gebeuren. Vul je e-mailadres in en we sturen je een link om je wachtwoord opnieuw in te stellen.';
+  String get forgetPasswordSubTitle => 'Maak je geen zorgen, het kan gebeuren. Vul je e-mailadres in en we sturen je een link om je wachtwoord opnieuw in te stellen.';
 
   @override
-  String get changeYourPasswordTitle =>
-      'E-mail voor wachtwoordherstel verzonden';
+  String get changeYourPasswordTitle => 'E-mail voor wachtwoordherstel verzonden';
 
   @override
-  String get changeYourPasswordSubTitle =>
-      'De veiligheid van je account is onze prioriteit! We hebben je een veilige link gestuurd om je wachtwoord te wijzigen.';
+  String get changeYourPasswordSubTitle => 'De veiligheid van je account is onze prioriteit! We hebben je een veilige link gestuurd om je wachtwoord te wijzigen.';
 
   @override
   String get confirmEmail => 'Bevestig je e-mailadres!';
 
   @override
-  String get confirmEmailSubTitle =>
-      'Gefeliciteerd! Bevestig je e-mail om te beginnen met winkelen en geniet van persoonlijke aanbiedingen.';
+  String get confirmEmailSubTitle => 'Gefeliciteerd! Bevestig je e-mail om te beginnen met winkelen en geniet van persoonlijke aanbiedingen.';
 
   @override
-  String get emailNotReceivedMessage =>
-      'E-mail niet ontvangen? Controleer je spam of verstuur opnieuw.';
+  String get emailNotReceivedMessage => 'E-mail niet ontvangen? Controleer je spam of verstuur opnieuw.';
 
   @override
   String get yourAccountCreatedTitle => 'Je account is succesvol aangemaakt!';
 
   @override
-  String get yourAccountCreatedSubTitle =>
-      'Welkom! Je account is aangemaakt. Geniet van moeiteloos online winkelen!';
+  String get yourAccountCreatedSubTitle => 'Welkom! Je account is aangemaakt. Geniet van moeiteloos online winkelen!';
 
   @override
   String get popularProducts => 'Populaire producten';
@@ -165,5 +159,29 @@ class AppLocalizationsNl extends AppLocalizations {
   String get homeAppbarSubTitle => 'Taimoor Sikander';
 
   @override
-  String get appTitle => 'Uw informatie';
+  String get alerts => 'alert';
+
+  @override
+  String get freezones => 'Vrije zones';
+
+  @override
+  String get activity => 'Activiteit';
+
+  @override
+  String get yourInformation => 'Uw informatie';
+
+  @override
+  String get howParkAlertWorks => 'Hoe ParkAlert werkt';
+
+  @override
+  String get frequentlyAskedQuestions => 'Veelgestelde vragen';
+
+  @override
+  String get termsAndConditions => 'algemene voorwaarden';
+
+  @override
+  String get privacyPolicyMenu => 'Privacybeleid';
+
+  @override
+  String get exitParkAlert => 'ParkAlert verlaten';
 }

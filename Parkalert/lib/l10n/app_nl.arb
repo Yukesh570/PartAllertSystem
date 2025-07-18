@@ -39,7 +39,7 @@
   "verificationCode": "Verificatiecode",
   "resendEmail": "E-mail opnieuw verzenden",
   "resendEmailIn": "E-mail opnieuw verzenden in",
-  "appTitle":"Uw informatie"
+  "appTitle":"Uw informatie",
 
   "loginTitle": "Je informatie",
   "loginSubTitle": "Ontdek eindeloze keuzes en ongeëvenaard gemak.",
@@ -56,5 +56,17 @@
 
   "popularProducts": "Populaire producten",
   "homeAppbarTitle": "Mooie dag om te winkelen",
-  "homeAppbarSubTitle": "Taimoor Sikander"
+  "homeAppbarSubTitle": "Taimoor Sikander",
+
+
+  "alerts": "alert",
+  "freezones": "Vrije zones",
+  "activity": "Activiteit",
+  "yourInformation": "Uw informatie",
+  "howParkAlertWorks": "Hoe ParkAlert werkt",
+  "frequentlyAskedQuestions": "Veelgestelde vragen",
+  "termsAndConditions": "algemene voorwaarden",
+  "privacyPolicyMenu": "Privacybeleid",
+  "exitParkAlert": "ParkAlert verlaten"
+
 }

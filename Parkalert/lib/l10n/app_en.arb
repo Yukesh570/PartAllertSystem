@@ -39,7 +39,7 @@
   "verificationCode": "verificationCode",
   "resendEmail": "Resend Email",
   "resendEmailIn": "Resend email in",
-  "appTitle":"Your Information"
+  "appTitle":"Your Information",
 
   "loginTitle": "Your Information",
   "loginSubTitle": "Discover Limitless Choices and Unmatched Convenience.",
@@ -56,5 +56,16 @@
 
   "popularProducts": "Popular Products",
   "homeAppbarTitle": "Good day for shopping",
-  "homeAppbarSubTitle": "Taimoor Sikander"
+  "homeAppbarSubTitle": "Taimoor Sikander",
+
+
+  "alerts": "Alerts",
+  "freezones": "Freezones",
+  "activity": "Activity",
+  "yourInformation": "Your information",
+  "howParkAlertWorks": "How ParkAlert works",
+  "frequentlyAskedQuestions": "Frequently asked questions",
+  "termsAndConditions": "Terms and conditions",
+  "privacyPolicyMenu": "Privacy policy",
+  "exitParkAlert": "Exit ParkAlert"
 }
