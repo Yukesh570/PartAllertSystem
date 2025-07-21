@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:Parkalert/navigationButton.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -18,18 +19,26 @@ class Mappage extends StatefulWidget {
 }
 
 class _MappageState extends State<Mappage> {
+  bool _isMapLoading = true;
+
   final Completer<GoogleMapController> _controller = Completer();
+
   final TextEditingController searchController = TextEditingController();
+
   static const CameraPosition _initialPosition = CameraPosition(
     target: LatLng(27.661150186746983, 85.30280431677846),
     zoom: 14,
   );
+
   List<dynamic> listForPlaces = [];
+
   var uuid = Uuid();
+
   String tokenForSession = '43305';
+
   void makesuggestion(String input) async {
     // String googlePlacesApiKey = dotenv.env['GOOGLE_PLACES_API_KEY']!;
-    String googlePlacesApiKey = "AIzaSyAQPMN-PSADaHE6Iq4c7DYbLoEuOr5TxJI";
+    String googlePlacesApiKey = dotenv.env['GOOGLE_PLACES_API_KEY']!;
     String groundURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request =
@@ -64,11 +73,10 @@ class _MappageState extends State<Mappage> {
   ];
 
   void onModify() {
-    if (tokenForSession == null) {
-      setState(() {
-        tokenForSession = uuid.v4();
-      });
-    }
+    setState(() {
+      tokenForSession = uuid.v4();
+    });
+
     makesuggestion(searchController.text);
   }
 
@@ -77,9 +85,19 @@ class _MappageState extends State<Mappage> {
     // TODO: implement initState
     super.initState();
     _markers.addAll(_myMarkers);
+
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    //   packData(); // Only after UI is built
+    // });
     searchController.addListener(() {
       onModify();
     });
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   Future<Position> getUserLocation() async {
@@ -166,13 +184,27 @@ class _MappageState extends State<Mappage> {
               ),
 
             Expanded(
-              child: GoogleMap(
-                initialCameraPosition: _initialPosition,
-                mapType: MapType.hybrid,
-                markers: Set<Marker>.of(_markers),
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
+              child: Stack(
+                children: [
+                  GoogleMap(
+                    initialCameraPosition: _initialPosition,
+                    mapType: MapType.hybrid,
+                    markers: Set<Marker>.of(_markers),
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                      setState(() {
+                        _isMapLoading = false;
+                      });
+                    },
+                  ),
+                  if (_isMapLoading)
+                    Positioned.fill(
+                      child: Container(
+                        color: Colors.transparent,
+                        child: const Center(child: CircularProgressIndicator()),
+                      ),
+                    ),
+                ],
               ),
             ),
           ],

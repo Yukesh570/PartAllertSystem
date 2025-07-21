@@ -19,7 +19,7 @@ class MainController extends GetxController {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/alerts'); // Set current route
 
-    Get.offAll(
+    Get.off(
       () => Alert(),
     ); // ✅ use () => Alert() for better route stack handling
   }
@@ -28,49 +28,49 @@ class MainController extends GetxController {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/activity'); // Set current route
 
-    Get.offAll(() => Activity()); //
+    Get.off(() => Activity()); //
   }
 
   void freezone() {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/freezone'); // Set current route
-    // Get.offAll(() => Freezone()); //
+    // Get.off(() => Freezone()); //
 
-    Get.offAll(() => Mappage()); //
+    Get.off(() => Mappage()); //
   }
 
   void privacyPage() {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/privacy'); // Set current route
 
-    Get.offAll(() => Privacypolicy()); //
+    Get.off(() => Privacypolicy()); //
   }
 
   void question() {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/questions'); // Set current route
 
-    Get.offAll(() => Question()); //
+    Get.off(() => Question()); //
   }
 
   void termsandconditions() {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/terms'); // Set current route
 
-    Get.offAll(() => Termsandcondtion()); //
+    Get.off(() => Termsandcondtion()); //
   }
 
   void working() {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/working'); // Set current route
 
-    Get.offAll(() => Working()); //
+    Get.off(() => Working()); //
   }
 
   void yourinfo() {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/yourinfo'); // Set current route
 
-    Get.offAll(() => Yourinfo()); //
+    Get.off(() => Yourinfo()); //
   }
 }
