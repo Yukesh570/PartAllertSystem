@@ -9,6 +9,11 @@ import 'package:Parkalert/navigationButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:Parkalert/features/screen/helperWidget/sound.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class Alert extends StatefulWidget {
   const Alert({super.key});
@@ -17,15 +22,21 @@ class Alert extends StatefulWidget {
   State<Alert> createState() => _AlertState();
 }
 
-final TextEditingController _bluetoothController = TextEditingController();
-
 class _AlertState extends State<Alert> {
   final TextEditingController _bluetoothDeviceController =
       TextEditingController();
+  final TextEditingController soundController = TextEditingController();
+
   @override
   void dispose() {
-    _bluetoothController.dispose();
+    _bluetoothDeviceController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    NotificationService.initialize(flutterLocalNotificationsPlugin);
   }
 
   @override
@@ -172,8 +183,12 @@ class _AlertState extends State<Alert> {
                           buildAlertFormRow(
                             icon: Icons.music_note,
                             text: 'Sound',
+                            controller: soundController,
                             onTap: () {
-                              pickAndPlaySound();
+                              showSoundPicker(
+                                context: context,
+                                controller: soundController,
+                              );
                             },
                           ),
 
@@ -185,7 +200,12 @@ class _AlertState extends State<Alert> {
                             backgroundColor: AppColors.buttonBackground,
                             textColor: AppColors.lightTextColor,
                             onPressed: () {
-                              /* Handle connect */
+                              print("object");
+                              NotificationService.showBigTextNotification(
+                                title: "ParkAlert",
+                                body: "You are out of parking zone",
+                                fln: flutterLocalNotificationsPlugin,
+                              );
                             },
                           ),
                           const SizedBox(height: 5.0),

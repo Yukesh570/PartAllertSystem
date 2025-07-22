@@ -1,6 +1,7 @@
 import 'package:Parkalert/common/widgets/login_signUp/form_divider.dart';
 import 'package:Parkalert/common/widgets/login_signUp/socialButton.dart';
 import 'package:Parkalert/features/controllers/information/information_controller.dart';
+import 'package:Parkalert/features/screen/helperWidget/sound.dart';
 import 'package:Parkalert/features/screen/information/widget/agreePolicy.dart';
 import 'package:Parkalert/features/screen/information/widget/informationForm.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
@@ -10,10 +11,14 @@ import 'package:Parkalert/utils/constants/sizes.dart';
 import 'package:Parkalert/utils/constants/text_strings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class Information extends StatefulWidget {
   final Function(Locale) onLocaleChange;
@@ -34,6 +39,12 @@ class _InformationState extends State<Information> {
     print("selectedLang: $selectedLang");
 
     widget.onLocaleChange(Locale(langCode.toLowerCase()));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    NotificationService.initialize(flutterLocalNotificationsPlugin);
   }
 
   @override

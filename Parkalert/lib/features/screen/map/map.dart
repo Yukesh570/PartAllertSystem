@@ -80,6 +80,10 @@ class _MappageState extends State<Mappage> {
     makesuggestion(searchController.text);
   }
 
+  void _onSearchChanged() {
+    onModify();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -89,14 +93,13 @@ class _MappageState extends State<Mappage> {
     // SchedulerBinding.instance.addPostFrameCallback((_) {
     //   packData(); // Only after UI is built
     // });
-    searchController.addListener(() {
-      onModify();
-    });
+    searchController.addListener(_onSearchChanged);
   }
 
   @override
   void dispose() {
-    searchController.dispose();
+    searchController.removeListener(_onSearchChanged); // ✅ important
+    searchController.dispose(); // ✅ then dispose
     super.dispose();
   }
 
@@ -152,9 +155,6 @@ class _MappageState extends State<Mappage> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: searchController,
-                onChanged: (value) {
-                  makesuggestion(value);
-                },
                 decoration: InputDecoration(
                   hintText: 'Search',
                   prefixIcon: const Icon(Icons.search),

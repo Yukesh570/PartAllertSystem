@@ -34,7 +34,8 @@ Future<void> showPairedDevicesPicker({
       .getBondedDevices();
 
   showDialog(
-    context: context,
+    context:
+        context, //context (short for BuildContext) is a reference to the location of a widget
     builder: (context) {
       return StatefulBuilder(
         builder: (context, setState) {
