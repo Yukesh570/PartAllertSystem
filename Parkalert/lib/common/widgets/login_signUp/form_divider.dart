@@ -21,10 +21,10 @@ class formDivider extends StatelessWidget {
             endIndent: 5,
           ),
         ),
-        Text(
-          TTexts.orSignInWith.capitalize!,
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
+        // Text(
+        //   TTexts.orSignInWith.capitalize!,
+        //   style: Theme.of(context).textTheme.labelMedium,
+        // ),
         Flexible(
           child: Divider(
             color: dark ? TColors.darkGrey : TColors.grey,

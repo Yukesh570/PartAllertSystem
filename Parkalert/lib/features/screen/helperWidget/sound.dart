@@ -66,6 +66,7 @@ void showSoundPicker({
   showModalBottomSheet(
     context: context,
     builder: (BuildContext ctx) {
+      //context is the BuildContext for the widget being built. It gives access to surrounding widget info (theme, navigation, etc.) and is crucial for building widgets dynamically and responsively.
       return ListView.builder(
         itemCount: soundList.length,
         itemBuilder: (context, index) {

@@ -1,16 +1,14 @@
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
-import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
+import 'package:Parkalert/features/screen/navItems/alert/alertSettings.dart';
 import 'package:flutter/material.dart';
 
 class BackgroundCirclesPainter extends CustomPainter {
-  final BuildContext context;
+  final bool isDark;
 
-  BackgroundCirclesPainter(this.context);
+  BackgroundCirclesPainter(this.isDark);
 
   @override
   void paint(Canvas canvas, Size size) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
-
     final double strokeWidth = size.shortestSide * 0.07;
     final paint = Paint()
       ..color = isDark

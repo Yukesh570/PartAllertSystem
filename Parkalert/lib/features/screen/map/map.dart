@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:Parkalert/features/screen/helperWidget/Button.dart';
+import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
+import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
+import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -27,7 +31,7 @@ class _MappageState extends State<Mappage> {
 
   static const CameraPosition _initialPosition = CameraPosition(
     target: LatLng(27.661150186746983, 85.30280431677846),
-    zoom: 14,
+    zoom: 17,
   );
 
   List<dynamic> listForPlaces = [];
@@ -124,7 +128,7 @@ class _MappageState extends State<Mappage> {
       );
       CameraPosition cameraPosition = CameraPosition(
         target: LatLng(value.latitude, value.longitude),
-        zoom: 14,
+        zoom: 17,
       );
       final GoogleMapController controller = await _controller.future;
       controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
@@ -135,10 +139,23 @@ class _MappageState extends State<Mappage> {
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-
+    final loc = AppLocalizations.of(context);
+    if (loc == null) {
+      // This means localization isn't yet loaded or context is not in a localized widget tree
+      return const Center(child: CircularProgressIndicator());
+    }
     return Scaffold(
+      extendBodyBehindAppBar: true,
+
       appBar: AppBar(
-        title: Center(child: const Text('Zones')),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+
+        title: Text(
+          loc.freezones,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         leading: Builder(
           builder: (context) => IconButton(
             onPressed: () => Scaffold.of(context).openDrawer(),
@@ -151,69 +168,165 @@ class _MappageState extends State<Mappage> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                controller: searchController,
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: const Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-            ),
-            if (listForPlaces.isNotEmpty)
-              SizedBox(
-                height: 200,
-                child: ListView.builder(
-                  itemCount: listForPlaces.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(listForPlaces[index]['description']),
-                      onTap: () {
-                        // You can use the place_id here to fetch coordinates and go to that location
-                        print(
-                          'Selected: ${listForPlaces[index]['description']}',
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
-
             Expanded(
               child: Stack(
                 children: [
-                  GoogleMap(
-                    initialCameraPosition: _initialPosition,
-                    mapType: MapType.hybrid,
-                    markers: Set<Marker>.of(_markers),
-                    onMapCreated: (GoogleMapController controller) {
-                      _controller.complete(controller);
-                      setState(() {
-                        _isMapLoading = false;
-                      });
-                    },
+                  Positioned.fill(
+                    child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
                   ),
+
+                  // 📦 Main container with title, search bar, and map
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: dark
+                            ? const Color.fromARGB(255, 20, 20, 20)
+                            : const Color.fromARGB(255, 255, 255, 255),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.15),
+                            spreadRadius: 4,
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+
+                      child: Column(
+                        crossAxisAlignment:
+                            CrossAxisAlignment.start, // Align children to left
+
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: const Text(
+                              'Set no-alert zones',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+
+                          Expanded(
+                            child: Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: 8,
+                                    left: 8,
+                                    bottom: 8,
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: GoogleMap(
+                                      initialCameraPosition: _initialPosition,
+                                      mapType: MapType.terrain,
+                                      markers: Set<Marker>.of(_markers),
+                                      onMapCreated:
+                                          (GoogleMapController controller) {
+                                            _controller.complete(controller);
+                                            setState(() {
+                                              _isMapLoading = false;
+                                            });
+                                          },
+                                      zoomControlsEnabled: false,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 5,
+                                  left: 12,
+                                  right: 12,
+                                  child: Material(
+                                    elevation: 5,
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: TextFormField(
+                                      controller: searchController,
+                                      decoration: InputDecoration(
+                                        hintText: 'Search',
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        prefixIcon: const Icon(Icons.search),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
                   if (_isMapLoading)
-                    Positioned.fill(
+                    const Positioned.fill(
+                      child: Center(child: CircularProgressIndicator()),
+                    ),
+
+                  // 🧠 Suggestions dropdown
+                  if (listForPlaces.isNotEmpty)
+                    Positioned(
+                      top: 260,
+                      left: 25,
+                      right: 25,
                       child: Container(
-                        color: Colors.transparent,
-                        child: const Center(child: CircularProgressIndicator()),
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListView.builder(
+                          itemCount: listForPlaces.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(listForPlaces[index]['description']),
+                              onTap: () {
+                                print(
+                                  'Selected: ${listForPlaces[index]['description']}',
+                                );
+                              },
+                            );
+                          },
+                        ),
                       ),
                     ),
                 ],
               ),
             ),
+
+            const SizedBox(height: 10),
+
+            // Footer row with buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                buildCircularIconButton(
+                  icon: Icons.arrow_back,
+                  onPressed: () {},
+                ),
+                buildMainButton(text: 'Main', onPressed: () {}),
+                buildCircularIconButton(
+                  icon: Iconsax.location,
+                  onPressed: packData,
+                ),
+              ],
+            ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Iconsax.location),
-        onPressed: packData,
       ),
     );
   }
 }
+
+
+ //build  

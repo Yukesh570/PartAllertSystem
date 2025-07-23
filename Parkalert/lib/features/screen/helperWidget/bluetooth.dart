@@ -1,5 +1,5 @@
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
-import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
+import 'package:Parkalert/features/screen/navItems/alert/alertSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:android_intent_plus/android_intent.dart';

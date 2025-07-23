@@ -282,19 +282,17 @@ class navButton extends StatelessWidget {
     );
   }
 
-  void _navigation({
+  Future<void> _navigation({
     required BuildContext context,
     required String targetRoute,
     required VoidCallback onNavigate,
     required String currentRoute,
-  }) {
+  }) async {
     if (currentRoute != targetRoute) {
-      Navigator.pop(context);
-      Future.delayed(const Duration(milliseconds: 200), () {
-        SchedulerBinding.instance.addPostFrameCallback((_) {
-          onNavigate();
-        });
-      });
+      bool didPop = await Navigator.of(context).maybePop();
+      if (didPop) {
+        onNavigate();
+      }
     }
   }
 

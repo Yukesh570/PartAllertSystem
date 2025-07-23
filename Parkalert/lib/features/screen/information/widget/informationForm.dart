@@ -29,6 +29,7 @@ class InformationForm extends StatelessWidget {
               labelText: loc.firstName,
               prefixIcon: Icon(Iconsax.user),
             ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 16.0),
           TextFormField(
@@ -37,6 +38,7 @@ class InformationForm extends StatelessWidget {
               labelText: loc.lastName,
               prefixIcon: Icon(Iconsax.user),
             ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 16.0),
           TextFormField(
@@ -45,6 +47,7 @@ class InformationForm extends StatelessWidget {
               labelText: loc.email,
               prefixIcon: Icon(Iconsax.direct),
             ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 16.0),
           TextFormField(
@@ -53,6 +56,7 @@ class InformationForm extends StatelessWidget {
               labelText: loc.phoneNo,
               prefixIcon: Icon(Iconsax.call),
             ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           SizedBox(height: 16.0),
         ],

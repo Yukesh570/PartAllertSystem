@@ -1,3 +1,4 @@
+import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +20,17 @@ class _QuestionState extends State<Question> {
       return const Center(child: CircularProgressIndicator());
     }
     return Scaffold(
+      extendBodyBehindAppBar: true,
+
       appBar: AppBar(
-        title: Center(child: Text(loc.frequentlyAskedQuestions)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+
+        title: Text(
+          loc.frequentlyAskedQuestions,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         leading: Builder(
           builder: (context) => IconButton(
             onPressed: () => Scaffold.of(context).openDrawer(),
@@ -29,6 +39,22 @@ class _QuestionState extends State<Question> {
         ),
       ),
       drawer: const navButton(),
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height, // or some fixed height
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height, // or some fixed height
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
+                ),
+                // other children here...
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

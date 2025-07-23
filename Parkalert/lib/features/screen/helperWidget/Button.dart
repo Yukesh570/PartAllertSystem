@@ -1,5 +1,5 @@
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
-import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
+import 'package:Parkalert/features/screen/navItems/alert/alertSettings.dart';
 import 'package:flutter/material.dart';
 
 Widget buildMainButton({
@@ -7,7 +7,7 @@ Widget buildMainButton({
   required VoidCallback onPressed,
 }) {
   return Container(
-    width: 120, // Adjust width as needed
+    width: 200, // Adjust width as needed
     height: 60,
     decoration: BoxDecoration(
       color: AppColors.mainButtonColor,
@@ -21,16 +21,15 @@ Widget buildMainButton({
         ),
       ],
     ),
-    child: ElevatedButton(
+    child: FilledButton(
       onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors
-            .transparent, // Make button background transparent to show container color
-        foregroundColor: AppColors.lightTextColor,
+      style: FilledButton.styleFrom(
+        backgroundColor: AppColors.mainButtonColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(30.0), // pill-shaped
         ),
-        elevation: 0, // No extra elevation as container has it
+        minimumSize: const Size(200, 60), // same size as before
+        elevation: 0,
       ),
       child: Text(
         text,
@@ -90,7 +89,7 @@ Widget buildConnectButton({
       ),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
       ),
     ),
   );

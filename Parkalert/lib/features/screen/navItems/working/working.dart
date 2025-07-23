@@ -1,3 +1,4 @@
+import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +20,17 @@ class _WorkingState extends State<Working> {
       return const Center(child: CircularProgressIndicator());
     }
     return Scaffold(
+      extendBodyBehindAppBar: true,
+
       appBar: AppBar(
-        title: Center(child: Text(loc.howParkAlertWorks)),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+
+        title: Text(
+          loc.howParkAlertWorks,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         leading: Builder(
           builder: (context) => IconButton(
             onPressed: () => Scaffold.of(context).openDrawer(),
@@ -29,6 +39,19 @@ class _WorkingState extends State<Working> {
         ),
       ),
       drawer: const navButton(),
+      body: SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height, // or some fixed height
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
+              ),
+              // other children here...
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

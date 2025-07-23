@@ -9,6 +9,6 @@ class InformationController extends GetxController {
 
   void InfonextPage() {
     // Get.offAll(Mappage());
-    Get.offAll(());
+    // Get.offAll(());
   }
 }

@@ -1,5 +1,5 @@
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
-import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
+import 'package:Parkalert/features/screen/navItems/alert/alertSettings.dart';
 import 'package:flutter/material.dart';
 
 Widget buildAlertFormRow({

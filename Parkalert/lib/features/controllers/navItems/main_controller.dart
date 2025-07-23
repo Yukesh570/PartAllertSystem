@@ -2,6 +2,7 @@ import 'package:Parkalert/features/controllers/drawerController.dart';
 import 'package:Parkalert/features/screen/map/map.dart';
 import 'package:Parkalert/features/screen/navItems/activity/activity.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
+import 'package:Parkalert/features/screen/navItems/alert/alertSettings.dart';
 import 'package:Parkalert/features/screen/navItems/freezones/freezone.dart';
 import 'package:Parkalert/features/screen/navItems/privacyPolicy/privacypolicy.dart';
 import 'package:Parkalert/features/screen/navItems/questions/question.dart';
