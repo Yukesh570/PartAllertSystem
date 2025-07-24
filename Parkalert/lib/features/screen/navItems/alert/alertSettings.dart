@@ -1,3 +1,4 @@
+import 'package:Parkalert/features/controllers/navItems/main_controller.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/features/screen/helperWidget/bluetooth.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
@@ -11,6 +12,8 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:Parkalert/features/screen/helperWidget/sound.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -43,6 +46,8 @@ class _AlertSettingState extends State<AlertSetting> {
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context);
+    final MainController controller = Get.put(MainController());
+
     if (loc == null) {
       // This means localization isn't yet loaded or context is not in a localized widget tree
       return const Center(child: CircularProgressIndicator());
@@ -75,14 +80,15 @@ class _AlertSettingState extends State<AlertSetting> {
             padding: const EdgeInsets.only(
               top: 0,
               bottom: 0,
-              right: 15,
-              left: 15,
+              right: 20,
+              left: 20,
             ),
             child: SingleChildScrollView(
               child: Container(
+                height: 680,
                 padding: const EdgeInsets.symmetric(
                   vertical: 2.0,
-                  horizontal: 10.0,
+                  horizontal: 20.0,
                 ),
                 decoration: BoxDecoration(
                   color: dark
@@ -125,6 +131,8 @@ class _AlertSettingState extends State<AlertSetting> {
                     // Main alert settings card
                     Container(
                       padding: const EdgeInsets.all(16.0),
+                      height: 580,
+
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: dark
@@ -237,18 +245,28 @@ class _AlertSettingState extends State<AlertSetting> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   buildCircularIconButton(
+                    context: context,
+
                     icon: Icons.arrow_back,
                     onPressed: () {
-                      /* Handle back */
+                      if (Navigator.of(context).canPop()) {
+                        Navigator.of(context).pop();
+                      } else {
+                        // Optionally handle the case where there's no back route
+                        print("No screen to go back to");
+                      }
                     },
                   ),
                   buildMainButton(
                     text: 'Main',
                     onPressed: () {
-                      /* Handle Main */
+                      controller.alertPage();
                     },
+                    context: context,
                   ),
                   buildCircularIconButton(
+                    context: context,
+
                     icon: Icons.add,
                     onPressed: () {
                       /* Handle add */

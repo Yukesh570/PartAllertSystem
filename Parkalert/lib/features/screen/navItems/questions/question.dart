@@ -20,8 +20,6 @@ class _QuestionState extends State<Question> {
       return const Center(child: CircularProgressIndicator());
     }
     return Scaffold(
-      extendBodyBehindAppBar: true,
-
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -39,21 +37,14 @@ class _QuestionState extends State<Question> {
         ),
       ),
       drawer: const navButton(),
-      body: SizedBox(
-        height: MediaQuery.of(context).size.height, // or some fixed height
-        child: SingleChildScrollView(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height, // or some fixed height
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-                ),
-                // other children here...
-              ],
-            ),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
           ),
-        ),
+
+          // other children here...
+        ],
       ),
     );
   }

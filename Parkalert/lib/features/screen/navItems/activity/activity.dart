@@ -1,4 +1,6 @@
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
+import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
+import 'package:Parkalert/features/screen/navItems/alert/ringers.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,8 @@ class Activity extends StatefulWidget {
 class _ActivityState extends State<Activity> {
   @override
   Widget build(BuildContext context) {
+    print("aactivtyyyyyyyyy $ringersList");
+
     final dark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context);
     if (loc == null) {
@@ -20,13 +24,15 @@ class _ActivityState extends State<Activity> {
       return const Center(child: CircularProgressIndicator());
     }
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
 
-        title: Text(loc.alerts, style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text(
+          loc.activity,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         leading: Builder(
           builder: (context) => IconButton(
             onPressed: () => Scaffold.of(context).openDrawer(),
@@ -35,18 +41,14 @@ class _ActivityState extends State<Activity> {
         ),
       ),
       drawer: const navButton(),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height, // or some fixed height
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-              ),
-              // other children here...
-            ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
           ),
-        ),
+
+          // other children here...
+        ],
       ),
     );
   }

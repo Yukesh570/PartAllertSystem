@@ -20,8 +20,6 @@ class _FreezoneState extends State<Freezone> {
       return const Center(child: CircularProgressIndicator());
     }
     return Scaffold(
-      extendBodyBehindAppBar: true,
-
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -39,18 +37,14 @@ class _FreezoneState extends State<Freezone> {
         ),
       ),
       drawer: const navButton(),
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height, // or some fixed height
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-              ),
-              // other children here...
-            ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
           ),
-        ),
+
+          // other children here...
+        ],
       ),
     );
   }

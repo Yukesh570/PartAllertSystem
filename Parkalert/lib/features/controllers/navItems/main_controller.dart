@@ -20,8 +20,17 @@ class MainController extends GetxController {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/alerts'); // Set current route
 
-    Get.off(
+    Get.offAll(
       () => Alert(),
+    ); // ✅ use () => Alert() for better route stack handling
+  }
+
+  void alertSettingPage() {
+    final drawerCtrl = Get.find<DrawerControllerX>();
+    drawerCtrl.changeRoute('/alertSetting'); // Set current route
+
+    Get.to(
+      () => AlertSetting(),
     ); // ✅ use () => Alert() for better route stack handling
   }
 

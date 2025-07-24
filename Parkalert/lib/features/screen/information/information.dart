@@ -30,7 +30,7 @@ class Information extends StatefulWidget {
 }
 
 class _InformationState extends State<Information> {
-  String? selectedLang; // No language selected initially
+  String? selectedLang = 'en'; // No language selected initially
 
   void changeLanguage(String langCode) {
     print("Language changed to: $langCode");
@@ -118,64 +118,67 @@ class _InformationState extends State<Information> {
               ),
               padding: const EdgeInsets.all(18), // Space inside the box
 
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    loc.language,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: dark
-                          ? const Color.fromARGB(255, 233, 232, 232)
-                          : TColors.dark,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      loc.language,
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            color: dark
+                                ? const Color.fromARGB(255, 233, 232, 232)
+                                : TColors.dark,
+                          ),
                     ),
-                  ),
-                  SizedBox(height: 16.0),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: languages.entries.map((entry) {
-                        final label = entry.key;
-                        final code = entry.value;
-                        return _LanguageChip(
-                          label: label,
-                          dark: dark,
-                          isSelected: selectedLang == code,
-                          onTap: () => changeLanguage(
-                            code,
-                          ), // Update the selected language
-                        );
-                      }).toList(),
+                    SizedBox(height: 16.0),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: languages.entries.map((entry) {
+                          final label = entry.key;
+                          final code = entry.value;
+                          return _LanguageChip(
+                            label: label,
+                            dark: dark,
+                            isSelected: selectedLang == code,
+                            onTap: () => changeLanguage(
+                              code,
+                            ), // Update the selected language
+                          );
+                        }).toList(),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 16.0),
-                  InformationForm(),
-                  AgreePolicyTextChoice(dark: dark),
-                  SizedBox(height: 16.0),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        controller.InfonextPage();
-                      },
-                      child: Text(
-                        loc.createAccount,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w900,
+                    SizedBox(height: 16.0),
+                    InformationForm(),
+                    AgreePolicyTextChoice(dark: dark),
+                    SizedBox(height: 16.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          controller.InfonextPage();
+                        },
+                        child: Text(
+                          loc.createAccount,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 16.0),
-                  formDivider(),
+                    SizedBox(height: 16.0),
+                    formDivider(),
 
-                  // Text(
-                  //   'This is the information screen where you can find details about the app.',
-                  //   style: Theme.of(context).textTheme.headlineMedium,
-                  // ),
-                  // Add more content here as needed
-                ],
+                    // Text(
+                    //   'This is the information screen where you can find details about the app.',
+                    //   style: Theme.of(context).textTheme.headlineMedium,
+                    // ),
+                    // Add more content here as needed
+                  ],
+                ),
               ),
             ),
           ),

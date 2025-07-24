@@ -311,11 +311,18 @@ class _MappageState extends State<Mappage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 buildCircularIconButton(
+                  context: context,
                   icon: Icons.arrow_back,
                   onPressed: () {},
                 ),
-                buildMainButton(text: 'Main', onPressed: () {}),
+                buildMainButton(
+                  text: 'Main',
+                  onPressed: () {},
+                  context: context,
+                ),
                 buildCircularIconButton(
+                  context: context,
+
                   icon: Iconsax.location,
                   onPressed: packData,
                 ),

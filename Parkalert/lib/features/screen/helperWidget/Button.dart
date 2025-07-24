@@ -3,14 +3,17 @@ import 'package:Parkalert/features/screen/navItems/alert/alertSettings.dart';
 import 'package:flutter/material.dart';
 
 Widget buildMainButton({
+  required BuildContext context,
   required String text,
   required VoidCallback onPressed,
 }) {
+  final dark = Theme.of(context).brightness == Brightness.dark;
+
   return Container(
     width: 200, // Adjust width as needed
     height: 60,
     decoration: BoxDecoration(
-      color: AppColors.mainButtonColor,
+      color: Colors.white,
       borderRadius: BorderRadius.circular(30.0), // More rounded for pill shape
       boxShadow: [
         BoxShadow(
@@ -33,7 +36,11 @@ Widget buildMainButton({
       ),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       ),
     ),
   );
@@ -41,6 +48,7 @@ Widget buildMainButton({
 
 // Helper method for circular icon buttons
 Widget buildCircularIconButton({
+  required BuildContext context,
   required IconData icon,
   required VoidCallback onPressed,
 }) {
@@ -48,7 +56,33 @@ Widget buildCircularIconButton({
     width: 60,
     height: 60,
     decoration: BoxDecoration(
-      color: AppColors.buttonBackground,
+      color: AppColors.mainButtonColor,
+      shape: BoxShape.circle,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.2),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    ),
+    child: IconButton(
+      icon: Icon(icon, color: AppColors.lightTextColor, size: 30),
+      onPressed: onPressed,
+    ),
+  );
+}
+
+Widget buildCircularAddbButton({
+  required IconData icon,
+  required VoidCallback onPressed,
+}) {
+  return Container(
+    width: 60,
+    height: 60,
+    decoration: BoxDecoration(
+      color: AppColors.mainButtonColor,
       shape: BoxShape.circle,
       boxShadow: [
         BoxShadow(

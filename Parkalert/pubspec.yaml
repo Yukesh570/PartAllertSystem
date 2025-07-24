@@ -13,6 +13,8 @@ dependencies:
     sdk: flutter
   flutter_map: ^8.2.1
   latlong2: ^0.9.0
+  shared_preferences: ^2.0.15
+
   flutter_blue_plus: ^1.31.11
   android_intent_plus: ^4.0.1
   permission_handler: ^11.3.1
