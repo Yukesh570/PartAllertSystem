@@ -45,7 +45,7 @@ class _InformationState extends State<Information> {
   @override
   void initState() {
     super.initState();
-    NotificationService.initialize(flutterLocalNotificationsPlugin);
+    NotificationService.initialize();
   }
 
   @override
@@ -67,6 +67,10 @@ class _InformationState extends State<Information> {
       "DU": "nl",
     };
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+
+      backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
+
       extendBodyBehindAppBar: true,
 
       appBar: AppBar(

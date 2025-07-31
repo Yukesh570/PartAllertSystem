@@ -20,6 +20,10 @@ class _PrivacypolicyState extends State<Privacypolicy> {
       return const Center(child: CircularProgressIndicator());
     }
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+
+      backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
+
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,

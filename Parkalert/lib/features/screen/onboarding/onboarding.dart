@@ -22,6 +22,8 @@ class OnBoardingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(OnBoardingController());
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [

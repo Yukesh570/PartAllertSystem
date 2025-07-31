@@ -1,21 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class NotificationService {
-  static Future initialize(
-    FlutterLocalNotificationsPlugin FlutterLocalNotificationsPlugin,
-  ) async {
-    var androidInitialize = new AndroidInitializationSettings(
+  static Future initialize() async {
+    var androidInitialize = AndroidInitializationSettings(
       "@mipmap/ic_launcher",
     );
-    var iOSInitialize = new DarwinInitializationSettings();
-    var initializtionsSettings = new InitializationSettings(
+    var iOSInitialize = DarwinInitializationSettings();
+    var initializationSettings = InitializationSettings(
       android: androidInitialize,
       iOS: iOSInitialize,
     );
-    await FlutterLocalNotificationsPlugin.initialize(initializtionsSettings);
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    // Create notification channel for Android with custom sound
+    await _createNotificationChannel(flutterLocalNotificationsPlugin);
+  }
+
+  static Future _createNotificationChannel(
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
+  ) async {
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'parkalert_channel2', // same id as used in showBigTextNotification
+      'Parking Alert',
+      description: 'Channel for parking alerts',
+      importance: Importance.max,
+      playSound: true,
+      // sound: RawResourceAndroidNotificationSound('mixkit_bell'), // custom sound
+    );
+
+    final androidImplementation = flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >();
+
+    if (androidImplementation != null) {
+      await androidImplementation.createNotificationChannel(channel);
+    }
   }
 
   static Future showBigTextNotification({
@@ -25,10 +49,10 @@ class NotificationService {
     var payload,
     required FlutterLocalNotificationsPlugin fln,
   }) async {
-    print("objecsdsdsdt");
+    print("Notification triggered");
     AndroidNotificationDetails androidPlatformChannelSpecifics =
-        new AndroidNotificationDetails(
-          'parkalert_channel2',
+        AndroidNotificationDetails(
+          'parkalert_channel2', // channel id
           'Parking Alert',
           playSound: true,
           sound: RawResourceAndroidNotificationSound("mixkit_bell"),
@@ -59,6 +83,7 @@ List<String> soundList = [
   'mixkit_software_interface_back',
   'mixkit_wrong_answer_fail',
 ];
+
 void showSoundPicker({
   required BuildContext context,
   required TextEditingController controller,
@@ -66,7 +91,6 @@ void showSoundPicker({
   showModalBottomSheet(
     context: context,
     builder: (BuildContext ctx) {
-      //context is the BuildContext for the widget being built. It gives access to surrounding widget info (theme, navigation, etc.) and is crucial for building widgets dynamically and responsively.
       return ListView.builder(
         itemCount: soundList.length,
         itemBuilder: (context, index) {

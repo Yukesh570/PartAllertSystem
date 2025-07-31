@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 Widget buildAlertFormRow({
   required IconData icon,
   required String text,
-  required VoidCallback onTap,
+  required VoidCallback? onTap,
   TextEditingController? controller,
 }) {
   return Row(

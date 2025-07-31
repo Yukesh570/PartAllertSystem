@@ -10,6 +10,7 @@ import 'package:Parkalert/features/controllers/alert/isON.dart';
 import 'package:Parkalert/features/screen/navItems/alert/ringers.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
+import 'package:Parkalert/utils/storage/ringerStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
@@ -19,62 +20,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
-
-// Future<void> saveRingersIndices(List<Ringers> ringersList) async {
-//   final prefs = await SharedPreferences.getInstance();
-
-//   // Extract the indices from the list
-//   List<String> indices = ringersList
-//       .map((r) => r.ringerData.index.toString())
-//       .toList();
-//   // Save the indices as List<String>
-//   await prefs.setStringList('ringers_indices', indices);
-// }
-
-Future<void> saveRingers(List<RingerData> ringers) async {
-  final prefs = await SharedPreferences.getInstance();
-  // Load existing ringers from SharedPreferences
-  List<String>? existingJsonList = prefs.getStringList('ringers');
-  List<RingerData> allRingers = [];
-
-  if (existingJsonList != null) {
-    allRingers = existingJsonList
-        .map((jsonStr) => RingerData.fromJson(jsonDecode(jsonStr)))
-        .toList();
-  }
-
-  // Avoid duplicate indices if needed
-  for (var newringer in ringers) {
-    if (!allRingers.any((r) => r.index == newringer.index)) {
-      allRingers.add(newringer);
-    }
-  }
-
-  // Save merged list back
-  List<String> mergeJsonList = allRingers
-      .map((r) => jsonEncode(r.toJson()))
-      .toList();
-  await prefs.setStringList('ringers', mergeJsonList);
-}
-
-// Future<void> saveRingersData(List<RingerData> ringers) async {
-//   final prefs = await SharedPreferences.getInstance();
-//   List<String> jsonList = ringers.map((r) => jsonEncode(r.toJson())).toList();
-//   await prefs.setStringList('ringers', jsonList);
-// }
-
-Future<List<RingerData>> loadRingers() async {
-  final prefs = await SharedPreferences.getInstance();
-
-  List<String>? jsonList = prefs.getStringList('ringers');
-
-  if (jsonList == null) return [];
-
-  return jsonList.map((jsonStr) {
-    Map<String, dynamic> jsonMap = jsonDecode(jsonStr);
-    return RingerData.fromJson(jsonMap);
-  }).toList();
-}
 
 class Alert extends StatefulWidget {
   const Alert({super.key});
@@ -112,35 +57,7 @@ class _AlertState extends State<Alert> {
 
   @override
   Widget build(BuildContext context) {
-    IsOnController isOnController = Get.put(IsOnController());
-
-    void _addRingers() async {
-      final newIndex = ringersList.length;
-      // Create new RingerData with default or initial values
-      RingerData newRingerData = RingerData(
-        index: newIndex,
-        date: "2025-07-24", // or get from UI
-        time: "10:30", // or get from UI
-        isOn: false,
-      );
-
-      setState(() {
-        isOnController.InitializeButton();
-
-        ringersList.add(Ringers(ringerData: newRingerData));
-      });
-      // Extract data to save
-
-      List<RingerData> dataToSave = ringersList.map((ringer) {
-        return RingerData(
-          index: ringer.ringerData.index,
-          date: "2025-07-24", // ← Replace with actual data from UI
-          time: "10:30", // ← Replace with actual data from UI
-          isOn: false, // ← Get this from your controller if dynamic
-        );
-      }).toList();
-      await saveRingers(dataToSave);
-    }
+    final MainController controller = Get.put(MainController());
 
     ;
     void printAllSharedPreferences() async {
@@ -170,6 +87,9 @@ class _AlertState extends State<Alert> {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+
+      backgroundColor: dark ? Colors.black : Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -312,8 +232,10 @@ class _AlertState extends State<Alert> {
                     context: context,
                   ),
                   buildCircularAddbButton(
-                    icon: Icons.add,
-                    onPressed: _addRingers,
+                    context: context,
+                    onPressed: () {
+                      controller.alertSettingPage();
+                    },
                   ),
                 ],
               ),

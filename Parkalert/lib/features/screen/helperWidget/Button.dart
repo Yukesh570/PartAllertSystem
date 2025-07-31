@@ -74,8 +74,9 @@ Widget buildCircularIconButton({
   );
 }
 
-Widget buildCircularAddbButton({
-  required IconData icon,
+Widget addAlertButton({
+  required BuildContext context,
+
   required VoidCallback onPressed,
 }) {
   return Container(
@@ -94,7 +95,33 @@ Widget buildCircularAddbButton({
       ],
     ),
     child: IconButton(
-      icon: Icon(icon, color: AppColors.lightTextColor, size: 30),
+      icon: Icon(Icons.add, color: AppColors.lightTextColor, size: 30),
+      onPressed: onPressed,
+    ),
+  );
+}
+
+Widget buildCircularAddbButton({
+  required BuildContext context,
+  required VoidCallback onPressed,
+}) {
+  return Container(
+    width: 60,
+    height: 60,
+    decoration: BoxDecoration(
+      color: AppColors.mainButtonColor,
+      shape: BoxShape.circle,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.2),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    ),
+    child: IconButton(
+      icon: Icon(Icons.add, color: AppColors.lightTextColor, size: 30),
       onPressed: onPressed,
     ),
   );

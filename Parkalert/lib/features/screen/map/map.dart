@@ -145,6 +145,10 @@ class _MappageState extends State<Mappage> {
       return const Center(child: CircularProgressIndicator());
     }
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+
+      backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
+
       extendBodyBehindAppBar: true,
 
       appBar: AppBar(
