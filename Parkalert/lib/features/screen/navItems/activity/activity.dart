@@ -1,4 +1,4 @@
-import 'package:Parkalert/data/RingerData.dart';
+import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alert.dart';

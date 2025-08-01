@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:Parkalert/data/RingerData.dart';
+import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/features/controllers/alert/isON.dart';
 import 'package:Parkalert/features/controllers/navItems/main_controller.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
@@ -49,9 +49,13 @@ class Ringers extends StatelessWidget {
 
     List<Color> colorText = [AppColors.text1, AppColors.text2, AppColors.text3];
     final Color Textcolor = colorText[ringerData.index % colorText.length];
+    var ringersList = <RingerData>[].obs;
 
     return GestureDetector(
-      onTap: () => {print('Container tapped!'), controller.alertSettingPage()},
+      onTap: () => {
+        print('Container tapped!'),
+        controller.alertSettingeEditingPage(ringerData),
+      },
       child: Container(
         padding: const EdgeInsets.all(16.0),
         width: double.infinity,
@@ -78,7 +82,6 @@ class Ringers extends StatelessWidget {
               ),
 
               child: Row(
-                // mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Transform.translate(
                     offset: const Offset(-18, -15),
@@ -91,9 +94,7 @@ class Ringers extends StatelessWidget {
                       print(
                         " isOnController.isOnList======== ${isOnController.isOnList}",
                       );
-
                       bool isOn = isOnController.isOnList[ringerData.index];
-
                       return Container(
                         width: 25,
                         height: 25,
@@ -101,7 +102,7 @@ class Ringers extends StatelessWidget {
                           boxShadow: [
                             BoxShadow(
                               color: isOn
-                                  ? Color.fromARGB(
+                                  ? const Color.fromARGB(
                                       255,
                                       22,
                                       230,
@@ -115,20 +116,20 @@ class Ringers extends StatelessWidget {
                         ),
                         child: Image.asset(
                           'assets/logos/partalertlogosplash.png',
-                          width: 30,
-                          height: 30,
+                          width: 25,
+                          height: 25,
                           fit: BoxFit.contain,
                         ),
                       );
                     }),
                   ),
 
-                  const SizedBox(width: 100.0),
+                  const SizedBox(width: 85.0),
 
                   Transform.translate(
                     offset: const Offset(-25, -15),
                     child: Text(
-                      'Alert 1',
+                      ringerData.name,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -164,7 +165,7 @@ class Ringers extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        "12-6-2025",
+                        ringerData.date,
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 18,
@@ -187,7 +188,7 @@ class Ringers extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        "15:55",
+                        ringerData.time,
                         style: TextStyle(
                           fontWeight: FontWeight.w400,
                           fontSize: 18,
@@ -214,7 +215,7 @@ class Ringers extends StatelessWidget {
                 backgroundColor: color2,
                 textColor: Textcolor,
                 onPressed: () {
-                  isOnController.toggleSwitch(ringerData.index);
+                  isOnController.toggleSwitch(ringerData);
                 },
               );
             }),

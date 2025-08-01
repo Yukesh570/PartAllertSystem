@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:Parkalert/data/RingerData.dart';
+import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/features/controllers/navItems/main_controller.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/alertFrom.dart';
@@ -10,7 +10,7 @@ import 'package:Parkalert/features/controllers/alert/isON.dart';
 import 'package:Parkalert/features/screen/navItems/alert/ringers.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
-import 'package:Parkalert/utils/storage/ringerStorage.dart';
+import 'package:Parkalert/utils/storage/ringerStorage/ringerStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
@@ -28,7 +28,7 @@ class Alert extends StatefulWidget {
   State<Alert> createState() => _AlertState();
 }
 
-List<Ringers> ringersList = [];
+var ringersList = <Ringers>[].obs;
 List<Ringers> ringersListdemo = [];
 
 class _AlertState extends State<Alert> {
@@ -48,7 +48,7 @@ class _AlertState extends State<Alert> {
           .map((data) => Ringers(ringerData: data))
           .toList();
 
-      ringersList = savedRingers
+      ringersList.value = savedRingers
           .map((data) => Ringers(ringerData: data))
           .toList();
     });
@@ -184,16 +184,18 @@ class _AlertState extends State<Alert> {
 
                   // Main alert settings card
                   Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: ringersList
-                            .map(
-                              (ringer) => (Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ringer,
-                              )),
-                            )
-                            .toList(),
+                    child: Obx(
+                      () => SingleChildScrollView(
+                        child: Column(
+                          children: ringersList
+                              .map(
+                                (ringer) => (Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ringer,
+                                )),
+                              )
+                              .toList(),
+                        ),
                       ),
                     ),
                   ),

@@ -14,7 +14,6 @@ class TLocalStorage {
     return _instance!;
   }
 
-
   /// Asynchronous initialization method
   static Future<void> init(String bucketName) async {
     // Very Important when you want to use Bucket's

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:Parkalert/utils/storage/data/RingerData.dart';
+import 'package:Parkalert/utils/storage/ringerStorage/ringerStorage.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,20 +16,18 @@ class IsOnController extends GetxController {
   }
 
   Future<void> loadIsOnFromStorage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final List<String>? jsonStringList = prefs.getStringList('ringers');
+    // final prefs = await SharedPreferences.getInstance();
+    // final List<String>? jsonStringList = prefs.getStringList('ringers');
+    final List<RingerData> ringer = await loadRingers();
+    final List<bool> extractedIsOnList = ringer
+        .map((ring) => ring.isOn)
+        .toList();
 
-    if (jsonStringList != null) {
-      final List<bool> extractedIsOnList = jsonStringList.map((jsonStr) {
-        final Map<String, dynamic> jsonMap = jsonDecode(jsonStr);
-        return jsonMap['isOn'] as bool;
-      }).toList();
-
-      isOnList.value = extractedIsOnList;
-      print("📥 Loaded isOnList: $isOnList");
-    } else {
-      print("⚠️ No saved ringer data found.");
-    }
+    isOnList.value = extractedIsOnList;
+    //   print("📥 Loaded isOnList: $isOnList");
+    // } else {
+    //   print("⚠️ No saved ringer data found.");
+    // }
     isLoading.value = false; // <-- loading done
   }
 
@@ -39,8 +39,15 @@ class IsOnController extends GetxController {
     isOnList.add(false); // Adds a new button with isOn = false
   }
 
-  void toggleSwitch(int index) {
-    isOnList[index] = !isOnList[index];
+  void toggleSwitch(RingerData ringerData) {
+    isOnList[ringerData.index] = !isOnList[ringerData.index];
+    updateRingers(
+      ringerData.index,
+      isOnList[ringerData.index],
+      null,
+      null,
+      null,
+    );
     print("isOn: $isOnList");
   }
 }

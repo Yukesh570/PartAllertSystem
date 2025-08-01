@@ -28,35 +28,39 @@ import 'package:intl/intl.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-class AlertSetting extends StatefulWidget {
+class AlertSettingEdit extends StatefulWidget {
   final RingerData? ringerData; // 👈 make it nullable
 
-  const AlertSetting({
+  const AlertSettingEdit({
     super.key,
     this.ringerData, // 👈 now it's optional
   });
 
   @override
-  State<AlertSetting> createState() => _AlertSettingState();
+  State<AlertSettingEdit> createState() => _AlertSettingEditState();
 }
 
-class _AlertSettingState extends State<AlertSetting> {
+class _AlertSettingEditState extends State<AlertSettingEdit> {
   final TextEditingController _bluetoothDeviceController =
       TextEditingController();
   final TextEditingController _nameController = TextEditingController();
 
   final TextEditingController soundController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    if (widget.ringerData != null) {
+      _bluetoothDeviceController.text = widget.ringerData!.bluetooth;
+      _nameController.text = widget.ringerData!.name;
+      soundController.text = widget.ringerData!.sound;
+    }
+    NotificationService.initialize();
+  }
 
   @override
   void dispose() {
     _bluetoothDeviceController.dispose();
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    NotificationService.initialize();
   }
 
   @override
@@ -246,7 +250,7 @@ class _AlertSettingState extends State<AlertSetting> {
                                 ),
 
                                 child: const Text(
-                                  'Create Alert',
+                                  'Edit Alert',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 18,
@@ -369,20 +373,16 @@ class _AlertSettingState extends State<AlertSetting> {
                         final String bluetoothDevice =
                             _bluetoothDeviceController.text.trim();
                         final String sound = soundController.text.trim();
-                        print('Name: $name');
-                        print('Bluetooth: $bluetoothDevice');
-                        print('Sound: $sound');
 
                         if (name.isNotEmpty &&
                             // bluetoothDevice.isNotEmpty &&
                             sound.isNotEmpty) {
-                          await _addRingers(
-                            name: name,
-                            bluetooth: bluetoothDevice,
-                            sound: sound,
-                            date: currentDate,
-                            time: currentTime, // or get from UI
-                            isOn: false,
+                          await updateRingers(
+                            widget.ringerData!.index,
+                            widget.ringerData!.isOn,
+                            name,
+                            bluetoothDevice,
+                            sound,
                           );
                           controller.alertPage();
                         }
