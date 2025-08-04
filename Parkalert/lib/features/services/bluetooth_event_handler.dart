@@ -13,12 +13,12 @@ class BluetoothEventHandler {
         print(
           "Galaxy Buds+ connected!============================================",
         );
-        _showNotification();
+        showNotification();
       }
     });
   }
 
-  static Future<void> _showNotification() async {
+  static Future<void> showNotification() async {
     const androidSettings = AndroidNotificationDetails(
       'bluetooth_channel',
       'Bluetooth Events',
@@ -31,7 +31,7 @@ class BluetoothEventHandler {
     await flutterLocalNotificationsPlugin.show(
       0,
       'Bluetooth Connected',
-      'Galaxy Buds+ connected!',
+      'Galaxy Buds+ sweta!',
       platformSettings,
     );
   }

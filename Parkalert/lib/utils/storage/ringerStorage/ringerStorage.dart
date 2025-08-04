@@ -91,7 +91,7 @@ Future<void> updateRingers(
     print("🔐 SharedPreferences Contents:");
     for (String key in keys) {
       final value = prefs.get(key);
-      print("saveddddddddd: $key → Value: $value");
+      print("kale: $key → Value: $value");
     }
   }
 

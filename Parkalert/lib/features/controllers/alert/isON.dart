@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:Parkalert/utils/storage/bluetoothStorage/bluetoothStorage.dart';
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/utils/storage/ringerStorage/ringerStorage.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,15 +41,50 @@ class IsOnController extends GetxController {
     isOnList.add(false); // Adds a new button with isOn = false
   }
 
-  void toggleSwitch(RingerData ringerData) {
-    isOnList[ringerData.index] = !isOnList[ringerData.index];
-    updateRingers(
-      ringerData.index,
-      isOnList[ringerData.index],
-      null,
-      null,
-      null,
-    );
-    print("isOn: $isOnList");
+  void toggleSwitch(BuildContext context, RingerData ringerData) async {
+    await activeBluetooth();
+    print("Current isOnList: $isOnList");
+    print("Any true? ${isOnList.any((on) => on)}");
+    print(isOnList[ringerData.index]);
+    if (isOnList[ringerData.index]) {}
+    if (isOnList.any((on) => on) && !isOnList[ringerData.index]) {
+      print("=== OBX RINGER SWITCH TOGGLED============");
+
+      showDialog(
+        context: context,
+
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Switch Toggled"),
+            content: Text(
+              isOnList[ringerData.index]
+                  ? "Ringer is now ON"
+                  : "Ringer is now OFF",
+            ),
+            actions: [
+              TextButton(
+                child: const Text("OK"),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      isOnList[ringerData.index] = !isOnList[ringerData.index];
+
+      await updateRingers(
+        ringerData.index,
+        isOnList[ringerData.index],
+        null,
+        null,
+        null,
+      );
+      await activeBluetooth();
+      var ujj = await loadActiveBluetooth();
+      print("uuujjjjwwaaall:$ujj");
+    }
   }
 }

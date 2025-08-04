@@ -209,13 +209,14 @@ class Ringers extends StatelessWidget {
               }
 
               bool isOn = isOnController.isOnList[ringerData.index];
+              print("Obx is ============================rebuilding");
 
               return buildConnectButton(
                 text: isOn ? 'Disconnect' : 'Connect',
                 backgroundColor: color2,
                 textColor: Textcolor,
                 onPressed: () {
-                  isOnController.toggleSwitch(ringerData);
+                  isOnController.toggleSwitch(context, ringerData);
                 },
               );
             }),
