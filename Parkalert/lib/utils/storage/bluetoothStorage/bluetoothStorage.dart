@@ -36,12 +36,12 @@ Future<RingerData> activeBluetooth() async {
   final prefs = await SharedPreferences.getInstance();
   // print("activeBluetoothasasasa: +++++++========${activeRinger.bluetooth}");
 
-  await prefs.setBool('activeBluetooth', activeRinger.isOn);
+  await prefs.setString('activeBluetooth', activeRinger.bluetooth);
   return activeRinger;
 }
 
-Future<bool?> loadActiveBluetooth() async {
+Future<String> loadActiveBluetooth() async {
   final prefs = await SharedPreferences.getInstance();
-  bool? bluetooth = prefs.getBool('activeBluetooth');
+  String bluetooth = prefs.getString('activeBluetooth') ?? '';
   return bluetooth;
 }

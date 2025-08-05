@@ -55,11 +55,9 @@ class IsOnController extends GetxController {
 
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text("Switch Toggled"),
+            title: const Text("Ringer Already Enabled"),
             content: Text(
-              isOnList[ringerData.index]
-                  ? "Ringer is now ON"
-                  : "Ringer is now OFF",
+              "Please disable the other ringer before enabling this one.",
             ),
             actions: [
               TextButton(

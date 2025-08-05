@@ -56,98 +56,150 @@ class Ringers extends StatelessWidget {
         print('Container tapped!'),
         controller.alertSettingeEditingPage(ringerData),
       },
-      child: Container(
-        padding: const EdgeInsets.all(16.0),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: dark ? AppColors.alert3Dark : color,
-          borderRadius: BorderRadius.circular(25.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              spreadRadius: 2,
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Alert 1 Header
-            Container(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10.0,
-                horizontal: 16.0,
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: dark ? AppColors.alert3Dark : color,
+            borderRadius: BorderRadius.circular(25.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                spreadRadius: 2,
+                blurRadius: 10,
+                offset: const Offset(0, 5),
               ),
-
-              child: Row(
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Alert 1 Header
+              Row(
                 children: [
-                  Transform.translate(
-                    offset: const Offset(-18, -15),
-                    child: Obx(() {
-                      if (isOnController.isLoading.value) {
-                        // Show loading or placeholder while loading
-                        return CircularProgressIndicator();
-                      }
-
-                      print(
-                        " isOnController.isOnList======== ${isOnController.isOnList}",
-                      );
-                      bool isOn = isOnController.isOnList[ringerData.index];
-                      return Container(
+                  Obx(() {
+                    if (isOnController.isLoading.value) {
+                      // Show loading or placeholder while loading
+                      return CircularProgressIndicator();
+                    }
+                    bool isOn = isOnController.isOnList[ringerData.index];
+                    return Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: isOn
+                                ? const Color.fromARGB(
+                                    255,
+                                    22,
+                                    230,
+                                    129,
+                                  ).withOpacity(0.9)
+                                : Colors.transparent,
+                            spreadRadius: 2,
+                            blurRadius: 16,
+                          ),
+                        ],
+                      ),
+                      child: Image.asset(
+                        'assets/logos/partalertlogosplash.png',
                         width: 25,
                         height: 25,
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: isOn
-                                  ? const Color.fromARGB(
-                                      255,
-                                      22,
-                                      230,
-                                      129,
-                                    ).withOpacity(0.9)
-                                  : Colors.transparent,
-                              spreadRadius: 2,
-                              blurRadius: 16,
-                            ),
-                          ],
-                        ),
-                        child: Image.asset(
-                          'assets/logos/partalertlogosplash.png',
-                          width: 25,
-                          height: 25,
-                          fit: BoxFit.contain,
-                        ),
-                      );
-                    }),
-                  ),
-
-                  const SizedBox(width: 85.0),
-
-                  Transform.translate(
-                    offset: const Offset(-25, -15),
-                    child: Text(
-                      ringerData.name,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: dark
-                            ? Colors.white
-                            : const Color.fromARGB(255, 0, 0, 0),
+                        fit: BoxFit.contain,
                       ),
+                    );
+                  }),
 
-                      textAlign: TextAlign.center,
+                  const SizedBox(width: 8.0),
+
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 6,
+                        horizontal: 8,
+                      ),
+                      // width: 240, // set your width
+                      // height: 40, // set your height
+                      decoration: BoxDecoration(
+                        color: color2, // or any background color
+                        border: Border.all(
+                          color: Colors.grey, // border color
+                          width: 1, // border width
+                        ),
+                        borderRadius: BorderRadius.circular(16), // curved edges
+                      ),
+                      child: Center(
+                        child: Text(
+                          ringerData.name,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 18,
+                            color: Textcolor,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.bluetooth,
+                        size: 20,
+                        color: colorOptions2[2],
+                      ),
+                    ),
+                  ),
 
-              child: Row(
+                  const SizedBox(width: 8.0),
+
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 6,
+                        horizontal: 8,
+                      ),
+                      // width: 240, // set your width
+                      // height: 40, // set your height
+                      decoration: BoxDecoration(
+                        color: color2, // or any background color
+                        border: Border.all(
+                          color: Colors.grey, // border color
+                          width: 1, // border width
+                        ),
+                        borderRadius: BorderRadius.circular(16), // curved edges
+                      ),
+                      child: Center(
+                        child: Text(
+                          ringerData.bluetooth,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 18,
+                            color: Textcolor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                 children: [
                   SizedBox(width: 20),
 
@@ -159,7 +211,7 @@ class Ringers extends StatelessWidget {
                       color: color2, // or any background color
                       border: Border.all(
                         color: Colors.grey, // border color
-                        width: 2, // border width
+                        width: 1, // border width
                       ),
                       borderRadius: BorderRadius.circular(16), // curved edges
                     ),
@@ -182,7 +234,7 @@ class Ringers extends StatelessWidget {
                       color: color2, // or any background color
                       border: Border.all(
                         color: Colors.grey, // border color
-                        width: 2, // border width
+                        width: 1, // border width
                       ),
                       borderRadius: BorderRadius.circular(16), // curved edges
                     ),
@@ -199,28 +251,29 @@ class Ringers extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            SizedBox(height: 10),
 
-            Obx(() {
-              if (isOnController.isLoading.value) {
-                // Show loading or placeholder while loading
-                return CircularProgressIndicator();
-              }
+              SizedBox(height: 8),
 
-              bool isOn = isOnController.isOnList[ringerData.index];
-              print("Obx is ============================rebuilding");
+              Obx(() {
+                if (isOnController.isLoading.value) {
+                  // Show loading or placeholder while loading
+                  return CircularProgressIndicator();
+                }
 
-              return buildConnectButton(
-                text: isOn ? 'Disconnect' : 'Connect',
-                backgroundColor: color2,
-                textColor: Textcolor,
-                onPressed: () {
-                  isOnController.toggleSwitch(context, ringerData);
-                },
-              );
-            }),
-          ],
+                bool isOn = isOnController.isOnList[ringerData.index];
+                print("Obx is ============================rebuilding");
+
+                return buildConnectButton(
+                  text: isOn ? 'Disconnect' : 'Connect',
+                  backgroundColor: color2,
+                  textColor: Textcolor,
+                  onPressed: () {
+                    isOnController.toggleSwitch(context, ringerData);
+                  },
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );

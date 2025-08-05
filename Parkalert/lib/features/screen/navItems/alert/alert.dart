@@ -190,7 +190,7 @@ class _AlertState extends State<Alert> {
                           children: ringersList
                               .map(
                                 (ringer) => (Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(5.0),
                                   child: ringer,
                                 )),
                               )
