@@ -8,8 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import androidx.core.app.NotificationCompat;
+import android.util.Log;
 
 import android.bluetooth.BluetoothDevice;
 
@@ -27,19 +30,40 @@ public class BluetoothReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(intent.getAction())) {
             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-            if (device != null && device.getName() != null && device.getName().contains("Galaxy Buds+")) {
+
+            SharedPreferences prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
+            String targetBluetoothName = prefs.getString("flutter.activeBluetooth", "");
+            if (device == null || targetBluetoothName.isEmpty()) {
+                Log.d("BluetoothReceiver", "BluetoothDevice is null");
+                return;
+            }
+
+            String deviceName = device.getName();
+            if (deviceName == null) {
+                Log.d("BluetoothReceiver", "device.getName() is null");
+            } else {
+                Log.d("BluetoothReceiver", "===Connected to: " + deviceName);
+                Log.d("BluetoothReceiver", "===targetBluetoothName to: " + targetBluetoothName);
+
+            }
+
+            if (device != null && device.getName() != null && device.getName().contains(targetBluetoothName)) {
                 // Notify Flutter if flutter app is active
+                 Log.d("BluetoothReceiver", "Connected to: ");
                 if (channel != null) {
                     channel.invokeMethod("onGalaxyBudsConnected", null);
                 }
                 else
                 // Show native notification when flutter app is not active
-                {showNotification(context);}
+                {showNotification(context,targetBluetoothName);}
+            }
+            else {
+                Log.d("BluetoothReceiver", "Did not match");
             }
         }
     }
 
-            private void showNotification(Context context) {
+            private void showNotification(Context context,String deviceName) {
                 NotificationManager notificationManager = 
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -68,8 +92,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(context.getApplicationInfo().icon)
-                    .setContentTitle("Bluetooth Connected")
-                    .setContentText("Galaxy Buds+ connected=======!")
+                    .setContentTitle("Bluetooth 0000Connected")
+                    .setContentText(deviceName +" connected!")
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setAutoCancel(true)
                     .setContentIntent(pendingIntent)

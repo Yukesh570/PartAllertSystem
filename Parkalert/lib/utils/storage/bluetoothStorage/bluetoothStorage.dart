@@ -31,12 +31,15 @@ Future<RingerData> activeBluetooth() async {
       sound: '',
     ),
   );
-  print("YUUUUUKKKKKESHHHHH${activeRinger.isOn}");
-
+  print("YUUUUUKKKKKESHHHHH${activeRinger.bluetooth}");
+  Map<String,String> data=
   final prefs = await SharedPreferences.getInstance();
   // print("activeBluetoothasasasa: +++++++========${activeRinger.bluetooth}");
-
-  await prefs.setString('activeBluetooth', activeRinger.bluetooth);
+  if (activeRinger.bluetooth.trim().isNotEmpty) {
+    await prefs.setString('activeBluetooth', activeRinger.bluetooth);
+  } else {
+    await prefs.remove('activeBluetooth');
+  }
   return activeRinger;
 }
 
