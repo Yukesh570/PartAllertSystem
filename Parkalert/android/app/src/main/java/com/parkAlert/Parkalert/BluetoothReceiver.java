@@ -17,7 +17,8 @@ import android.util.Log;
 import android.bluetooth.BluetoothDevice;
 
 import io.flutter.plugin.common.MethodChannel;
-
+import org.json.JSONObject;
+import org.json.JSONException;
 public class BluetoothReceiver extends BroadcastReceiver {
     public static final String CHANNEL_ID = "bluetooth_channel";
    
@@ -32,7 +33,19 @@ public class BluetoothReceiver extends BroadcastReceiver {
             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
             SharedPreferences prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
-            String targetBluetoothName = prefs.getString("flutter.activeBluetooth", "");
+            String jsonString = prefs.getString("flutter.activeBluetooth", "");
+            String targetBluetoothName = "";
+            String targetSound = "";
+
+            if (!jsonString.isEmpty()) {
+                try{
+                    JSONObject jsonObject = new JSONObject(jsonString);
+                    targetBluetoothName = jsonObject.optString("bluetooth","");
+                    targetSound=jsonObject.optString("sound","");   
+                } catch (JSONException e) {
+                        Log.e("BluetoothReceiver", "Failed to parse JSON: " + e.getMessage());
+                }
+            }
             if (device == null || targetBluetoothName.isEmpty()) {
                 Log.d("BluetoothReceiver", "BluetoothDevice is null");
                 return;
@@ -55,7 +68,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 }
                 else
                 // Show native notification when flutter app is not active
-                {showNotification(context,targetBluetoothName);}
+                {showNotification(context,targetBluetoothName,targetSound);}
             }
             else {
                 Log.d("BluetoothReceiver", "Did not match");
@@ -63,7 +76,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
         }
     }
 
-            private void showNotification(Context context,String deviceName) {
+            private void showNotification(Context context,String deviceName,String targetSound) {
                 NotificationManager notificationManager = 
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 

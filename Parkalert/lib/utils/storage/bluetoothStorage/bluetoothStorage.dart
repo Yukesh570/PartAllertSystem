@@ -31,20 +31,37 @@ Future<RingerData> activeBluetooth() async {
       sound: '',
     ),
   );
-  print("YUUUUUKKKKKESHHHHH${activeRinger.bluetooth}");
-  Map<String,String> data=
+  Map<String, String> data = {
+    'bluetooth': activeRinger.bluetooth,
+    'sound': activeRinger.sound,
+  };
+  print("YUUUUUKKKKKESHHHHH${data}");
+
   final prefs = await SharedPreferences.getInstance();
   // print("activeBluetoothasasasa: +++++++========${activeRinger.bluetooth}");
   if (activeRinger.bluetooth.trim().isNotEmpty) {
-    await prefs.setString('activeBluetooth', activeRinger.bluetooth);
+    await prefs.setString('activeBluetooth', jsonEncode(data));
   } else {
     await prefs.remove('activeBluetooth');
   }
   return activeRinger;
 }
 
-Future<String> loadActiveBluetooth() async {
+Future<Map<String, String>> loadActiveBluetooth() async {
   final prefs = await SharedPreferences.getInstance();
-  String bluetooth = prefs.getString('activeBluetooth') ?? '';
-  return bluetooth;
+     print('swetttttttttttttaaaaaaaaaaaaa');
+
+  final String? jsonString = prefs.getString('activeBluetooth');
+     print('swetttttttttttttaaaaaaaaaaaaa');
+
+  if (jsonString == null) return {'bluetooth': '', 'sound': ''};
+     print('swetttttttttttttaaaaaaaaaaaaa');
+
+  final Map<String, dynamic> data = jsonDecode(jsonString);
+   print('swetttttttttttttaaaaaaaaaaaaa');
+
+  return {
+    'bluetooth': data['bluetooth']?.toString() ?? '',
+    'sound': data['sound']?.toString() ?? '',
+  };
 }

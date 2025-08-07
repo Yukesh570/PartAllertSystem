@@ -29,7 +29,9 @@ class NotificationService {
       description: 'Channel for parking alerts',
       importance: Importance.max,
       playSound: true,
-      // sound: RawResourceAndroidNotificationSound('mixkit_bell'), // custom sound
+      sound: RawResourceAndroidNotificationSound(
+        'mixkit_wrong_answer_fail',
+      ), // custom sound
     );
 
     final androidImplementation = flutterLocalNotificationsPlugin
@@ -55,7 +57,9 @@ class NotificationService {
           'parkalert_channel2', // channel id
           'Parking Alert',
           playSound: true,
-          sound: RawResourceAndroidNotificationSound("mixkit_bell"),
+          sound: RawResourceAndroidNotificationSound(
+            "mixkit_wrong_answer_fail",
+          ),
           importance: Importance.max,
           priority: Priority.high,
         );
@@ -75,13 +79,14 @@ class NotificationService {
 }
 
 List<String> soundList = [
-  'mixkit_bell',
-  'mixkit_correct',
-  'mixkit_interface_option',
-  'mixkit_long_pop',
-  'mixkit_sci_fi_click',
-  'mixkit_software_interface_back',
-  'mixkit_wrong_answer_fail',
+  'abhash',
+  'idiot',
+  'sweta',
+  'ujjwal',
+  'nischal',
+  'yugen',
+  'yukesh',
+  'yunik',
 ];
 
 void showSoundPicker({

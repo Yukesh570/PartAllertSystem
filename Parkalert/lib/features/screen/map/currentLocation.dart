@@ -1,15 +1,35 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
-class _getUserLocationState extends StatefulWidget {
-  const _getUserLocationState({super.key});
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-  @override
-  State<_getUserLocationState> createState() => __getUserLocationStateState();
+final List<Marker> _markers = [];
+final Completer<GoogleMapController> _controller = Completer();
+
+Future<Position> getUserLocation() async {
+  await Geolocator.requestPermission().then((value) {}).onError((
+    error,
+    stackTrace,
+  ) {
+    print(error);
+  });
+  return await Geolocator.getCurrentPosition();
 }
 
-class __getUserLocationStateState extends State<_getUserLocationState> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
+packData() {
+  getUserLocation().then((value) async {
+    _markers.add(
+      Marker(
+        markerId: MarkerId('First'),
+        position: LatLng(value.latitude, value.longitude),
+        infoWindow: InfoWindow(title: 'My Location'),
+      ),
+    );
+    CameraPosition cameraPosition = CameraPosition(
+      target: LatLng(value.latitude, value.longitude),
+      zoom: 17,
+    );
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+  });
 }

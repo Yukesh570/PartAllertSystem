@@ -1,4 +1,5 @@
 import 'package:Parkalert/features/screen/helperWidget/sound.dart';
+import 'package:Parkalert/features/screen/information/information.dart';
 import 'package:Parkalert/features/services/bluetooth_event_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:Parkalert/app.dart';
@@ -11,6 +12,7 @@ void main() async {
   await GetStorage.init();
 
   await NotificationService.initialize();
+
   await NotificationService().requestPermissions();
   BluetoothEventHandler.initialize();
 

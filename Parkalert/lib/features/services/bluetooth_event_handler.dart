@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class BluetoothEventHandler {
   static const platform = MethodChannel('bluetooth/events');
+
   static final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -25,24 +26,36 @@ class BluetoothEventHandler {
 
   static Future<void> showNotification() async {
     var ujj = await loadActiveBluetooth();
-    if (ujj.trim().isEmpty) {
-      print("No active Bluetooth device, skipping notification");
-      return;
-    }
-    const androidSettings = AndroidNotificationDetails(
-      'bluetooth_channel',
-      'Bluetooth Events',
-      importance: Importance.max,
-      priority: Priority.high,
-      playSound: true,
-    );
-    const platformSettings = NotificationDetails(android: androidSettings);
+    try {
+      print("00000000000000000000000000 ${ujj}");
+      if ((ujj['bluetooth'] ?? '').trim().isEmpty) {
+        print("No active Bluetooth device, skipping notification");
+        return;
+      }
+      print("dqqqqqqqqqqqqqqqqqqqqqqqqqqqqq ${ujj}");
 
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      'Bluetooth Connected',
-      ujj,
-      platformSettings,
-    );
+      final androidSettings = AndroidNotificationDetails(
+        'bluetooth_channel',
+        'Bluetooth Events',
+        importance: Importance.max,
+        priority: Priority.high,
+        playSound: true,
+        sound: RawResourceAndroidNotificationSound((ujj['sound'] ?? '')),
+      );
+      print("2222222222222222222222222222222222222222222 ${ujj}");
+
+      final platformSettings = NotificationDetails(android: androidSettings);
+      print("333333333333333333333333333333333333333333 ${ujj}");
+
+      await flutterLocalNotificationsPlugin.show(
+        0,
+        'Bluetooth Connected',
+        ujj['bluetooth'],
+        platformSettings,
+      );
+    } catch (e, st) {
+      print("❌ Error in showNotification: $e");
+      print("📍 Stacktrace:\n$st");
+    }
   }
 }
