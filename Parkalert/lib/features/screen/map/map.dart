@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
@@ -7,41 +8,55 @@ import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:uuid/uuid.dart';
 
 class Mappage extends StatefulWidget {
-  const Mappage({super.key});
+  const Mappage({Key? key}) : super(key: key);
 
   @override
   State<Mappage> createState() => _MappageState();
 }
 
 class _MappageState extends State<Mappage> {
-  bool _isMapLoading = true;
-
   final Completer<GoogleMapController> _controller = Completer();
-
   final TextEditingController searchController = TextEditingController();
+  bool _isTyping = false;
 
   static const CameraPosition _initialPosition = CameraPosition(
-    target: LatLng(27.661150186746983, 85.30280431677846),
-    zoom: 17,
+    target: LatLng(27.66115, 85.3028), // Kathmandu, Nepal
+    zoom: 15,
   );
 
+  final List<LatLng> _drawingPoints = [];
+  final Set<Polygon> _polygons = {};
   List<dynamic> listForPlaces = [];
+  final List<Marker> _placeMarker = [];
+  final List<Marker> _currrentLocationMarker = [];
+  BitmapDescriptor? currentLocationIcon;
 
   var uuid = Uuid();
 
   String tokenForSession = '43305';
+  // final List<Marker> _predefinedMarkers = [
+  //   Marker(
+  //     markerId: MarkerId('marker1'),
+  //     position: LatLng(27.66115, 85.3028),
+  //     infoWindow: InfoWindow(title: 'Marker 1'),
+  //   ),
+  //   Marker(
+  //     markerId: MarkerId('marker2'),
+  //     position: LatLng(27.6631, 85.3035),
+  //     infoWindow: InfoWindow(title: 'Marker 2'),
+  //   ),
+  // ];
 
+  bool _isDrawing = false;
   void makesuggestion(String input) async {
-    // String googlePlacesApiKey = dotenv.env['GOOGLE_PLACES_API_KEY']!;
     String googlePlacesApiKey = dotenv.env['GOOGLE_PLACES_API_KEY']!;
     String groundURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
@@ -49,34 +64,33 @@ class _MappageState extends State<Mappage> {
         '$groundURL?input=$input&key=$googlePlacesApiKey&sessiontoken=$tokenForSession';
 
     var response = await http.get(Uri.parse(request));
-    print("Response status: ${response.statusCode}");
-    print("Response body: ${response.body}");
-    var Resultdata = response.body.toString();
     if (response.statusCode == 200) {
       setState(() {
-        listForPlaces = jsonDecode(Resultdata)['predictions'];
-        print("listForPlaces: $listForPlaces");
+        listForPlaces = jsonDecode(response.body)['predictions'];
       });
     } else {
       throw Exception('Failed to load data: ${response.statusCode}');
     }
   }
 
-  bool _isTyping = false;
+  void _onMapTap(LatLng point) {
+    FocusScope.of(context).unfocus(); // hides the keyboard when map tapped
+    listForPlaces = [];
+    if (_isDrawing) {
+      setState(() {
+        _drawingPoints.add(point);
+      });
+      print('Added point: $point');
+    }
+  }
 
-  final List<Marker> _markers = [];
-  final List<Marker> _myMarkers = [
-    Marker(
-      markerId: MarkerId('First'),
-      position: LatLng(27.661150186746983, 85.30280431677846),
-      infoWindow: InfoWindow(title: 'My Location'),
-    ),
-    Marker(
-      markerId: MarkerId('First'),
-      position: LatLng(27.66313817917902, 85.30349125170206),
-      infoWindow: InfoWindow(title: 'second'),
-    ),
-  ];
+  void _startDrawing() {
+    setState(() {
+      _isDrawing = true;
+      _drawingPoints.clear();
+      // _polygons.clear();
+    });
+  }
 
   void onModify() {
     setState(() {
@@ -92,20 +106,57 @@ class _MappageState extends State<Mappage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _markers.addAll(_myMarkers);
+    loadCustomIcon();
 
-    // SchedulerBinding.instance.addPostFrameCallback((_) {
-    //   packData(); // Only after UI is built
-    // });
     searchController.addListener(_onSearchChanged);
+  }
+
+  void _finishDrawing() {
+    if (_drawingPoints.length < 3) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Add at least 3 points to form a polygon')),
+      );
+      return;
+    }
+
+    final String polygonId = 'polygon_${_polygons.length + 1}';
+    final polygon = Polygon(
+      polygonId: PolygonId(polygonId),
+      points: List.from(_drawingPoints),
+      fillColor: Colors.blue.withOpacity(0.3),
+      strokeColor: Colors.blue,
+      strokeWidth: 3,
+    );
+    print("======polygon: ${polygon.points}");
+
+    setState(() {
+      _polygons.add(polygon);
+      _isDrawing = false;
+      _drawingPoints.clear();
+    });
+  }
+
+  Future<void> loadCustomIcon() async {
+    try {
+      print('Starting to load custom icon...');
+      BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(size: Size(48, 48)),
+        'assets/logos/currentLocation.png',
+      );
+      print('Custom marker icon loaded successfully');
+      setState(() {
+        currentLocationIcon = icon;
+      });
+    } catch (e) {
+      print('Failed to load custom marker icon: $e');
+    }
   }
 
   @override
   void dispose() {
-    searchController.removeListener(_onSearchChanged); // ✅ important
-    searchController.dispose(); // ✅ then dispose
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
     super.dispose();
   }
 
@@ -121,10 +172,13 @@ class _MappageState extends State<Mappage> {
 
   packData() {
     getUserLocation().then((value) async {
-      _markers.add(
+      _currrentLocationMarker.add(
         Marker(
-          markerId: MarkerId('First'),
+          markerId: MarkerId('UserLocation'),
           position: LatLng(value.latitude, value.longitude),
+          icon:
+              currentLocationIcon ??
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
           infoWindow: InfoWindow(title: 'My Location'),
         ),
       );
@@ -138,14 +192,64 @@ class _MappageState extends State<Mappage> {
     });
   }
 
+  Future<void> goToPlace(String placeId) async {
+    String googlePlacesApiKey = dotenv.env['GOOGLE_PLACES_API_KEY']!;
+    String url =
+        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$googlePlacesApiKey';
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      var location = data['result']['geometry']['location'];
+      double latitude = location['lat'];
+      double longitude = location['lng'];
+      final GoogleMapController controller = await _controller.future;
+      controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: LatLng(latitude, longitude), zoom: 17),
+        ),
+      );
+      searchController.removeListener(_onSearchChanged);
+
+      setState(() {
+        _placeMarker.add(
+          Marker(
+            markerId: MarkerId('Second'),
+            position: LatLng(latitude, longitude),
+            infoWindow: InfoWindow(title: 'Second'),
+          ),
+        );
+        listForPlaces = [];
+        searchController.text = data['result']['name'];
+        _isTyping = false;
+      });
+      FocusScope.of(context).unfocus();
+
+      searchController.addListener(_onSearchChanged);
+    } else {
+      throw Exception('Failed to load data: ${response.statusCode}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context);
     if (loc == null) {
-      // This means localization isn't yet loaded or context is not in a localized widget tree
       return const Center(child: CircularProgressIndicator());
     }
+    final allMarkers = {
+      ..._placeMarker,
+      ..._currrentLocationMarker,
+      // ..._predefinedMarkers,
+      ..._drawingPoints.map(
+        (point) => Marker(
+          markerId: MarkerId(point.toString()),
+          position: point,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        ),
+      ),
+    };
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: dark ? Colors.black : Colors.white,
@@ -166,19 +270,16 @@ class _MappageState extends State<Mappage> {
         ),
       ),
       drawer: const navButton(),
-
       body: SafeArea(
         child: Column(
           children: [
             Expanded(
               child: Stack(
                 children: [
-                  // Background
                   Positioned.fill(
                     child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
                   ),
 
-                  // Main card with map and search
                   Padding(
                     padding: const EdgeInsets.all(12.0),
                     child: Container(
@@ -199,7 +300,6 @@ class _MappageState extends State<Mappage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Title
                           const Padding(
                             padding: EdgeInsets.all(8.0),
                             child: Text(
@@ -210,114 +310,127 @@ class _MappageState extends State<Mappage> {
                               ),
                             ),
                           ),
-
-                          // Search bar and suggestions
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                            ),
-                            child: Column(
+                          Expanded(
+                            child: Stack(
                               children: [
-                                Material(
-                                  elevation: 5,
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: TextFormField(
-                                    controller: searchController,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _isTyping = value.isNotEmpty;
-                                      });
+                                // Google Map
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: GoogleMap(
+                                    initialCameraPosition: _initialPosition,
+                                    polygons: _polygons,
+                                    markers: allMarkers,
+                                    onMapCreated: (controller) =>
+                                        _controller.complete(controller),
+                                    onTap: _onMapTap,
+                                    myLocationButtonEnabled: false,
+                                    zoomControlsEnabled: false,
+                                  ),
+                                ),
 
-                                      // Trigger your prediction fetch logic here
-                                      // Example: fetchAutocompleteSuggestions(value);
-                                    },
-                                    decoration: InputDecoration(
-                                      hintText: _isTyping ? '' : 'Search',
-                                      filled: true,
-                                      fillColor: Colors.white,
-                                      prefixIcon: const Icon(Icons.search),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none,
+                                // Search bar positioned on top
+                                Positioned(
+                                  top: 10,
+                                  left: 10,
+                                  right: 10,
+                                  child: Material(
+                                    elevation: 5,
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: TextFormField(
+                                      controller: searchController,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _isTyping = value.isNotEmpty;
+                                        });
+                                      },
+                                      decoration: InputDecoration(
+                                        hintText: _isTyping ? '' : 'Search',
+                                        filled: true,
+                                        fillColor: Colors.white,
+                                        prefixIcon: const Icon(Icons.search),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            10,
+                                          ),
+                                          borderSide: BorderSide.none,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
+                                // Suggestions dropdown overlay
                                 if (listForPlaces.isNotEmpty)
-                                  Container(
-                                    margin: const EdgeInsets.only(top: 8),
-                                    constraints: const BoxConstraints(
-                                      maxHeight: 200,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: listForPlaces.length,
-                                      itemBuilder: (context, index) {
-                                        return ListTile(
-                                          title: Text(
-                                            listForPlaces[index]['description'],
-                                          ),
-                                          onTap: () {
-                                            print(
-                                              'Selected: ${listForPlaces[index]['description']}',
-                                            );
-                                            // TODO: handle tap (e.g. update map location)
-                                          },
-                                        );
-                                      },
+                                  Positioned(
+                                    top: 60,
+                                    left: 10,
+                                    right: 10,
+                                    child: Container(
+                                      constraints: const BoxConstraints(
+                                        maxHeight: 200,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: listForPlaces.length,
+                                        itemBuilder: (context, index) {
+                                          return ListTile(
+                                            title: Text(
+                                              listForPlaces[index]['description'],
+                                            ),
+                                            onTap: () {
+                                              final placeId =
+                                                  listForPlaces[index]['place_id'];
+                                              goToPlace(placeId);
+                                            },
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                               ],
-                            ),
-                          ),
-
-                          const SizedBox(height: 8),
-
-                          // Google Map
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: GoogleMap(
-                                  initialCameraPosition: _initialPosition,
-                                  mapType: MapType.terrain,
-                                  markers: Set<Marker>.of(_markers),
-                                  onMapCreated:
-                                      (GoogleMapController controller) {
-                                        _controller.complete(controller);
-                                        setState(() {
-                                          _isMapLoading = false;
-                                        });
-                                      },
-                                  zoomControlsEnabled: false,
-                                ),
-                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
+                  Positioned(
+                    bottom: 15,
+                    right: 15,
+                    child: FloatingActionButton(
+                      onPressed: _isDrawing ? _finishDrawing : _startDrawing,
+                      backgroundColor: _isDrawing
+                          ? Colors
+                                .greenAccent
+                                .shade700 // Active color
+                          : Colors.blueAccent.shade400, // Idle color
+                      shape:
+                          const CircleBorder(), // Ensures it's perfectly round
+                      elevation: 6,
+                      splashColor: Colors.white.withOpacity(0.3),
+                      tooltip: _isDrawing ? 'Finish Zone' : 'Start Zone',
 
-                  // Loading Spinner
-                  if (_isMapLoading)
-                    const Positioned.fill(
-                      child: Center(child: CircularProgressIndicator()),
+                      child: _isDrawing
+                          ? const Icon(
+                              Icons.done,
+                              color: Colors.white,
+                              size: 28,
+                            )
+                          : const Icon(
+                              Icons.edit_location_alt,
+                              color: Colors.white,
+                              size: 28,
+                            ),
                     ),
+                  ),
                 ],
               ),
             ),
-
             const SizedBox(height: 10),
 
-            // Footer Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -344,6 +457,3 @@ class _MappageState extends State<Mappage> {
     );
   }
 }
-
-
- //build  
