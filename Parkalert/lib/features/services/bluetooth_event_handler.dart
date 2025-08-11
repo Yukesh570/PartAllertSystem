@@ -18,13 +18,17 @@ class BluetoothEventHandler {
       );
       if (call.method == 'onGalaxyBudsConnected') {
         print("Galaxy Buds+ connected! START");
-        await showNotification();
+        await showNotification('connected');
         print("Galaxy Buds+ connected! END");
+      } else if (call.method == 'onGalaxyBudsDisconnected') {
+        print("Galaxy Buds+ disconnected! START");
+        await showNotification('disconnected');
+        print("Galaxy Buds+ disconnected! END");
       }
     });
   }
 
-  static Future<void> showNotification() async {
+  static Future<void> showNotification(String message) async {
     var ujj = await loadActiveBluetooth();
     try {
       print("00000000000000000000000000 ${ujj}");
@@ -49,7 +53,7 @@ class BluetoothEventHandler {
 
       await flutterLocalNotificationsPlugin.show(
         0,
-        'Bluetooth Connected',
+        'Bluetooth $message',
         ujj['bluetooth'],
         platformSettings,
       );

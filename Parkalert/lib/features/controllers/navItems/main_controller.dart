@@ -5,6 +5,7 @@ import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alertSettingEdit.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alertSettings.dart';
 import 'package:Parkalert/features/screen/navItems/freezones/freezone.dart';
+import 'package:Parkalert/features/screen/navItems/freezones/zoneBox.dart';
 import 'package:Parkalert/features/screen/navItems/privacyPolicy/privacypolicy.dart';
 import 'package:Parkalert/features/screen/navItems/questions/question.dart';
 import 'package:Parkalert/features/screen/navItems/termsAndConditions/termsandcondtion.dart';
@@ -55,9 +56,9 @@ class MainController extends GetxController {
   void freezone() {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/freezone'); // Set current route
-    // Get.off(() => Freezone()); //
+    Get.off(() => Freezone()); //
 
-    Get.off(() => Mappage()); //
+    // Get.off(() => Mappage()); //
   }
 
   void privacyPage() {

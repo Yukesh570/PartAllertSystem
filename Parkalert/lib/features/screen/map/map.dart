@@ -7,12 +7,14 @@ import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
+import 'package:Parkalert/utils/storage/mapStorage/mapStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class Mappage extends StatefulWidget {
@@ -38,24 +40,28 @@ class _MappageState extends State<Mappage> {
   final List<Marker> _placeMarker = [];
   final List<Marker> _currrentLocationMarker = [];
   BitmapDescriptor? currentLocationIcon;
-
   var uuid = Uuid();
-
   String tokenForSession = '43305';
-  // final List<Marker> _predefinedMarkers = [
-  //   Marker(
-  //     markerId: MarkerId('marker1'),
-  //     position: LatLng(27.66115, 85.3028),
-  //     infoWindow: InfoWindow(title: 'Marker 1'),
-  //   ),
-  //   Marker(
-  //     markerId: MarkerId('marker2'),
-  //     position: LatLng(27.6631, 85.3035),
-  //     infoWindow: InfoWindow(title: 'Marker 2'),
-  //   ),
-  // ];
-
   bool _isDrawing = false;
+
+  // Save polygons to SharedPreferences
+  Future<void> savePolygons() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonStr = encodePolygons(_polygons);
+    await prefs.setString('saved_polygons', jsonStr);
+  }
+
+  Future<void> loadPolygons() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedJson = prefs.getString('saved_polygons');
+    if (savedJson != null) {
+      final loadedPolygons = decodePolygons(savedJson);
+      setState(() {
+        _polygons.addAll(loadedPolygons);
+      });
+    }
+  }
+
   void makesuggestion(String input) async {
     String googlePlacesApiKey = dotenv.env['GOOGLE_PLACES_API_KEY']!;
     String groundURL =
@@ -110,6 +116,7 @@ class _MappageState extends State<Mappage> {
     loadCustomIcon();
 
     searchController.addListener(_onSearchChanged);
+    loadPolygons(); // Load saved polygons on start
   }
 
   void _finishDrawing() {
@@ -135,6 +142,7 @@ class _MappageState extends State<Mappage> {
       _isDrawing = false;
       _drawingPoints.clear();
     });
+    savePolygons();
   }
 
   Future<void> loadCustomIcon() async {
@@ -228,6 +236,29 @@ class _MappageState extends State<Mappage> {
     } else {
       throw Exception('Failed to load data: ${response.statusCode}');
     }
+  }
+
+  LatLngBounds getPolygonBounds(List<LatLng> points) {
+    double? minLat, maxLat, minLng, maxLng;
+    print("points: ${points}");
+    for (var point in points) {
+      if (minLat == null || point.latitude < minLat) minLat = point.latitude;
+      if (maxLat == null || point.latitude > maxLat) maxLat = point.latitude;
+      if (minLng == null || point.longitude < minLng) minLng = point.longitude;
+      if (maxLng == null || point.longitude > maxLng) maxLng = point.longitude;
+    }
+
+    return LatLngBounds(
+      southwest: LatLng(minLat!, minLng!),
+      northeast: LatLng(maxLat!, maxLng!),
+    );
+  }
+
+  Future<void> goToPolygon(Polygon polygon) async {
+    final GoogleMapController controller = await _controller.future;
+    final bounds = getPolygonBounds(polygon.points);
+    CameraUpdate cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50);
+    controller.animateCamera(cameraUpdate);
   }
 
   @override
@@ -397,6 +428,19 @@ class _MappageState extends State<Mappage> {
                       ),
                     ),
                   ),
+                  Positioned(
+                    bottom: MediaQuery.of(context).padding.bottom + 20,
+                    right: 20,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_polygons.isNotEmpty) {
+                          goToPolygon(_polygons.first);
+                        }
+                      },
+                      child: Text('Go to first Geofence'),
+                    ),
+                  ),
+
                   Positioned(
                     bottom: 15,
                     right: 15,
