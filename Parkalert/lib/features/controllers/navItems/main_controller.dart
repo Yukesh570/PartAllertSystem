@@ -12,6 +12,7 @@ import 'package:Parkalert/features/screen/navItems/termsAndConditions/termsandco
 import 'package:Parkalert/features/screen/navItems/working/working.dart';
 import 'package:Parkalert/features/screen/navItems/yourInformation/yourinfo.dart';
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
+import 'package:Parkalert/utils/storage/data/ZoneData.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
@@ -50,15 +51,23 @@ class MainController extends GetxController {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/activity'); // Set current route
 
-    Get.off(() => Activity()); //
+    Get.to(() => Activity()); //
   }
 
   void freezone() {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/freezone'); // Set current route
-    Get.off(() => Freezone()); //
+    Get.to(() => Freezone()); //
 
     // Get.off(() => Mappage()); //
+  }
+
+  void mapPage(ZoneData zoneData) {
+    final drawerCtrl = Get.find<DrawerControllerX>();
+    drawerCtrl.changeRoute('/map'); // Set current route
+    // Get.off(() => Freezone()); //
+
+    Get.to(() => Mappage(zoneData: zoneData)); //
   }
 
   void privacyPage() {

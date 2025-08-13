@@ -7,18 +7,22 @@ import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
+import 'package:Parkalert/utils/storage/data/ZoneData.dart';
 import 'package:Parkalert/utils/storage/mapStorage/mapStorage.dart';
+import 'package:Parkalert/utils/storage/zoneStorage/zoneStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:latlong2/latlong.dart' as latlng;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class Mappage extends StatefulWidget {
-  const Mappage({Key? key}) : super(key: key);
+  final ZoneData zoneData;
+  const Mappage({Key? key, required this.zoneData}) : super(key: key);
 
   @override
   State<Mappage> createState() => _MappageState();
@@ -38,8 +42,12 @@ class _MappageState extends State<Mappage> {
   final Set<Polygon> _polygons = {};
   List<dynamic> listForPlaces = [];
   final List<Marker> _placeMarker = [];
+  final List<Marker> _geoFench = [];
+
   final List<Marker> _currrentLocationMarker = [];
   BitmapDescriptor? currentLocationIcon;
+  BitmapDescriptor? geofenceIcon;
+
   var uuid = Uuid();
   String tokenForSession = '43305';
   bool _isDrawing = false;
@@ -60,6 +68,12 @@ class _MappageState extends State<Mappage> {
         _polygons.addAll(loadedPolygons);
       });
     }
+  }
+
+  List<latlng.LatLng> convertToLatLong2(List<LatLng> googlePoints) {
+    return googlePoints
+        .map((p) => latlng.LatLng(p.latitude, p.longitude))
+        .toList();
   }
 
   void makesuggestion(String input) async {
@@ -114,19 +128,24 @@ class _MappageState extends State<Mappage> {
   void initState() {
     super.initState();
     loadCustomIcon();
-
+    fenceIcon();
+    goToPolygon(widget.zoneData);
     searchController.addListener(_onSearchChanged);
     loadPolygons(); // Load saved polygons on start
   }
 
-  void _finishDrawing() {
+  void _finishDrawing() async {
     if (_drawingPoints.length < 3) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Add at least 3 points to form a polygon')),
       );
       return;
     }
+    final convertedPoints = convertToLatLong2(
+      _drawingPoints,
+    ); // latlong2 LatLng
 
+    await updateZones(widget.zoneData.index, null, convertedPoints, null);
     final String polygonId = 'polygon_${_polygons.length + 1}';
     final polygon = Polygon(
       polygonId: PolygonId(polygonId),
@@ -155,6 +174,22 @@ class _MappageState extends State<Mappage> {
       print('Custom marker icon loaded successfully');
       setState(() {
         currentLocationIcon = icon;
+      });
+    } catch (e) {
+      print('Failed to load custom marker icon: $e');
+    }
+  }
+
+  Future<void> fenceIcon() async {
+    try {
+      print('Starting to load custom icon...');
+      BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(size: Size(48, 48)),
+        'assets/logos/fence.png',
+      );
+      print('Custom marker icon loaded successfully');
+      setState(() {
+        geofenceIcon = icon;
       });
     } catch (e) {
       print('Failed to load custom marker icon: $e');
@@ -254,11 +289,35 @@ class _MappageState extends State<Mappage> {
     );
   }
 
-  Future<void> goToPolygon(Polygon polygon) async {
+  Future<void> goToPolygon(ZoneData zoneData) async {
+    if (zoneData.points.isEmpty) return; // safety check
+
     final GoogleMapController controller = await _controller.future;
-    final bounds = getPolygonBounds(polygon.points);
+    List<LatLng> googlePoints = zoneData.points
+        .map((p) => LatLng(p.latitude, p.longitude))
+        .toList();
+    final bounds = getPolygonBounds(googlePoints);
+    // Calculate center of bounds
+    final double centerLat =
+        (bounds.northeast.latitude + bounds.southwest.latitude) / 2;
+    final double centerLng =
+        (bounds.northeast.longitude + bounds.southwest.longitude) / 2;
+    final LatLng center = LatLng(centerLat, centerLng);
+
     CameraUpdate cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50);
     controller.animateCamera(cameraUpdate);
+    setState(() {
+      _geoFench.add(
+        Marker(
+          markerId: MarkerId(zoneData.name),
+          position: center,
+          icon:
+              geofenceIcon ??
+              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+          infoWindow: InfoWindow(title: zoneData.name),
+        ),
+      );
+    });
   }
 
   @override
@@ -269,6 +328,7 @@ class _MappageState extends State<Mappage> {
       return const Center(child: CircularProgressIndicator());
     }
     final allMarkers = {
+      ..._geoFench,
       ..._placeMarker,
       ..._currrentLocationMarker,
       // ..._predefinedMarkers,
@@ -428,19 +488,19 @@ class _MappageState extends State<Mappage> {
                       ),
                     ),
                   ),
-                  Positioned(
-                    bottom: MediaQuery.of(context).padding.bottom + 20,
-                    right: 20,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        if (_polygons.isNotEmpty) {
-                          goToPolygon(_polygons.first);
-                        }
-                      },
-                      child: Text('Go to first Geofence'),
-                    ),
-                  ),
 
+                  // Positioned(
+                  //   bottom: MediaQuery.of(context).padding.bottom + 20,
+                  //   right: 20,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       if (_polygons.isNotEmpty) {
+                  //         goToPolygon(_polygons.first);
+                  //       }
+                  //     },
+                  //     child: Text('Go to first Geofence'),
+                  //   ),
+                  // ),
                   Positioned(
                     bottom: 15,
                     right: 15,
@@ -481,7 +541,14 @@ class _MappageState extends State<Mappage> {
                 buildCircularIconButton(
                   context: context,
                   icon: Icons.arrow_back,
-                  onPressed: () {},
+                  onPressed: () {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    } else {
+                      // Optionally handle the case where there's no back route
+                      print("No screen to go back to");
+                    }
+                  },
                 ),
                 buildMainButton(
                   text: 'Main',

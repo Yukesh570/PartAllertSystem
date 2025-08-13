@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:Parkalert/utils/storage/data/ZoneData.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //saves the Zones
@@ -50,7 +51,13 @@ Future<List<ZoneData>> loadZones() async {
   }).toList();
 }
 
-Future<void> updateZones(int index, bool isOn, String? name) async {
+Future<void> updateZones(
+  int index,
+  bool? isOn,
+  List<LatLng>? points,
+  String? name,
+) async {
+  print("6969696969669696969696969696969696${name}");
   final prefs = await SharedPreferences.getInstance();
   List<String>? existingJsonList = prefs.getStringList('zones');
 
@@ -58,23 +65,27 @@ Future<void> updateZones(int index, bool isOn, String? name) async {
       .map((jsonStr) => ZoneData.fromJson(jsonDecode(jsonStr)))
       .toList();
 
-  print("All zones: ${allZones.length}");
-
   int indexToUpdate = allZones.indexWhere((r) => r.index == index);
 
-  print("Index to update: $indexToUpdate");
-
   if (indexToUpdate != -1) {
-    if (name == null) {
-      allZones[indexToUpdate].isOn = isOn;
+    if (points == null && name == null) {
+      print(
+        "auuuuuuueeeeeee1231231231231231231===================================rr${name}",
+      );
+      allZones[indexToUpdate].isOn = isOn!;
+    } else if (isOn == null && name == null) {
+      print(
+        "auuuuuuueeeeeee1231231231231231231===================================rr${name}",
+      );
+      allZones[indexToUpdate].points = points!;
     } else {
-      allZones[indexToUpdate].isOn = isOn;
+      print(
+        "================auuuuuuueeeeeee1231231231231231231===================================rr${name}",
+      );
+
       allZones[indexToUpdate].name = name!;
     }
-  } else {
-    print("zone with index ${index} not found");
   }
-
   List<String> updatedJsonList = allZones
       .map((r) => jsonEncode(r.toJson()))
       .toList();
@@ -90,7 +101,7 @@ Future<void> updateZones(int index, bool isOn, String? name) async {
     print("🔐 SharedPreferences Contents:");
     for (String key in keys) {
       final value = prefs.get(key);
-      print("kale: $key → Value: $value");
+      print("kale=======: $key → Value: $value");
     }
   }
 

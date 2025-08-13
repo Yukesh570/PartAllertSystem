@@ -1,4 +1,5 @@
 import 'package:Parkalert/features/controllers/alert/isON.dart';
+import 'package:Parkalert/features/controllers/navItems/freeZone_controller.dart';
 import 'package:Parkalert/features/controllers/navItems/main_controller.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/alertFrom.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -25,60 +27,54 @@ class Freezone extends StatefulWidget {
   State<Freezone> createState() => _FreezoneState();
 }
 
-var zonesList = <ZoneBox>[].obs;
-List<ZoneBox> zonesListdemo = [];
-
 class _FreezoneState extends State<Freezone> {
+  final zoneController = Get.put(FreezoneController());
+
   @override
   void initState() {
     super.initState();
-    loadAndSetZones();
-    final isOnController = Get.put(IsOnController());
-    isOnController.loadIsOnFromStorage();
+    zoneController.loadZonesFromPrefs();
   }
 
   final TextEditingController _nameController = TextEditingController();
-  void loadAndSetZones() async {
-    List<ZoneData> savedRingers = await loadZones();
-
-    setState(() {
-      zonesListdemo = savedRingers
-          .map((data) => ZoneBox(zoneData: data))
-          .toList();
-
-      zonesList.value = savedRingers
-          .map((data) => ZoneBox(zoneData: data))
-          .toList();
-    });
-    print("zonesList: $zonesListdemo");
-  }
 
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context);
     final MainController controller = Get.put(MainController());
+    void printAllSharedPreferences() async {
+      final prefs = await SharedPreferences.getInstance();
+      final zones = prefs.getStringList('zones');
 
-    List<ZoneData> zoneDataList = [];
+      if (zones == null || zones.isEmpty) {
+        print("🔍 No zones found in SharedPreferences.");
+        return;
+      }
 
+      print("🔐 Saved Zones:");
+      for (var i = 0; i < zones.length; i++) {
+        print("Zone $i → ${zones[i]}");
+      }
+    }
+
+    printAllSharedPreferences();
     _addZone({
       required String name,
       required String initialTime,
       required String stopTime,
       required bool isOn,
     }) async {
-      final List<ZoneData> savedZoneData = await loadZones();
-
-      final newIndex = savedZoneData.length;
-      ZoneData newZoneData = ZoneData(
-        index: newIndex,
-        initialTime: initialTime, // or get from UI
-        stopTime: stopTime, // or get from UI
-        isOn: isOn,
-        name: name,
+      final newIndex = zoneController.zones.length;
+      await zoneController.addZone(
+        ZoneData(
+          index: newIndex,
+          initialTime: initialTime, // or get from UI
+          stopTime: stopTime, // or get from UI
+          isOn: isOn,
+          name: name,
+          points: [],
+        ),
       );
-      zoneDataList.add(newZoneData);
-      print('sdfsdfsdfsdfdsfsflakckkk ${zoneDataList.length}');
-      await saveZones(zoneDataList);
     }
 
     if (loc == null) {
@@ -164,16 +160,12 @@ class _FreezoneState extends State<Freezone> {
                     ),
                   ),
                   const SizedBox(height: 16.0),
-                  if (zonesList.isEmpty)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                        vertical: 4.0,
-                      ),
 
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 200.0),
-                        child: Center(
+                  // Main alert settings card
+                  Expanded(
+                    child: Obx(() {
+                      if (zoneController.zones.isEmpty) {
+                        return const Center(
                           child: Text(
                             'No ZoneBox',
                             style: TextStyle(
@@ -181,27 +173,23 @@ class _FreezoneState extends State<Freezone> {
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-
-                  // Main alert settings card
-                  Expanded(
-                    child: Obx(
-                      () => SingleChildScrollView(
+                        );
+                      }
+                      return SingleChildScrollView(
                         child: Column(
-                          children: zonesList
+                          children: zoneController.zones
                               .map(
-                                (zone) => (Padding(
+                                (data) => Padding(
                                   padding: const EdgeInsets.all(5.0),
-                                  child: zone,
-                                )),
+                                  child: ZoneBox(zoneData: data),
+                                ),
                               )
                               .toList(),
                         ),
-                      ),
-                    ),
+                      );
+                    }),
                   ),
+
                   const SizedBox(
                     height: 20.0,
                   ), // Space before bottom navigation
@@ -231,7 +219,7 @@ class _FreezoneState extends State<Freezone> {
                   buildMainButton(
                     text: 'Main',
                     onPressed: () {
-                      /* Handle Main */
+                      controller.alertPage();
                     },
                     context: context,
                   ),
@@ -239,9 +227,9 @@ class _FreezoneState extends State<Freezone> {
                     context: context,
                     onPressed: () async {
                       await _addZone(
-                        name: "FreeZone",
-                        initialTime: "currentDate",
-                        stopTime: "currentTime", // or get from UI
+                        name: "FreeZone ${zoneController.zones.length + 1}",
+                        initialTime: "--:--",
+                        stopTime: "--:--", // or get from UI
                         isOn: false,
                       );
                     },

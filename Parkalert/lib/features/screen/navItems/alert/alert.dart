@@ -59,7 +59,6 @@ class _AlertState extends State<Alert> {
   Widget build(BuildContext context) {
     final MainController controller = Get.put(MainController());
 
-    ;
     void printAllSharedPreferences() async {
       final prefs = await SharedPreferences.getInstance();
       final keys = prefs.getKeys();
