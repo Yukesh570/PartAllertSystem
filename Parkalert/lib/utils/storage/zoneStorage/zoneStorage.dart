@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:Parkalert/features/controllers/navItems/freeZone_controller.dart';
 import 'package:Parkalert/utils/storage/data/ZoneData.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,14 +19,6 @@ Future<bool> saveZones(List<ZoneData> zones) async {
 
   // Avoid duplicate indices if needed
   for (var newZone in zones) {
-    print("zone index: ${newZone.index}");
-    print("zone index: ${newZone.name}");
-
-    print("zone index: ${newZone.initialTime}");
-
-    print("zone index: ${newZone.stopTime}");
-    print("zone index: ${newZone.isOn}");
-
     if (!allZones.any((r) => r.index == newZone.index)) {
       allZones.add(newZone);
     }
@@ -35,7 +28,7 @@ Future<bool> saveZones(List<ZoneData> zones) async {
   List<String> mergeJsonList = allZones
       .map((r) => jsonEncode(r.toJson()))
       .toList();
-  return await prefs.setStringList('zones', mergeJsonList);
+  return prefs.setStringList('zones', mergeJsonList);
 }
 
 Future<List<ZoneData>> loadZones() async {
@@ -56,8 +49,9 @@ Future<void> updateZones(
   bool? isOn,
   List<LatLng>? points,
   String? name,
+  String? initialTime,
+  String? stopTime,
 ) async {
-  print("6969696969669696969696969696969696${name}");
   final prefs = await SharedPreferences.getInstance();
   List<String>? existingJsonList = prefs.getStringList('zones');
 
@@ -68,22 +62,21 @@ Future<void> updateZones(
   int indexToUpdate = allZones.indexWhere((r) => r.index == index);
 
   if (indexToUpdate != -1) {
-    if (points == null && name == null) {
-      print(
-        "auuuuuuueeeeeee1231231231231231231===================================rr${name}",
-      );
-      allZones[indexToUpdate].isOn = isOn!;
-    } else if (isOn == null && name == null) {
-      print(
-        "auuuuuuueeeeeee1231231231231231231===================================rr${name}",
-      );
-      allZones[indexToUpdate].points = points!;
-    } else {
-      print(
-        "================auuuuuuueeeeeee1231231231231231231===================================rr${name}",
-      );
-
-      allZones[indexToUpdate].name = name!;
+    if (isOn != null) {
+      allZones[indexToUpdate].isOn = isOn;
+    } else if (points != null) {
+      allZones[indexToUpdate].points = points;
+    } else if (initialTime != null) {
+      allZones[indexToUpdate].initialTime = initialTime;
+    } else if (stopTime != null) {
+      allZones[indexToUpdate].stopTime = stopTime;
+    } else if (points != null && name != null) {
+      allZones[indexToUpdate].points = points;
+      allZones[indexToUpdate].name = name;
+      print("Index to update: $indexToUpdate");
+    } else if (name != null) {
+      print("kkkkkkkakaaaaaalllllllllllleeeeeeeeeeee");
+      allZones[indexToUpdate].name = name;
     }
   }
   List<String> updatedJsonList = allZones
@@ -107,4 +100,29 @@ Future<void> updateZones(
 
   printAllSharedPreferences();
   await prefs.setStringList("zones", updatedJsonList);
+}
+
+Future<void> deleteZone(int index) async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String>? existingJsonList = prefs.getStringList('zones');
+
+  if (existingJsonList == null) return;
+
+  // Convert to ZoneData list
+  List<ZoneData> allZones = existingJsonList
+      .map((jsonStr) => ZoneData.fromJson(jsonDecode(jsonStr)))
+      .toList();
+
+  // Remove by index
+  allZones.removeWhere((zone) => zone.index == index);
+  // 🔹 Reassign indices so they are continuous
+  for (int i = 0; i < allZones.length; i++) {
+    allZones[i].index = i; // ✅ start from 0
+  }
+  // Save back
+  List<String> updatedJsonList = allZones
+      .map((zone) => jsonEncode(zone.toJson()))
+      .toList();
+  await prefs.setStringList("zones", updatedJsonList);
+  FreezoneController.instance.loadZonesFromPrefs();
 }

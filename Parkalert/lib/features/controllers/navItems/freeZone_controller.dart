@@ -32,12 +32,11 @@ class FreezoneController extends GetxController {
 
   Future<void> loadZonesFromPrefs() async {
     zones.value = await loadZones();
-    final List<bool> extractedIsOnList = zones.value
-        .map((ring) => ring.isOn)
-        .toList();
 
-    isOnList.value = extractedIsOnList;
-    isLoading.value = false; // <-- loading done
+    // 🔹 Rebuild isOnList so it matches zones
+    isOnList.value = zones.map((z) => z.isOn).toList();
+
+    isLoading.value = false; // done
   }
 
   Future<void> addZone(ZoneData newZone) async {
@@ -61,6 +60,13 @@ class FreezoneController extends GetxController {
   void toggleSwitch(BuildContext context, ZoneData zoneData) async {
     isOnList[zoneData.index] = !isOnList[zoneData.index];
 
-    await updateZones(zoneData.index, isOnList[zoneData.index], null, null);
+    await updateZones(
+      zoneData.index,
+      isOnList[zoneData.index],
+      null,
+      null,
+      null,
+      null,
+    );
   }
 }

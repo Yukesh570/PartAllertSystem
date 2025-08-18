@@ -1,4 +1,5 @@
 import 'package:Parkalert/features/screen/information/information.dart';
+import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
 import 'package:Parkalert/features/screen/onboarding/onboarding.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,8 @@ class _AppState extends State<App> {
           child: child!,
         );
       },
-      home: Information(onLocaleChange: _setLocale),
+      home: Alert(),
+      // home: Information(onLocaleChange: _setLocale),
     );
   }
 }
