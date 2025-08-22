@@ -27,7 +27,11 @@ public class BluetoothReceiver extends BroadcastReceiver {
     
     // 👇 Add this line
     public static MethodChannel channel;
-
+    public static boolean insideGeofence = false;
+    public static void updateGeofenceState(boolean inside) {
+        insideGeofence = inside;
+        Log.d("BluetoothReceiver", "Live geofence state updated = " + inside);
+    }
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
@@ -48,6 +52,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
     }
     private void handleBluetoothEvent(Context context, BluetoothDevice device, boolean connected) {
             SharedPreferences prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
+                        boolean insideGeofence = BluetoothReceiver.insideGeofence;
                         String jsonString = prefs.getString("flutter.activeBluetooth", "");
                         String targetBluetoothName = "";
                         String targetSound = "";
@@ -71,17 +76,25 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     return;
                 }
                 Log.d("BluetoothReceiver", (connected ? "Connected to: " : "Disconnected from: ") + deviceName);
-                Log.d("BluetoothReceiver", "Target Bluetooth name: " + targetBluetoothName);
-                if (deviceName.contains(targetBluetoothName)) {
-                // Notify Flutter if flutter app is active
-                if (channel != null) {
+                Log.d("BluetoothReceiver", "Target Bluetooth name======: " + targetBluetoothName);
+                Log.d("BluetoothReceiver", "insideGeofence: " + insideGeofence);
+
+                if (deviceName.contains(targetBluetoothName)) 
+        {
+                if (!insideGeofence) {
+                        if (channel != null) {
                     String methodName = connected ? "onGalaxyBudsConnected" : "onGalaxyBudsDisconnected";
                     channel.invokeMethod(methodName, null);
-                } else {
-                    // Show native notification when flutter app is not active
-                     showNotification(context,deviceName,connected,targetSound);
-                }
-            } else {
+                } else  {
+                showNotification(context, deviceName, connected, targetSound);
+            }                } 
+                else {
+                Log.d("BluetoothReceiver", "Inside geofence → skipping notification");
+            }
+                // Notify Flutter if flutter app is active
+               
+        }
+             else {
                 Log.d("BluetoothReceiver", "Device name does not match target Bluetooth");
             }
         }

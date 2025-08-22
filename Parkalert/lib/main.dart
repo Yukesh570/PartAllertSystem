@@ -1,6 +1,7 @@
 import 'package:Parkalert/features/controllers/drawerController.dart';
 import 'package:Parkalert/features/screen/helperWidget/sound.dart';
 import 'package:Parkalert/features/screen/information/information.dart';
+import 'package:Parkalert/features/screen/map/test.dart';
 import 'package:Parkalert/features/services/bluetooth_event_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:Parkalert/app.dart';
@@ -19,7 +20,10 @@ void main() async {
 
   await NotificationService().requestPermissions();
   BluetoothEventHandler.initialize();
+  // await requestGeofencePermissions();
 
+  listenForGeofenceEvents(); // start listening
+  await startGeofenceService(); // start the Android service
   await dotenv.load();
   runApp(const App());
 }

@@ -15,17 +15,20 @@ dependencies:
   latlong2: ^0.9.0
   shared_preferences: ^2.0.15
   flutter_blue_classic: ^0.0.6
-  app_settings: ^5.1.1
+  app_settings: ^6.1.1
+  geofencing_api: ^2.0.0
+  fl_location: ^5.0.0
+  flutter_activity_recognition: ^4.0.0
 
-  android_intent_plus: ^4.0.1
-  permission_handler: ^11.3.1
+  android_intent_plus: ^5.3.1
+  permission_handler: ^12.0.1
   url_launcher: ^6.2.6
   flutter_dotenv: ^5.1.0
-  geolocator: ^11.0.0
+  geolocator: ^14.0.2
   google_maps_flutter: ^2.12.3
   flutter_compass: ^0.8.1
-  geocoding: ^2.0.5
-  audioplayers: ^5.2.1
+  geocoding: ^4.0.0
+  audioplayers: ^6.5.0
   # file_picker: ^6.1.1
   #utilities Packages
   http: ^1.4.0
@@ -52,7 +55,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.14.4
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter_launcher_icons:
   android: true

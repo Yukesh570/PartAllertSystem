@@ -1,517 +1,259 @@
 import 'dart:async';
-import 'dart:convert';
+import 'dart:math';
+import 'dart:math' as math;
 
-import 'package:Parkalert/features/screen/helperWidget/Button.dart';
-import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
-import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
-import 'package:Parkalert/l10n/app_localizations.dart';
-import 'package:Parkalert/navigationButton.dart';
+import 'package:Parkalert/utils/storage/data/ZoneData.dart';
+import 'package:Parkalert/utils/storage/zoneStorage/zoneStorage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart' as http;
-import 'package:iconsax_flutter/iconsax_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:uuid/uuid.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Mappage extends StatefulWidget {
-  const Mappage({super.key});
+class GeofenceService {
+  static const double _distanceFilter = 1.0; // meters (reduced from 10)
+  static const double _edgeBuffer = 2.0; // meters buffer for boundary detection
+  StreamSubscription<Position>? _positionStream;
+  bool _isInsideZone = false;
+  final Function(String, String) showNotification;
+  final VoidCallback updateState;
 
-  @override
-  State<Mappage> createState() => _MappageState();
-}
+  GeofenceService({required this.showNotification, required this.updateState});
+  bool _isPointInPolygon(LatLng point, List<LatLng> polygon) {
+    if (polygon.isEmpty) return false;
+    if (polygon.length < 3) return false; // Not a valid polygon
 
-class _MappageState extends State<Mappage> {
-  bool _isMapLoading = true;
+    // 1. First do a simple bounding box check
+    double minX = polygon[0].latitude;
+    double maxX = polygon[0].latitude;
+    double minY = polygon[0].longitude;
+    double maxY = polygon[0].longitude;
 
-  final Completer<GoogleMapController> _controller = Completer();
-
-  final TextEditingController searchController = TextEditingController();
-
-  static const CameraPosition _initialPosition = CameraPosition(
-    target: LatLng(27.661150186746983, 85.30280431677846),
-    zoom: 17,
-  );
-
-  List<dynamic> listForPlaces = [];
-
-  var uuid = Uuid();
-
-  String tokenForSession = '43305';
-
-  void makesuggestion(String input) async {
-    String googlePlacesApiKey = dotenv.env['GOOGLE_PLACES_API_KEY']!;
-    String groundURL =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    String request =
-        '$groundURL?input=$input&key=$googlePlacesApiKey&sessiontoken=$tokenForSession';
-
-    var response = await http.get(Uri.parse(request));
-    if (response.statusCode == 200) {
-      setState(() {
-        listForPlaces = jsonDecode(response.body)['predictions'];
-      });
-    } else {
-      throw Exception('Failed to load data: ${response.statusCode}');
+    for (final p in polygon) {
+      minX = min(minX, p.latitude);
+      maxX = max(maxX, p.latitude);
+      minY = min(minY, p.longitude);
+      maxY = max(maxY, p.longitude);
     }
-  }
 
-  bool _isTyping = false;
-  List<Circle> _geoFenceCircles = [];
-  List<LatLng> _drawingPoints = [];
-  Set<Polygon> _polygons = {};
-  bool _isDrawing = false; // true when user is adding points
+    // Quick rejection if point is outside bounding box
+    if (point.latitude < minX ||
+        point.latitude > maxX ||
+        point.longitude < minY ||
+        point.longitude > maxY) {
+      return false;
+    }
 
-  final List<Marker> _markers = [];
-  final List<Marker> _myMarkers = [
-    Marker(
-      markerId: MarkerId('First'),
-      position: LatLng(27.661150186746983, 85.30280431677846),
-      infoWindow: InfoWindow(title: 'My Location'),
-    ),
-    Marker(
-      markerId: MarkerId('Second'),
-      position: LatLng(27.66313817917902, 85.30349125170206),
-      infoWindow: InfoWindow(title: 'Second'),
-    ),
-  ];
-  void _onMapTap(LatLng tappedPoint) {
-    for (int i = 0; i < _geoFenceCircles.length; i++) {
-      final circle = _geoFenceCircles[i];
-      final distance = Geolocator.distanceBetween(
-        tappedPoint.latitude,
-        tappedPoint.longitude,
-        circle.center.latitude,
-        circle.center.longitude,
-      );
-      if (distance <= circle.radius) {
-        _showRadiusSlider(i);
-        return;
+    // 2. Ray casting algorithm
+    bool inside = false;
+    for (int i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+      final LatLng vertex1 = polygon[j];
+      final LatLng vertex2 = polygon[i];
+
+      // Check if point is between the vertices in the y-direction
+      final bool vertex1Above = vertex1.longitude > point.longitude;
+      final bool vertex2Above = vertex2.longitude > point.longitude;
+
+      if (vertex1Above != vertex2Above) {
+        // Avoid division by zero for horizontal edges
+        if (vertex1.longitude == vertex2.longitude) {
+          continue;
+        }
+
+        // Calculate intersection point
+        final double intersectionLat =
+            (vertex2.latitude - vertex1.latitude) *
+                (point.longitude - vertex1.longitude) /
+                (vertex2.longitude - vertex1.longitude) +
+            vertex1.latitude;
+
+        // Check if point is to the left of the intersection
+        if (point.latitude <= intersectionLat) {
+          inside = !inside;
+        }
       }
     }
 
-    final String circleIdVal = 'geofence_circle_${_geoFenceCircles.length + 1}';
-    final Circle newCircle = Circle(
-      circleId: CircleId(circleIdVal),
-      center: tappedPoint,
-      radius: 150,
-      fillColor: Colors.blue.withOpacity(0.3),
-      strokeColor: Colors.blue,
-      strokeWidth: 2,
+    return inside;
+  }
+
+  void startMonitoring() {
+    const locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.bestForNavigation, // More accurate positioning
+      distanceFilter: 5,
     );
-    setState(() {
-      // rebuild the user interface
-      _geoFenceCircles.add(newCircle);
-    });
-  }
 
-  void _startDrawing() {
-    setState(() {
-      _isDrawing = true;
-      _drawingPoints = [];
-    });
-  }
-
-  void _finishDrawing() {
-    if (_drawingPoints.length < 3) {
-      return;
-    }
-    final String polygonIdVal = 'polygon_${_polygons.length + 1}';
-    final polygon = Polygon(
-      polygonId: PolygonId(polygonIdVal),
-      points: _drawingPoints,
-      fillColor: Colors.blue.withOpacity(0.3),
-      strokeColor: Colors.blue,
-      strokeWidth: 2,
-    );
-    setState(() {
-      _polygons.add(polygon);
-      _drawingPoints = [];
-      _isDrawing = false;
-    });
-  }
-
-  void _showRadiusSlider(int index) {
-    double radius = _geoFenceCircles[index].radius;
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModelState) {
-            return Container(
-              padding: EdgeInsets.all(20),
-              height: 150,
-              child: Column(
-                children: [
-                  Text('Adjust Radius ${radius.round()} meters'),
-                  Slider(
-                    value: radius,
-                    min: 50,
-                    max: 1000,
-                    divisions: 19,
-                    label: radius.round().toString(),
-                    onChanged: (value) {
-                      setModelState(() {
-                        radius = value;
-                      });
-                      _updateCircleRadisus(index, value);
-                    },
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _geoFenceCircles.removeAt(index);
-                      });
-                      Navigator.pop(context);
-                    },
-                    child: Text('Remove Geofence'),
-                  ),
-                ],
-              ),
-            );
+    _positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+          (Position position) {
+            _checkGeofence(LatLng(position.latitude, position.longitude));
           },
         );
-      },
-    );
   }
 
-  void _updateCircleRadisus(int index, double newRadius) {
-    final oldCirlce = _geoFenceCircles[index];
-    setState(() {
-      _geoFenceCircles[index] = Circle(
-        circleId: oldCirlce.circleId,
-        center: oldCirlce.center,
-        radius: newRadius,
-        fillColor: oldCirlce.fillColor,
-        strokeColor: oldCirlce.strokeColor,
-        strokeWidth: oldCirlce.strokeWidth,
-      );
-    });
+  void stopMonitoring() {
+    _positionStream?.cancel();
+    _positionStream = null;
   }
 
-  void onModify() {
-    setState(() {
-      tokenForSession = uuid.v4();
-    });
+  static const platform = MethodChannel('bluetooth/events');
 
-    makesuggestion(searchController.text);
+  Future<void> _updateGeofenceState(bool inside) async {
+    // print("Updating insideGeofencekkkkkkkkkkkkkkkkkkkkkkkkkkkkkk = $inside");
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool("flutter.insideGeofence", inside);
+    await prefs.reload(); // make sure it's flushed
+    // await platform.invokeMethod("updateGeofenceState", {"inside": inside});
+
+    // print("Updated insideGeofence = $inside");
   }
 
-  void _onSearchChanged() {
-    onModify();
-  }
+  Future<void> _checkGeofence(LatLng currentLocation) async {
+    List<ZoneData> zones = await loadZones();
+    bool insideAnyZone = false;
+    String? activeZoneName;
 
-  BitmapDescriptor? currentLocationIcon;
+    for (var zone in zones) {
+      if (!zone.isOn) continue;
+      List<LatLng> polygonPoints = zone.points
+          .map((p) => LatLng(p.latitude, p.longitude))
+          .toList();
 
-  @override
-  void initState() {
-    super.initState();
-    loadCustomIcon();
-
-    _markers.addAll(_myMarkers);
-    searchController.addListener(_onSearchChanged);
-  }
-
-  Future<void> loadCustomIcon() async {
-    try {
-      print('Starting to load custom icon...');
-      BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(size: Size(48, 48)),
-        'assets/logos/currentLocation.png',
-      );
-      print('Custom marker icon loaded successfully');
-      setState(() {
-        currentLocationIcon = icon;
-      });
-    } catch (e) {
-      print('Failed to load custom marker icon: $e');
+      if (_isPointInPolygon(currentLocation, polygonPoints) ||
+          _isNearPolygonEdge(currentLocation, polygonPoints, _edgeBuffer)) {
+        insideAnyZone = true;
+        activeZoneName = zone.name;
+        break; // ✅ found a zone, no need to keep checking
+      }
     }
+
+    // ✅ Handle enter
+    if (insideAnyZone && !_isInsideZone) {
+      await _showZoneNotification(
+        "Entered yukesh Zone",
+        activeZoneName ?? "zone",
+      );
+      await _updateGeofenceState(true);
+    }
+
+    // ✅ Handle exit
+    if (!insideAnyZone && _isInsideZone) {
+      await _showZoneNotification("Exited yukesh Zone", "geofenced area");
+      await _updateGeofenceState(false);
+    }
+
+    // Update state tracking
+    _isInsideZone = insideAnyZone;
+    updateState();
   }
 
-  @override
   void dispose() {
-    searchController.removeListener(_onSearchChanged);
-    searchController.dispose();
-    super.dispose();
+    stopMonitoring();
   }
 
-  Future<Position> getUserLocation() async {
-    await Geolocator.requestPermission().then((value) {}).onError((
-      error,
-      stackTrace,
-    ) {
-      print(error);
-    });
-    return await Geolocator.getCurrentPosition();
+  bool _isNearPolygonEdge(
+    LatLng point,
+    List<LatLng> polygon,
+    double bufferMeters,
+  ) {
+    final Distance distance = Distance();
+
+    for (int i = 0; i < polygon.length; i++) {
+      final LatLng p1 = polygon[i];
+      final LatLng p2 = polygon[(i + 1) % polygon.length];
+
+      // Calculate distance from point to edge
+      final double distToEdge = distance.distanceToLine(point, p1, p2);
+
+      if (distToEdge <= bufferMeters) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  packData() {
-    getUserLocation().then((value) async {
-      _markers.add(
-        Marker(
-          markerId: MarkerId('UserLocation'),
-          position: LatLng(value.latitude, value.longitude),
-          icon:
-              currentLocationIcon ??
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          infoWindow: InfoWindow(title: 'My Location'),
-        ),
-      );
-      CameraPosition cameraPosition = CameraPosition(
-        target: LatLng(value.latitude, value.longitude),
-        zoom: 17,
-      );
-      final GoogleMapController controller = await _controller.future;
-      controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-      setState(() {});
-    });
+  Future<void> _showZoneNotification(String title, String body) async {
+    // Show both system notification and snackbar
+    showNotification(title, "You've $body");
   }
+}
 
-  Future<void> goToPlace(String placeId) async {
-    String googlePlacesApiKey = dotenv.env['GOOGLE_PLACES_API_KEY']!;
-    String url =
-        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$googlePlacesApiKey';
-    var response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      var location = data['result']['geometry']['location'];
-      double latitude = location['lat'];
-      double longitude = location['lng'];
-      final GoogleMapController controller = await _controller.future;
-      controller.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(target: LatLng(latitude, longitude), zoom: 17),
-        ),
+class Distance {
+  static const double earthRadius = 6371000; // meters
+
+  double distanceToLine(LatLng point, LatLng lineStart, LatLng lineEnd) {
+    // Convert to radians
+    final double lat1Rad = lineStart.latitude * pi / 180;
+    final double lat2Rad = lineEnd.latitude * pi / 180;
+    final double lon1Rad = lineStart.longitude * pi / 180;
+    final double lon2Rad = lineEnd.longitude * pi / 180;
+    final double pointLatRad = point.latitude * pi / 180;
+    final double pointLonRad = point.longitude * pi / 180;
+
+    // Calculate the angular distance
+    final double deltaLat = lat2Rad - lat1Rad;
+    final double deltaLon = lon2Rad - lon1Rad;
+
+    // Calculate the denominator for the projection
+    final double denom =
+        deltaLat * deltaLat + deltaLon * deltaLon * cos(lat1Rad) * cos(lat2Rad);
+    if (denom == 0) {
+      // Line is actually a point
+      return distanceBetween(
+        lineStart.latitude,
+        lineStart.longitude,
+        point.latitude,
+        point.longitude,
       );
-      setState(() {
-        _markers.add(
-          Marker(
-            markerId: MarkerId('Second'),
-            position: LatLng(latitude, longitude),
-            infoWindow: InfoWindow(title: 'Second'),
-          ),
-        );
-        listForPlaces = [];
-        searchController.text = data['result']['name'];
-        _isTyping = false;
-      });
+    }
+
+    // Calculate the projection factor
+    final double t =
+        ((pointLatRad - lat1Rad) * deltaLat +
+            (pointLonRad - lon1Rad) * deltaLon * cos(lat1Rad) * cos(lat2Rad)) /
+        denom;
+
+    if (t <= 0) {
+      return distanceBetween(
+        lineStart.latitude,
+        lineStart.longitude,
+        point.latitude,
+        point.longitude,
+      );
+    } else if (t >= 1) {
+      return distanceBetween(
+        lineEnd.latitude,
+        lineEnd.longitude,
+        point.latitude,
+        point.longitude,
+      );
     } else {
-      throw Exception('Failed to load data: ${response.statusCode}');
+      // Calculate projected point
+      final double projectedLatRad = lat1Rad + t * deltaLat;
+      final double projectedLonRad = lon1Rad + t * deltaLon;
+
+      return distanceBetween(
+        projectedLatRad * 180 / pi,
+        projectedLonRad * 180 / pi,
+        point.latitude,
+        point.longitude,
+      );
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final dark = Theme.of(context).brightness == Brightness.dark;
-    final loc = AppLocalizations.of(context);
-    if (loc == null) {
-      return const Center(child: CircularProgressIndicator());
-    }
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: dark ? Colors.black : Colors.white,
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        title: Text(
-          loc.freezones,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        leading: Builder(
-          builder: (context) => IconButton(
-            onPressed: () => Scaffold.of(context).openDrawer(),
-            icon: Icon(Icons.menu, color: dark ? Colors.white : Colors.black),
-          ),
-        ),
-      ),
-      drawer: const navButton(),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  // Background circles painter behind the map
-                  Positioned.fill(
-                    child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-                  ),
+  double distanceBetween(double lat1, double lon1, double lat2, double lon2) {
+    final double dLat = (lat2 - lat1) * pi / 180;
+    final double dLon = (lon2 - lon1) * pi / 180;
 
-                  // Map and Search stacked
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: dark
-                            ? const Color.fromARGB(255, 20, 20, 20)
-                            : Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
-                            spreadRadius: 4,
-                            blurRadius: 10,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Text(
-                              'Set no-alert zones',
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Stack(
-                              children: [
-                                // Google Map
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: GoogleMap(
-                                    circles: Set<Circle>.of(_geoFenceCircles),
-                                    // polygons: _polygons,
-                                    initialCameraPosition: _initialPosition,
-                                    mapType: MapType.terrain,
-                                    markers: _drawingPoints
-                                        .map(
-                                          (point) => Marker(
-                                            markerId: MarkerId(
-                                              point.toString(),
-                                            ),
-                                            position: point,
-                                            icon:
-                                                BitmapDescriptor.defaultMarkerWithHue(
-                                                  BitmapDescriptor.hueBlue,
-                                                ),
-                                          ),
-                                        )
-                                        .toSet(),
-                                    onTap: _onMapTap,
+    final double a =
+        sin(dLat / 2) * sin(dLat / 2) +
+        cos(lat1 * pi / 180) *
+            cos(lat2 * pi / 180) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
 
-                                    onMapCreated:
-                                        (GoogleMapController controller) {
-                                          _controller.complete(controller);
-                                          setState(() {
-                                            _isMapLoading = false;
-                                          });
-                                        },
-                                    zoomControlsEnabled: false,
-                                  ),
-                                ),
+    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
-                                // Search bar positioned on top
-                                Positioned(
-                                  top: 10,
-                                  left: 10,
-                                  right: 10,
-                                  child: Material(
-                                    elevation: 5,
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: TextFormField(
-                                      controller: searchController,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _isTyping = value.isNotEmpty;
-                                        });
-                                      },
-                                      decoration: InputDecoration(
-                                        hintText: _isTyping ? '' : 'Search',
-                                        filled: true,
-                                        fillColor: Colors.white,
-                                        prefixIcon: const Icon(Icons.search),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                          borderSide: BorderSide.none,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                // Suggestions dropdown overlay
-                                if (listForPlaces.isNotEmpty)
-                                  Positioned(
-                                    top: 60,
-                                    left: 10,
-                                    right: 10,
-                                    child: Container(
-                                      constraints: const BoxConstraints(
-                                        maxHeight: 200,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: listForPlaces.length,
-                                        itemBuilder: (context, index) {
-                                          return ListTile(
-                                            title: Text(
-                                              listForPlaces[index]['description'],
-                                            ),
-                                            onTap: () {
-                                              final placeId =
-                                                  listForPlaces[index]['place_id'];
-                                              goToPlace(placeId);
-                                            },
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  if (_isMapLoading)
-                    const Positioned.fill(
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                buildCircularIconButton(
-                  context: context,
-                  icon: Icons.arrow_back,
-                  onPressed: () {},
-                ),
-                buildMainButton(
-                  text: 'Main',
-                  onPressed: () {},
-                  context: context,
-                ),
-                buildCircularIconButton(
-                  context: context,
-                  icon: Iconsax.location,
-                  onPressed: packData,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+    return earthRadius * c;
   }
 }

@@ -1,6 +1,7 @@
 import 'package:Parkalert/utils/storage/bluetoothStorage/bluetoothStorage.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BluetoothEventHandler {
   static const platform = MethodChannel('bluetooth/events');
@@ -16,6 +17,14 @@ class BluetoothEventHandler {
       print(
         "Call:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",
       );
+      // final prefs = await SharedPreferences.getInstance();
+      // final insideGeofence = prefs.getBool("flutter.insideGeofence") ?? false;
+      // print("🚫 Inside geofence → skip notification${insideGeofence}");
+
+      // if (insideGeofence) {
+      //   print("🚫 Inside geofence → skip notification");
+      //   return;
+      // }
       if (call.method == 'onGalaxyBudsConnected') {
         print("Galaxy Buds+ connected! START");
         await showNotification('connected');

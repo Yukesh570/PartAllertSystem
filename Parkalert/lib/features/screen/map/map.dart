@@ -7,6 +7,7 @@ import 'package:Parkalert/features/controllers/pagger.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
+import 'package:Parkalert/features/screen/map/currentLocation.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
 import 'package:Parkalert/utils/storage/data/ZoneData.dart';
@@ -49,10 +50,12 @@ class _MappageState extends State<Mappage> {
   final List<Marker> _placeMarker = [];
   final List<Marker> _geoFench = [];
   final List<Marker> _geo = [];
+  late GeofenceService _geofenceService;
+  StreamSubscription<Position>? _locationSubscription;
 
   Set<Marker> _markers = {};
 
-  final List<Marker> _currrentLocationMarker = [];
+  // final List<Marker> _currrentLocationMarker = [];
   BitmapDescriptor? currentLocationIcon;
   BitmapDescriptor? geofenceIcon;
 
@@ -126,6 +129,7 @@ class _MappageState extends State<Mappage> {
         );
       }
     }
+
     setState(() {
       _markers = markers;
     });
@@ -146,6 +150,22 @@ class _MappageState extends State<Mappage> {
     return googlePoints
         .map((p) => latlng.LatLng(p.latitude, p.longitude))
         .toList();
+  }
+
+  void trackUserLocation() async {
+    _locationSubscription =
+        Geolocator.getPositionStream(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.high,
+            distanceFilter: 5, // update every 5 meters
+          ),
+        ).listen((Position position) async {
+          final GoogleMapController controller = await _controller.future;
+          LatLng userLatLng = LatLng(position.latitude, position.longitude);
+
+          // Smooth camera move
+          controller.animateCamera(CameraUpdate.newLatLng(userLatLng));
+        });
   }
 
   void makesuggestion(String input) async {
@@ -206,6 +226,11 @@ class _MappageState extends State<Mappage> {
     searchController.addListener(_onSearchChanged);
     loadPolygonsFromZones();
     loadMarkersromZones();
+    _geofenceService = GeofenceService(
+      showNotification: _showNotification,
+      updateState: () => setState(() {}),
+    );
+    _geofenceService.startMonitoring();
     // loadPolygons();
   }
 
@@ -266,10 +291,18 @@ class _MappageState extends State<Mappage> {
     }
   }
 
+  void _showNotification(String title, String body) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('$title: $body'), duration: Duration(seconds: 3)),
+    );
+  }
+
   @override
   void dispose() {
     searchController.removeListener(_onSearchChanged);
     searchController.dispose();
+    _geofenceService.dispose();
+
     super.dispose();
   }
 
@@ -285,16 +318,14 @@ class _MappageState extends State<Mappage> {
 
   packData() {
     getUserLocation().then((value) async {
-      _currrentLocationMarker.add(
-        Marker(
-          markerId: MarkerId('UserLocation'),
-          position: LatLng(value.latitude, value.longitude),
-          icon:
-              currentLocationIcon ??
-              BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          infoWindow: InfoWindow(title: 'My Location'),
-        ),
-      );
+      // _currrentLocationMarker.add(
+      //   Marker(
+      //     markerId: MarkerId('UserLocation'),
+      //     position: LatLng(value.latitude, value.longitude),
+
+      //     infoWindow: InfoWindow(title: 'My Location'),
+      //   ),
+      // );
       CameraPosition cameraPosition = CameraPosition(
         target: LatLng(value.latitude, value.longitude),
         zoom: 17,
@@ -466,7 +497,7 @@ class _MappageState extends State<Mappage> {
       ..._markers,
       ..._geoFench,
       ..._placeMarker,
-      ..._currrentLocationMarker,
+      // ..._currrentLocationMarker,
       // ..._predefinedMarkers,
       ..._drawingPoints.map(
         (point) => Marker(
@@ -549,6 +580,7 @@ class _MappageState extends State<Mappage> {
                                     borderRadius: BorderRadius.circular(20),
                                     child: GoogleMap(
                                       initialCameraPosition: _initialPosition,
+                                      myLocationEnabled: true,
                                       polygons: _polygons,
                                       markers: allMarkers,
                                       onMapCreated: (controller) =>

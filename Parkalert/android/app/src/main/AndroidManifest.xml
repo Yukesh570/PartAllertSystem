@@ -8,6 +8,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
+
     
 
     <application
@@ -28,6 +32,11 @@
         </intent-filter>
         </receiver>
 
+        <service
+        android:name=".GeofenceForegroundService"
+        android:enabled="true"
+        android:exported="false" 
+        android:foregroundServiceType="location" />
 
         <meta-data android:name="com.google.android.geo.API_KEY"
                android:value="AIzaSyDrUHqW414IFDi3RMRwy0en38XOvVrXD_Y"/>
@@ -58,11 +67,6 @@
             <intent-filter>
             <action android:name="android.intent.action.MAIN"/>
             <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

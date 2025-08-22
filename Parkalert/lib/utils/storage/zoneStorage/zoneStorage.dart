@@ -4,7 +4,7 @@ import 'package:Parkalert/utils/storage/data/ZoneData.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-//saves the Zones
+// saves the Zones
 Future<bool> saveZones(List<ZoneData> zones) async {
   final prefs = await SharedPreferences.getInstance();
 
@@ -126,3 +126,67 @@ Future<void> deleteZone(int index) async {
   await prefs.setStringList("zones", updatedJsonList);
   FreezoneController.instance.loadZonesFromPrefs();
 }
+
+// import 'dart:convert';
+// import 'package:Parkalert/utils/storage/data/ZoneData.dart';
+// import 'package:latlong2/latlong.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+
+// // -------------------- SAVE --------------------
+// Future<bool> saveZones(List<ZoneData> zones) async {
+//   final prefs = await SharedPreferences.getInstance();
+
+//   String jsonString = jsonEncode(
+//     zones.map((z) => z.toJson()).toList(),
+//   ); // encode as array
+
+//   return prefs.setString('zones', jsonString); // ✅ single JSON string
+// }
+
+// // -------------------- LOAD --------------------
+// Future<List<ZoneData>> loadZones() async {
+//   final prefs = await SharedPreferences.getInstance();
+//   String? jsonString = prefs.getString('zones');
+
+//   if (jsonString == null || jsonString.isEmpty) return [];
+
+//   List<dynamic> jsonArray = jsonDecode(jsonString);
+//   return jsonArray.map((jsonMap) => ZoneData.fromJson(jsonMap)).toList();
+// }
+
+// // -------------------- UPDATE --------------------
+// Future<void> updateZones(
+//   int index, {
+//   bool? isOn,
+//   List<LatLng>? points,
+//   String? name,
+//   String? initialTime,
+//   String? stopTime,
+// }) async {
+//   List<ZoneData> zones = await loadZones();
+//   int idx = zones.indexWhere((z) => z.index == index);
+
+//   if (idx != -1) {
+//     if (isOn != null) zones[idx].isOn = isOn;
+//     if (points != null) zones[idx].points = points;
+//     if (name != null) zones[idx].name = name;
+//     if (initialTime != null) zones[idx].initialTime = initialTime;
+//     if (stopTime != null) zones[idx].stopTime = stopTime;
+//   }
+
+//   await saveZones(zones);
+// }
+
+// // -------------------- DELETE --------------------
+// Future<void> deleteZone(int index) async {
+//   List<ZoneData> zones = await loadZones();
+
+//   zones.removeWhere((z) => z.index == index);
+
+//   // reassign indices
+//   for (int i = 0; i < zones.length; i++) {
+//     zones[i].index = i;
+//   }
+
+//   await saveZones(zones);
+// }
