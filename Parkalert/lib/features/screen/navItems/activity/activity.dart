@@ -1,3 +1,4 @@
+import 'package:Parkalert/features/controllers/navItems/main_controller.dart';
 import 'package:Parkalert/features/controllers/pagger.dart';
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
@@ -7,6 +8,8 @@ import 'package:Parkalert/features/screen/navItems/alert/ringers.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class Activity extends StatefulWidget {
   const Activity({super.key});
@@ -30,6 +33,8 @@ class _ActivityState extends State<Activity> {
   //   print("ringersListactivity: $ringersListdemo");
   // }
   Widget build(BuildContext context) {
+    final MainController controller = Get.put(MainController());
+
     print("aactivtyyyyyyyyy $ringersList");
     print("ringersListactivity: $ringersListdemo");
 
@@ -165,47 +170,52 @@ class _ActivityState extends State<Activity> {
                           ),
                         ],
                       ),
-                      child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.center, // center horizontally
-                        mainAxisAlignment:
-                            MainAxisAlignment.center, // align to top
-                        children: [
-                          Text(
-                            " All location",
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                      child: GestureDetector(
+                        onTap: () {
+                          controller.locationHistory();
+                        },
+                        child: Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.center, // center horizontally
+                          mainAxisAlignment:
+                              MainAxisAlignment.center, // align to top
+
+                          children: [
+                            Text(
+                              " All location",
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
+                            const SizedBox(height: 10),
 
-                          Expanded(
-                            child: Transform.translate(
-                              offset: const Offset(
-                                0,
-                                -10,
-                              ), // 👈 shift upward by 10 pixels
+                            Expanded(
+                              child: Transform.translate(
+                                offset: const Offset(
+                                  0,
+                                  -10,
+                                ), // 👈 shift upward by 10 pixels
 
-                              child: Transform.scale(
-                                scale: 1.8,
+                                child: Transform.scale(
+                                  scale: 1.8,
 
-                                child: Image.asset(
-                                  "assets/logos/location.png",
-                                  fit: BoxFit.contain,
+                                  child: Image.asset(
+                                    "assets/logos/location.png",
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-            // other children here...
           ],
         ),
       ),

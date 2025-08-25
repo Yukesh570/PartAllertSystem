@@ -105,7 +105,7 @@ class GeofenceService {
     await prefs.reload(); // make sure it's flushed
     // await platform.invokeMethod("updateGeofenceState", {"inside": inside});
 
-    // print("Updated insideGeofence = $inside");
+    print("Updated insideGeofence = $inside");
   }
 
   Future<void> _checkGeofence(LatLng currentLocation) async {

@@ -27,11 +27,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
     
     // 👇 Add this line
     public static MethodChannel channel;
-    public static boolean insideGeofence = false;
-    public static void updateGeofenceState(boolean inside) {
-        insideGeofence = inside;
-        Log.d("BluetoothReceiver", "Live geofence state updated = " + inside);
-    }
+ 
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
@@ -52,10 +48,12 @@ public class BluetoothReceiver extends BroadcastReceiver {
     }
     private void handleBluetoothEvent(Context context, BluetoothDevice device, boolean connected) {
             SharedPreferences prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
-                        boolean insideGeofence = BluetoothReceiver.insideGeofence;
                         String jsonString = prefs.getString("flutter.activeBluetooth", "");
+                        boolean isInsideGeofence = prefs.getBoolean("flutter.insideGeofence", false);
                         String targetBluetoothName = "";
                         String targetSound = "";
+                Log.d("BluetoothReceiver", "12121212121212121212insideGeofence6969696996969696969696696969: " + isInsideGeofence);
+
                 if (!jsonString.isEmpty()) {
                     try {
                         JSONObject jsonObject = new JSONObject(jsonString);
@@ -77,17 +75,23 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 }
                 Log.d("BluetoothReceiver", (connected ? "Connected to: " : "Disconnected from: ") + deviceName);
                 Log.d("BluetoothReceiver", "Target Bluetooth name======: " + targetBluetoothName);
-                Log.d("BluetoothReceiver", "insideGeofence: " + insideGeofence);
 
                 if (deviceName.contains(targetBluetoothName)) 
         {
-                if (!insideGeofence) {
-                        if (channel != null) {
-                    String methodName = connected ? "onGalaxyBudsConnected" : "onGalaxyBudsDisconnected";
-                    channel.invokeMethod(methodName, null);
-                } else  {
+                if (!isInsideGeofence) {
+                // if (channel != null) {
+                //     String methodName = connected ? "onGalaxyBudsConnected" : "onGalaxyBudsDisconnected";
+                //     channel.invokeMethod(methodName, null);
+                // } 
+                // else  
+                // {
+                                Log.d("BluetoothReceiver", "BEEEEEEEEEEEEEEEEEEEEFFFFFFFFFFFFFFFFFFFFFFOOOOOOOOOOOOOOOORRRRRRRRRRRRRRRREEEEEEEEEEE");
+
                 showNotification(context, deviceName, connected, targetSound);
-            }                } 
+                                Log.d("BluetoothReceiver", "aaaaaaaaaaaaaaFFFFFFFFFFFFFFFFFFFTTTTTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRR");
+
+                // }                
+            } 
                 else {
                 Log.d("BluetoothReceiver", "Inside geofence → skipping notification");
             }
@@ -104,6 +108,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
 private void showNotification(Context context, String deviceName, boolean connected, String targetSound) {
     NotificationManager notificationManager =
         (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    Log.d("BluetoothReceiver", "aaaaaaaaaaaaaaFFFFFFFFFFFFFFFF121212121222222222222222222222222222222FFFTTTTTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRR");
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         // Always delete existing channel so sound updates
@@ -141,8 +146,9 @@ private void showNotification(Context context, String deviceName, boolean connec
         intent,
         PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
+    Log.d("BluetoothReceiver", "aaaaaaaaaaaaaaFFFFFFFFFFFFFFFFFFFTT0000000000000000000000000000000000000000000000TTTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRR");
 
-    String title = connected ? "Bluetooth Connected" : "Bluetooth Disconnected";
+    String title = connected ? "Bluetooth ConnectedDDD" : "Bluetooth Disconnectedddd";
     String text = deviceName + (connected ? " connected!" : " disconnected!");
 
     NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)

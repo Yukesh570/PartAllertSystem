@@ -1,4 +1,5 @@
 import 'package:Parkalert/features/controllers/drawerController.dart';
+import 'package:Parkalert/features/screen/map/locationHistory.dart';
 import 'package:Parkalert/features/screen/map/map.dart';
 import 'package:Parkalert/features/screen/navItems/activity/activity.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
@@ -103,5 +104,12 @@ class MainController extends GetxController {
     drawerCtrl.changeRoute('/yourinfo'); // Set current route
 
     Get.off(() => Yourinfo()); //
+  }
+
+  void locationHistory() {
+    final drawerCtrl = Get.find<DrawerControllerX>();
+    drawerCtrl.changeRoute('/locationHistory'); // Set current route
+
+    Get.to(() => LocationHistory()); //
   }
 }

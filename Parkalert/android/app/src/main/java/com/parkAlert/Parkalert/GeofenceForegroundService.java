@@ -141,6 +141,7 @@ public class GeofenceForegroundService extends Service {
     }
 
     isInsideZone = insideAnyZone;
+    Log.d("GeofenceService", "================ - insideAnyZone: " + insideAnyZone + ", isInsideZone: " + isInsideZone);
 
     // Save state to SharedPreferences
     getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
