@@ -22,8 +22,8 @@ void main() async {
   BluetoothEventHandler.initialize();
   // await requestGeofencePermissions();
 
-  listenForGeofenceEvents(); // start listening
-  await startGeofenceService(); // start the Android service
+  // listenForGeofenceEvents(); // start listening
+  // await startGeofenceService(); // start the Android service
   await dotenv.load();
   runApp(const App());
 }

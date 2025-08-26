@@ -1,18 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:Parkalert/features/controllers/drawerController.dart';
 import 'package:Parkalert/features/controllers/pagger.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
-import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/features/screen/map/currentLocation.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
-import 'package:Parkalert/utils/storage/data/ZoneData.dart';
-import 'package:Parkalert/utils/storage/mapStorage/mapStorage.dart';
-import 'package:Parkalert/utils/storage/zoneStorage/zoneStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
@@ -24,7 +19,6 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
-import 'package:Parkalert/utils/storage/zoneStorage/zoneStorage.dart';
 
 class LocationHistory extends StatefulWidget {
   const LocationHistory({Key? key}) : super(key: key);
@@ -49,6 +43,8 @@ class _LocationHistoryState extends State<LocationHistory> {
   final List<Marker> _placeMarker = [];
   final List<Marker> _geoFench = [];
   final List<Marker> _geo = [];
+  final List<Marker> _currentLoc = [];
+
   late GeofenceService _geofenceService;
   StreamSubscription<Position>? _locationSubscription;
 
@@ -139,11 +135,8 @@ class _LocationHistoryState extends State<LocationHistory> {
     loadCustomIcon();
     fenceIcon();
     searchController.addListener(_onSearchChanged);
-    _geofenceService = GeofenceService(
-      showNotification: _showNotification,
-      updateState: () => setState(() {}),
-    );
-    _geofenceService.startMonitoring();
+    loadSavedLocation();
+
     // loadPolygons();
   }
 
@@ -152,7 +145,7 @@ class _LocationHistoryState extends State<LocationHistory> {
       print('Starting to load custom icon...');
       BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(size: Size(48, 48)),
-        'assets/logos/currentLocation.png',
+        'assets/logos/loca.png',
       );
       print('Custom marker icon loaded successfully');
       setState(() {
@@ -177,12 +170,6 @@ class _LocationHistoryState extends State<LocationHistory> {
     } catch (e) {
       print('Failed to load custom marker icon: $e');
     }
-  }
-
-  void _showNotification(String title, String body) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$title: $body'), duration: Duration(seconds: 3)),
-    );
   }
 
   @override
@@ -262,18 +249,66 @@ class _LocationHistoryState extends State<LocationHistory> {
     }
   }
 
-  void _finishDrawing() async {
-    if (_drawingPoints.length < 3) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Add at least 3 points to form a polygon')),
-      );
-      return;
-    }
-    final convertedPoints = convertToLatLong2(
-      _drawingPoints,
-    ); // latlong2 LatLng
+  Future<void> loadSavedLocation() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.reload();
 
-    // savePolygons();
+      // Try to get the location data
+      final String? locationJson = prefs.getString('currentLocation');
+      print("🔍Current location JSON: $locationJson");
+
+      if (locationJson != null && locationJson.isNotEmpty) {
+        try {
+          final List<dynamic> dataList = jsonDecode(locationJson);
+          for (var data in dataList) {
+            final double lat = data['lat'];
+            final double lng = data['lng'];
+            final int time = data['time'];
+
+            final String name = data['name'];
+            print("📌📌📌📌📌📌📌📌📌 $name");
+            setState(() {
+              _currentLoc.add(
+                Marker(
+                  markerId: MarkerId('savedLocation_$time'),
+                  position: LatLng(lat, lng),
+                  icon: currentLocationIcon ?? BitmapDescriptor.defaultMarker,
+                  infoWindow: InfoWindow(
+                    title: 'Saved Location',
+                    snippet:
+                        'Device: $name\nTime: ${DateTime.fromMillisecondsSinceEpoch(time)}',
+                  ),
+                ),
+              );
+            });
+          }
+          if (dataList.isNotEmpty) {
+            final mostRecent = dataList.last;
+            final double lat = mostRecent['lat'];
+            final double lng = mostRecent['lng'];
+            final GoogleMapController controller = await _controller.future;
+            controller.animateCamera(
+              CameraUpdate.newLatLngZoom(LatLng(lat, lng), 17),
+            );
+
+            print("📌 Loaded saved location marker at $lat, $lng");
+          }
+        } catch (e) {
+          print("❌ Failed to parse saved location: $e");
+        }
+      } else {
+        print("⚠️ No saved location found in SharedPreferences");
+
+        // Alternative: Check if it's stored with the flutter prefix
+        final String? flutterLocationJson = prefs.getString(
+          'flutter.currentLocation',
+        );
+        print("🔍Flutter current location JSON: $flutterLocationJson");
+      }
+    } catch (e) {
+      print("❌ Error accessing SharedPreferences: $e");
+    }
   }
 
   LatLngBounds getPolygonBounds(List<LatLng> points) {
@@ -304,6 +339,7 @@ class _LocationHistoryState extends State<LocationHistory> {
       ..._markers,
       ..._geoFench,
       ..._placeMarker,
+      ..._currentLoc,
       // ..._currrentLocationMarker,
       // ..._predefinedMarkers,
       ..._drawingPoints.map(
@@ -326,7 +362,7 @@ class _LocationHistoryState extends State<LocationHistory> {
           elevation: 0,
           centerTitle: true,
           title: Text(
-            loc.freezones,
+            "History",
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           leading: Builder(
@@ -372,7 +408,7 @@ class _LocationHistoryState extends State<LocationHistory> {
                             const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Text(
-                                'Set no-alert zones',
+                                'Parked History',
                                 style: TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,

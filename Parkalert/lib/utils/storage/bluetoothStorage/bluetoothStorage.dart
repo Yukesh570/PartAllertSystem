@@ -34,6 +34,7 @@ Future<RingerData> activeBluetooth() async {
   Map<String, String> data = {
     'bluetooth': activeRinger.bluetooth,
     'sound': activeRinger.sound,
+    'name': activeRinger.name,
   };
   print("YUUUUUKKKKKESHHHHH${data}");
 
@@ -49,19 +50,20 @@ Future<RingerData> activeBluetooth() async {
 
 Future<Map<String, String>> loadActiveBluetooth() async {
   final prefs = await SharedPreferences.getInstance();
-     print('swetttttttttttttaaaaaaaaaaaaa');
+  print('swetttttttttttttaaaaaaaaaaaaa');
 
   final String? jsonString = prefs.getString('activeBluetooth');
-     print('swetttttttttttttaaaaaaaaaaaaa');
+  print('swetttttttttttttaaaaaaaaaaaaa');
 
-  if (jsonString == null) return {'bluetooth': '', 'sound': ''};
-     print('swetttttttttttttaaaaaaaaaaaaa');
+  if (jsonString == null) return {'bluetooth': '', 'sound': '', 'name': ''};
+  print('swetttttttttttttaaaaaaaaaaaaa');
 
   final Map<String, dynamic> data = jsonDecode(jsonString);
-   print('swetttttttttttttaaaaaaaaaaaaa');
+  print('swetttttttttttttaaaaaaaaaaaaa');
 
   return {
     'bluetooth': data['bluetooth']?.toString() ?? '',
     'sound': data['sound']?.toString() ?? '',
+    'name': data['name']?.toString() ?? '',
   };
 }
