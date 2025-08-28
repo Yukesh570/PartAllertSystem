@@ -1,5 +1,7 @@
-import 'package:Parkalert/features/controllers/navItems/main_controller.dart';
+import 'package:Parkalert/features/controllers/drawerController.dart';
+import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/features/controllers/pagger.dart';
+import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
@@ -34,6 +36,7 @@ class _ActivityState extends State<Activity> {
   // }
   Widget build(BuildContext context) {
     final MainController controller = Get.put(MainController());
+    final drawerCtrl = Get.find<DrawerControllerX>();
 
     print("aactivtyyyyyyyyy $ringersList");
     print("ringersListactivity: $ringersListdemo");
@@ -113,41 +116,68 @@ class _ActivityState extends State<Activity> {
                     ),
                     const SizedBox(height: 25),
 
-                    Container(
-                      height: 230, // 👈 set the height to your desired value
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 20,
-                      ),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: AppColors.alert3,
-                        borderRadius: BorderRadius.circular(25),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-
-                      child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.center, // center horizontally
-                        mainAxisAlignment:
-                            MainAxisAlignment.start, // align to top
-                        children: [
-                          Text(
-                            "All activities",
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
+                    ClipRRect(
+                      child: Container(
+                        height: 230, // 👈 set the height to your desired value
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 10,
+                        ),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: AppColors.alert3,
+                          borderRadius: BorderRadius.circular(25),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
                             ),
+                          ],
+                        ),
+
+                        child: GestureDetector(
+                          onTap: () {
+                            controller.activityHistory();
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment
+                                .center, // center horizontally
+                            mainAxisAlignment:
+                                MainAxisAlignment.center, // align to top
+
+                            children: [
+                              Text(
+                                " All Activities",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+
+                              Expanded(
+                                child: Transform.translate(
+                                  offset: const Offset(
+                                    14,
+                                    4,
+                                  ), // 👈 shift upward by 10 pixels
+
+                                  child: Transform.scale(
+                                    scale: 2.2,
+
+                                    child: Image.asset(
+                                      "assets/logos/allactivity.png",
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 25),
@@ -212,6 +242,39 @@ class _ActivityState extends State<Activity> {
                         ),
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    buildCircularIconButton(
+                      context: context,
+                      icon: Icons.arrow_back,
+                      onPressed: () {
+                        drawerCtrl.goBack(); // update drawer highlight
+
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        } else {
+                          // Optionally handle the case where there's no back route
+                          print("No screen to go back to");
+                        }
+                      },
+                    ),
+                    buildMainButton(
+                      text: 'Main',
+                      onPressed: () {
+                        controller.alertPage();
+                      },
+                      context: context,
+                    ),
+                    addAlertButton(context: context, onPressed: () async {}),
                   ],
                 ),
               ),

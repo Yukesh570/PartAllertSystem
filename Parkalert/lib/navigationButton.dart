@@ -1,5 +1,5 @@
 import 'package:Parkalert/features/controllers/drawerController.dart';
-import 'package:Parkalert/features/controllers/navItems/main_controller.dart';
+import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/utils/constants/colors.dart';
 import 'package:flutter/material.dart';

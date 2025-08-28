@@ -20,6 +20,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   final _box = GetStorage();
+  bool _isRegistered = false; // new flag
 
   Locale _locale = const Locale('en'); // Default locale
 
@@ -31,6 +32,8 @@ class _AppState extends State<App> {
     if (savedLangCode != null) {
       _locale = Locale(savedLangCode);
     }
+    // ✅ Check if user already created an account
+    _isRegistered = _box.read('isRegistered') ?? false;
   }
 
   void _setLocale(Locale locale) {
@@ -68,8 +71,11 @@ class _AppState extends State<App> {
           child: child!,
         );
       },
-      home: Alert(),
+      // home: Alert(),
       // home: Information(onLocaleChange: _setLocale),
+      home: _isRegistered
+          ? const Alert()
+          : Information(onLocaleChange: _setLocale),
     );
   }
 }

@@ -31,6 +31,17 @@ Future<void> stopGeofenceService() async {
   }
 }
 
+Future<void> ensureLocationPermissions() async {
+  // Step 1: Request foreground
+  var status = await Permission.locationWhenInUse.request();
+
+  if (status.isGranted) {
+    // Step 2: Request background (Always)
+
+    await startGeofenceService();
+  }
+}
+
 /// Listen for geofence events (enteredZone/exitedZone)
 void listenForGeofenceEvents() {
   print("✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅");

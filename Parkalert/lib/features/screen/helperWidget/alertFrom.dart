@@ -21,6 +21,8 @@ Widget buildAlertFormRow({
           decoration: InputDecoration(
             hintText: text,
             filled: true,
+            fillColor: Colors.white, // ✅ Makes the background white
+
             contentPadding: const EdgeInsets.symmetric(
               vertical: 12.0,
               horizontal: 16.0,
@@ -28,7 +30,12 @@ Widget buildAlertFormRow({
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.0),
               borderSide: BorderSide(
-                color: AppColors.alertHeaderBackground.withOpacity(0.5),
+                color: const Color.fromARGB(
+                  255,
+                  255,
+                  255,
+                  255,
+                ).withOpacity(0.5),
               ),
             ),
           ),

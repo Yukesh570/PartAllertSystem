@@ -45,7 +45,7 @@ class _MappageState extends State<Mappage> {
   final List<Marker> _placeMarker = [];
   final List<Marker> _geoFench = [];
   final List<Marker> _geo = [];
-  late GeofenceService _geofenceService;
+  // late GeofenceService _geofenceService;
   StreamSubscription<Position>? _locationSubscription;
 
   Set<Marker> _markers = {};
@@ -221,11 +221,11 @@ class _MappageState extends State<Mappage> {
     searchController.addListener(_onSearchChanged);
     loadPolygonsFromZones();
     loadMarkersromZones();
-    _geofenceService = GeofenceService(
-      showNotification: _showNotification,
-      updateState: () => setState(() {}),
-    );
-    _geofenceService.startMonitoring();
+    // _geofenceService = GeofenceService(
+    //   showNotification: _showNotification,
+    //   updateState: () => setState(() {}),
+    // );
+    // _geofenceService.startMonitoring();
     // loadPolygons();
   }
 
@@ -296,7 +296,7 @@ class _MappageState extends State<Mappage> {
   void dispose() {
     searchController.removeListener(_onSearchChanged);
     searchController.dispose();
-    _geofenceService.dispose();
+    // _geofenceService.dispose();
 
     super.dispose();
   }

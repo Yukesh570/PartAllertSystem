@@ -1,26 +1,22 @@
-import 'dart:async';
-
-import 'package:Parkalert/features/controllers/alert/isON.dart';
 import 'package:Parkalert/features/controllers/navItems/freeZone_controller.dart';
 import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
-import 'package:Parkalert/features/screen/map/map.dart';
-import 'package:Parkalert/utils/storage/data/ZoneData.dart';
+import 'package:Parkalert/utils/storage/data/historyData.dart';
 import 'package:Parkalert/utils/storage/zoneStorage/zoneStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
-class ZoneBox extends StatefulWidget {
-  final ZoneData zoneData;
+class ActivityBox extends StatefulWidget {
+  final Historydata historydata;
 
-  const ZoneBox({Key? key, required this.zoneData});
+  const ActivityBox({Key? key, required this.historydata});
   @override
-  State<ZoneBox> createState() => ZoneBoxState();
+  State<ActivityBox> createState() => ActivityBoxState();
 }
 
-class ZoneBoxState extends State<ZoneBox> {
+class ActivityBoxState extends State<ActivityBox> {
   final MainController controller = Get.put(MainController());
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _initialTimeController = TextEditingController();
@@ -30,9 +26,7 @@ class ZoneBoxState extends State<ZoneBox> {
   @override
   void initState() {
     super.initState();
-    _nameController.text = widget.zoneData.name;
-    _initialTimeController.text = widget.zoneData.initialTime;
-    _stopTimeController.text = widget.zoneData.stopTime;
+    _nameController.text = widget.historydata.name;
   }
 
   @override
@@ -53,32 +47,38 @@ class ZoneBoxState extends State<ZoneBox> {
       AppColors.alert3,
     ];
     final Color color =
-        colorOptions[widget.zoneData.index % colorOptions.length];
+        colorOptions[widget.historydata.index % colorOptions.length];
     List<Color> colorOptionsdark = [
       AppColors.alert1Dark,
       AppColors.alert2Dark,
       AppColors.alert3Dark,
     ];
     final Color colordark =
-        colorOptionsdark[widget.zoneData.index % colorOptionsdark.length];
+        colorOptionsdark[widget.historydata.index % colorOptionsdark.length];
     List<Color> colorOptions2 = [
       AppColors.button1,
       AppColors.button2,
       AppColors.button3,
     ];
     final Color color2 =
-        colorOptions2[widget.zoneData.index % colorOptions2.length];
+        colorOptions2[widget.historydata.index % colorOptions2.length];
 
     List<Color> colorText = [AppColors.text1, AppColors.text2, AppColors.text3];
-    final Color Textcolor = colorText[widget.zoneData.index % colorText.length];
-    print("nnnnaaammmeee===${widget.zoneData.name}");
+    final Color Textcolor =
+        colorText[widget.historydata.index % colorText.length];
+    print("nnnnaaammmeee===${widget.historydata.name}");
     print("nnnnaaammmeee===${_nameController.text}");
     // List<Color> colorLoc = [AppColors.text1, AppColors.alert1, AppColors.text3];
-    // final Color LocColor = colorText[zoneData.index % colorText.length];
+    // final Color LocColor = colorText[historydata.index % colorText.length];
 
-    Widget _timeBox(TextEditingController controller, Color textColor) {
+    Widget _timeBox(String time, Color textColor) {
+      int timestamp = int.parse(time);
+
+      DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+      String formattedDate = DateFormat('yyyy/MM/dd').format(date);
+
       return Container(
-        width: 80,
+        width: 150,
         height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
@@ -91,35 +91,34 @@ class ZoneBoxState extends State<ZoneBox> {
         ),
 
         child: Center(
-          child: TextField(
-            controller: controller,
-            onSubmitted: (value) {
-              updateZones(widget.zoneData.index, null, null, null, value, null);
-              setState(() {
-                widget.zoneData.initialTime = value;
-              });
-            },
+          child: Text(
+            formattedDate,
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
               color: Textcolor,
             ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              isDense: true,
-              contentPadding: EdgeInsets.zero,
-              focusedBorder: InputBorder.none, // remove focus border
-              enabledBorder: InputBorder.none, // remove enabled border
-              hintText: "HH:mm",
-            ),
+            // decoration: const InputDecoration(
+            //   border: InputBorder.none,
+            //   isDense: true,
+            //   contentPadding: EdgeInsets.zero,
+            //   focusedBorder: InputBorder.none, // remove focus border
+            //   enabledBorder: InputBorder.none, // remove enabled border
+            //   hintText: "HH:mm",
+            // ),
           ),
         ),
       );
     }
 
-    Widget _timeBox_(TextEditingController controller, Color textColor) {
+    Widget _timeBox_(String time, Color textColor) {
+      int timestamp = int.parse(time);
+
+      DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+      time = date.hour.toString() + ":" + date.minute.toString();
+
       return Container(
-        width: 80,
+        width: 70,
         height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
@@ -132,28 +131,21 @@ class ZoneBoxState extends State<ZoneBox> {
         ),
 
         child: Center(
-          child: TextField(
-            controller: controller,
-            onSubmitted: (value) {
-              updateZones(widget.zoneData.index, null, null, null, null, value);
-              setState(() {
-                widget.zoneData.stopTime = value;
-              });
-            },
-
+          child: Text(
+            time,
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
               color: Textcolor,
             ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              isDense: true,
-              contentPadding: EdgeInsets.zero,
-              focusedBorder: InputBorder.none, // remove focus border
-              enabledBorder: InputBorder.none, // remove enabled border
-              hintText: "HH:mm",
-            ),
+            // decoration: const InputDecoration(
+            //   border: InputBorder.none,
+            //   isDense: true,
+            //   contentPadding: EdgeInsets.zero,
+            //   focusedBorder: InputBorder.none, // remove focus border
+            //   enabledBorder: InputBorder.none, // remove enabled border
+            //   hintText: "HH:mm",
+            // ),
           ),
         ),
       );
@@ -207,7 +199,7 @@ class ZoneBoxState extends State<ZoneBox> {
                             return CircularProgressIndicator();
                           }
                           bool isOn =
-                              isOnController.isOnList[widget.zoneData.index];
+                              isOnController.isOnList[widget.historydata.index];
 
                           return Center(
                             child: Container(
@@ -246,7 +238,7 @@ class ZoneBoxState extends State<ZoneBox> {
                         controller: _nameController,
                         onSubmitted: (value) {
                           updateZones(
-                            widget.zoneData.index,
+                            widget.historydata.index,
                             null,
                             null,
                             value,
@@ -254,10 +246,10 @@ class ZoneBoxState extends State<ZoneBox> {
                             null,
                           );
                           setState(() {
-                            widget.zoneData.name = value;
+                            widget.historydata.name = value;
                           });
 
-                          print("nnnnaaammmeee===${widget.zoneData.name}");
+                          print("nnnnaaammmeee===${widget.historydata.name}");
                           print("nnnnaaammmeee===${_nameController.text}");
                         },
                         textAlign: TextAlign.center,
@@ -279,7 +271,6 @@ class ZoneBoxState extends State<ZoneBox> {
                         ),
                       ),
                     ),
-
                     SizedBox(
                       width: 30,
                       height: 30,
@@ -297,7 +288,7 @@ class ZoneBoxState extends State<ZoneBox> {
                             // if (_polygons.isNotEmpty) {
                             //   goToPolygon(_polygons.first);
                             // }
-                            controller.mapPage(widget.zoneData);
+                            // controller.mapPage(widget.hi);
                           },
                         ),
                       ),
@@ -308,59 +299,30 @@ class ZoneBoxState extends State<ZoneBox> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _timeBox(_initialTimeController, colordark),
+                    _timeBox(widget.historydata.time, colordark),
                     const SizedBox(width: 15),
 
-                    Text(
-                      "TOT",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: color2,
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-
-                    _timeBox_(_stopTimeController, colordark),
+                    _timeBox_(widget.historydata.time, colordark),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 15),
+
                 Obx(() {
-                  // if (isOnController.isLoading.value) {
-                  //   // Show loading or placeholder while loading
-                  //   return CircularProgressIndicator();
-                  // }
-                  bool isOn = isOnController.isOnList[widget.zoneData.index];
+                  if (isOnController.isLoading.value) {
+                    // Show loading or placeholder while loading
+                    return CircularProgressIndicator();
+                  }
+
+                  bool isOn = isOnController.isOnList[widget.historydata.index];
+                  print("Obx is ============================rebuilding");
 
                   return buildConnectButton(
                     text: isOn ? 'Disconnect' : 'Connect',
                     backgroundColor: color2,
                     textColor: Textcolor,
-                    onPressed: () {
-                      isOnController.toggleSwitch(context, widget.zoneData);
-                    },
+                    onPressed: () {},
                   );
                 }),
-                SizedBox(height: 8),
-
-                // Obx(() {
-                //   if (isOnController.isLoading.value) {
-                //     // Show loading or placeholder while loading
-                //     return CircularProgressIndicator();
-                //   }
-
-                //   bool isOn = isOnController.isOnList[zoneData.index];
-                //   print("Obx is ============================rebuilding");
-
-                //   return buildConnectButton(
-                //     text: isOn ? 'Disconnect' : 'Connect',
-                //     backgroundColor: color2,
-                //     textColor: Textcolor,
-                //     onPressed: () {
-                //       isOnController.toggleSwitch(context, zoneData);
-                //     },
-                //   );
-                // }),
               ],
             ),
           ),
@@ -406,7 +368,7 @@ class ZoneBoxState extends State<ZoneBox> {
                   );
 
                   if (confirm == true) {
-                    await deleteZone(widget.zoneData.index);
+                    await deleteZone(widget.historydata.index);
                     setState(() {
                       _showExit = false;
                     });

@@ -45,7 +45,7 @@ class _LocationHistoryState extends State<LocationHistory> {
   final List<Marker> _geo = [];
   final List<Marker> _currentLoc = [];
 
-  late GeofenceService _geofenceService;
+  // late GeofenceService _geofenceService;
   StreamSubscription<Position>? _locationSubscription;
 
   Set<Marker> _markers = {};
@@ -132,6 +132,8 @@ class _LocationHistoryState extends State<LocationHistory> {
   @override
   void initState() {
     super.initState();
+    // _geofenceService = GeofenceService(); // 👈 initialize here (or with params if required)
+
     loadCustomIcon();
     fenceIcon();
     searchController.addListener(_onSearchChanged);
@@ -176,7 +178,7 @@ class _LocationHistoryState extends State<LocationHistory> {
   void dispose() {
     searchController.removeListener(_onSearchChanged);
     searchController.dispose();
-    _geofenceService.dispose();
+    // _geofenceService.dispose();
 
     super.dispose();
   }

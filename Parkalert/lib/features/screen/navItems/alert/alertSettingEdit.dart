@@ -2,7 +2,7 @@ import 'package:Parkalert/features/controllers/drawerController.dart';
 import 'package:Parkalert/features/controllers/pagger.dart';
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/features/controllers/alert/isON.dart';
-import 'package:Parkalert/features/controllers/navItems/main_controller.dart';
+import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/features/screen/helperWidget/bluetooth.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';

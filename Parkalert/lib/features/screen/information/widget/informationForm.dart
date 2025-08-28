@@ -11,7 +11,17 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 
 class InformationForm extends StatelessWidget {
-  const InformationForm({super.key});
+  final TextEditingController firstNameController;
+  final TextEditingController lastNameController;
+  final TextEditingController emailController;
+  final TextEditingController phoneController;
+  const InformationForm({
+    super.key,
+    required this.firstNameController,
+    required this.lastNameController,
+    required this.emailController,
+    required this.phoneController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +34,7 @@ class InformationForm extends StatelessWidget {
       child: Column(
         children: [
           TextFormField(
+            controller: firstNameController,
             expands: false,
             decoration: InputDecoration(
               labelText: loc.firstName,
@@ -33,6 +44,7 @@ class InformationForm extends StatelessWidget {
           ),
           SizedBox(height: 16.0),
           TextFormField(
+            controller: lastNameController,
             expands: false,
             decoration: InputDecoration(
               labelText: loc.lastName,
@@ -42,6 +54,7 @@ class InformationForm extends StatelessWidget {
           ),
           SizedBox(height: 16.0),
           TextFormField(
+            controller: emailController,
             expands: false,
             decoration: InputDecoration(
               labelText: loc.email,
@@ -51,6 +64,7 @@ class InformationForm extends StatelessWidget {
           ),
           SizedBox(height: 16.0),
           TextFormField(
+            controller: phoneController,
             expands: false,
             decoration: InputDecoration(
               labelText: loc.phoneNo,

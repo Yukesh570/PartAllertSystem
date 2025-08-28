@@ -1,6 +1,7 @@
 import 'package:Parkalert/common/widgets/login_signUp/form_divider.dart';
 import 'package:Parkalert/common/widgets/login_signUp/socialButton.dart';
 import 'package:Parkalert/features/controllers/information/information_controller.dart';
+import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/features/screen/helperWidget/sound.dart';
 import 'package:Parkalert/features/screen/information/widget/agreePolicy.dart';
@@ -16,6 +17,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -31,6 +33,10 @@ class Information extends StatefulWidget {
 
 class _InformationState extends State<Information> {
   String? selectedLang = 'en'; // No language selected initially
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
 
   void changeLanguage(String langCode) {
     print("Language changed to: $langCode");
@@ -50,8 +56,8 @@ class _InformationState extends State<Information> {
 
   @override
   Widget build(BuildContext context) {
-    final InformationController controller = Get.put(
-      InformationController(),
+    final MainController controller = Get.put(
+      MainController(),
     ); // registers controller
 
     final loc = AppLocalizations.of(context);
@@ -155,14 +161,31 @@ class _InformationState extends State<Information> {
                       ),
                     ),
                     SizedBox(height: 16.0),
-                    InformationForm(),
+                    InformationForm(
+                      firstNameController: firstNameController,
+                      lastNameController: lastNameController,
+                      emailController: emailController,
+                      phoneController: phoneController,
+                    ),
                     AgreePolicyTextChoice(dark: dark),
                     SizedBox(height: 16.0),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          controller.InfonextPage();
+                          final box = GetStorage();
+                          box.write(
+                            'isRegistered',
+                            true,
+                          ); // ✅ Save flag that account is created
+                          box.write('userData', {
+                            'firstName': firstNameController.text,
+                            'lastName': lastNameController.text,
+                            'email': emailController.text,
+                            'phone': phoneController.text,
+                          });
+
+                          controller.alertPage();
                         },
                         child: Text(
                           loc.createAccount,

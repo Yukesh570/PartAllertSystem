@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:Parkalert/features/controllers/alert/isON.dart';
 import 'package:Parkalert/features/controllers/drawerController.dart';
 import 'package:Parkalert/features/controllers/navItems/freeZone_controller.dart';
@@ -8,10 +10,12 @@ import 'package:Parkalert/features/screen/helperWidget/alertFrom.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/features/screen/helperWidget/sound.dart';
+import 'package:Parkalert/features/screen/navItems/activity/activityBox.dart';
 import 'package:Parkalert/features/screen/navItems/freezones/zoneBox.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
 import 'package:Parkalert/utils/storage/data/ZoneData.dart';
+import 'package:Parkalert/utils/storage/data/historyData.dart';
 import 'package:Parkalert/utils/storage/zoneStorage/zoneStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -22,30 +26,61 @@ import 'package:shared_preferences/shared_preferences.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-class Freezone extends StatefulWidget {
-  const Freezone({super.key});
+class ActivityHistory extends StatefulWidget {
+  const ActivityHistory({super.key});
 
   @override
-  State<Freezone> createState() => _FreezoneState();
+  State<ActivityHistory> createState() => _ActivityHistoryState();
 }
 
-class _FreezoneState extends State<Freezone> {
+class _ActivityHistoryState extends State<ActivityHistory> {
   final zoneController = Get.put(FreezoneController());
+  List<Historydata> _history = [];
+  bool _loadingHistory = true;
+
+  Future<void> loadSavedLocations() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString("currentLocation") ?? "[]";
+
+    final List<dynamic> jsonList = json.decode(jsonString);
+
+    final historyList = jsonList.asMap().entries.map((entry) {
+      final index = entry.key;
+      final item = entry.value as Map<String, dynamic>;
+      return Historydata.fromJson({
+        "index": index,
+        "lat": item["lat"],
+        "lng": item["lng"],
+        "time": item["time"].toString(),
+        "name": item["name"],
+      });
+    }).toList();
+
+    setState(() {
+      _history = historyList;
+      _loadingHistory = false;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     zoneController.loadZonesFromPrefs();
+    loadSavedLocations();
   }
 
   final TextEditingController _nameController = TextEditingController();
 
   Widget build(BuildContext context) {
     final drawerCtrl = Get.find<DrawerControllerX>();
+    print(
+      "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq${_history}",
+    );
 
     final dark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context);
     final MainController controller = Get.put(MainController());
+
     void printAllSharedPreferences() async {
       final prefs = await SharedPreferences.getInstance();
       final zones = prefs.getStringList('zones');
@@ -86,7 +121,7 @@ class _FreezoneState extends State<Freezone> {
       return const Center(child: CircularProgressIndicator());
     }
     return PageWrapper(
-      routeName: '/freezone', // current route
+      routeName: '/activity', // current route
 
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -99,7 +134,7 @@ class _FreezoneState extends State<Freezone> {
           centerTitle: true,
 
           title: Text(
-            loc.freezones,
+            "Activity History",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           leading: Builder(
@@ -174,7 +209,7 @@ class _FreezoneState extends State<Freezone> {
                         if (zoneController.zones.isEmpty) {
                           return const Center(
                             child: Text(
-                              'No ZoneBox',
+                              'No History Found',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -184,11 +219,11 @@ class _FreezoneState extends State<Freezone> {
                         }
                         return SingleChildScrollView(
                           child: Column(
-                            children: zoneController.zones
+                            children: _history
                                 .map(
                                   (data) => Padding(
                                     padding: const EdgeInsets.all(5.0),
-                                    child: ZoneBox(zoneData: data),
+                                    child: ActivityBox(historydata: data),
                                   ),
                                 )
                                 .toList(),
@@ -232,17 +267,7 @@ class _FreezoneState extends State<Freezone> {
                       },
                       context: context,
                     ),
-                    addAlertButton(
-                      context: context,
-                      onPressed: () async {
-                        await _addZone(
-                          name: "FreeZone ${zoneController.zones.length + 1}",
-                          initialTime: "--:--",
-                          stopTime: "--:--", // or get from UI
-                          isOn: false,
-                        );
-                      },
-                    ),
+                    addAlertButton(context: context, onPressed: () {}),
                   ],
                 ),
               ),

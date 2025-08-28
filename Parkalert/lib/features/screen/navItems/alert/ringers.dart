@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/features/controllers/alert/isON.dart';
-import 'package:Parkalert/features/controllers/navItems/main_controller.dart';
+import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alert.dart';

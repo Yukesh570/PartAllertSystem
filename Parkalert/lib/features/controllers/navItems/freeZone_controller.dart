@@ -21,15 +21,6 @@ class FreezoneController extends GetxController {
     loadZonesFromPrefs();
   }
 
-  void freezone() {
-    final drawerCtrl = Get.find<DrawerControllerX>();
-    drawerCtrl.changeRoute('/freezone'); // Set current route
-
-    Get.offAll(
-      () => Freezone(),
-    ); // ✅ use () => Alert() for better route stack handling
-  }
-
   Future<void> loadZonesFromPrefs() async {
     zones.value = await loadZones();
 

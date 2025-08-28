@@ -1,14 +1,14 @@
-import 'package:Parkalert/features/screen/map/map.dart';
-import 'package:Parkalert/features/screen/onboarding/onboarding.dart';
-import 'package:get/get.dart';
+// import 'package:Parkalert/features/screen/map/map.dart';
+// import 'package:Parkalert/features/screen/onboarding/onboarding.dart';
+// import 'package:get/get.dart';
 
-class InformationController extends GetxController {
-  static InformationController get instance => Get.find();
+// class InformationController extends GetxController {
+//   static InformationController get instance => Get.find();
 
-  //variable
+//   //variable
 
-  void InfonextPage() {
-    // Get.offAll(Mappage());
-    // Get.offAll(());
-  }
-}
+//   void InfonextPage() {
+//     Get.offAll(Aler());
+//     Get.offAll(());
+//   }
+// }
