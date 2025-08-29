@@ -19,8 +19,6 @@ class IsOnController extends GetxController {
   }
 
   Future<void> loadIsOnFromStorage() async {
-    // final prefs = await SharedPreferences.getInstance();
-    // final List<String>? jsonStringList = prefs.getStringList('ringers');
     final List<RingerData> ringer = await loadRingers();
     final List<bool> extractedIsOnList = ringer
         .map((ring) => ring.isOn)

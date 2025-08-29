@@ -12,6 +12,7 @@ import 'package:Parkalert/utils/storage/ringerStorage/ringerStorage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart'; // for SystemNavigator
 
@@ -35,6 +36,18 @@ class _AlertState extends State<Alert> {
     loadAndSetRingers();
     final isOnController = Get.put(IsOnController());
     isOnController.loadIsOnFromStorage();
+    checkIfDataSaved();
+  }
+
+  void checkIfDataSaved() {
+    final box = GetStorage();
+    final userData = box.read('userData');
+
+    if (userData != null) {
+      print("📦 Saved user data: $userData");
+    } else {
+      print("⚠️ No user data found in storage.");
+    }
   }
 
   void loadAndSetRingers() async {

@@ -1,3 +1,4 @@
+import 'package:Parkalert/api/api.dart';
 import 'package:Parkalert/common/widgets/login_signUp/form_divider.dart';
 import 'package:Parkalert/common/widgets/login_signUp/socialButton.dart';
 import 'package:Parkalert/features/controllers/information/information_controller.dart';
@@ -32,6 +33,8 @@ class Information extends StatefulWidget {
 }
 
 class _InformationState extends State<Information> {
+  final _formKey = GlobalKey<FormState>();
+
   String? selectedLang = 'en'; // No language selected initially
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -65,6 +68,8 @@ class _InformationState extends State<Information> {
       // This means localization isn't yet loaded or context is not in a localized widget tree
       return const Center(child: CircularProgressIndicator());
     }
+    final ApiService apiService = ApiService();
+
     final dark = Theme.of(context).brightness == Brightness.dark;
     final Map<String, String> languages = {
       "EN": "en",
@@ -162,6 +167,8 @@ class _InformationState extends State<Information> {
                     ),
                     SizedBox(height: 16.0),
                     InformationForm(
+                      formKey: _formKey,
+
                       firstNameController: firstNameController,
                       lastNameController: lastNameController,
                       emailController: emailController,
@@ -172,20 +179,46 @@ class _InformationState extends State<Information> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          final box = GetStorage();
-                          box.write(
-                            'isRegistered',
-                            true,
-                          ); // ✅ Save flag that account is created
-                          box.write('userData', {
-                            'firstName': firstNameController.text,
-                            'lastName': lastNameController.text,
-                            'email': emailController.text,
-                            'phone': phoneController.text,
-                          });
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            try {
+                              final box = GetStorage();
 
-                          controller.alertPage();
+                              box.write(
+                                'isRegistered',
+                                true,
+                              ); // ✅ Save flag that account is created
+                              box.write('userData', {
+                                'firstName': firstNameController.text,
+                                'lastName': lastNameController.text,
+                                'email': emailController.text,
+                                'phone': phoneController.text,
+                              });
+                              final success = await apiService.registerUser(
+                                firstName: firstNameController.text,
+                                lastName: lastNameController.text,
+                                email: emailController.text,
+                                phoneNumber: phoneController.text,
+                              );
+                              print("successssssssss: ${success}");
+                              controller.alertPage();
+                            } catch (e) {
+                              // ❌ Network or unexpected error
+                              Get.snackbar(
+                                'Error',
+                                'Something went wrong: $e',
+                                backgroundColor: Colors.red,
+                                colorText: Colors.white,
+                              );
+                            }
+                          } else {
+                            Get.snackbar(
+                              'Error',
+                              'Please fill in all the required fields.',
+                              backgroundColor: Colors.red,
+                              colorText: Colors.white,
+                            );
+                          }
                         },
                         child: Text(
                           loc.createAccount,

@@ -11,12 +11,14 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 
 class InformationForm extends StatelessWidget {
+  final GlobalKey<FormState> formKey;
   final TextEditingController firstNameController;
   final TextEditingController lastNameController;
   final TextEditingController emailController;
   final TextEditingController phoneController;
   const InformationForm({
     super.key,
+    required this.formKey,
     required this.firstNameController,
     required this.lastNameController,
     required this.emailController,
@@ -31,6 +33,7 @@ class InformationForm extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
     return Form(
+      key: formKey,
       child: Column(
         children: [
           TextFormField(
