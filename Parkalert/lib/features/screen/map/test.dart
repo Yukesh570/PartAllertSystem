@@ -11,34 +11,25 @@ Future<void> requestGeofencePermissions() async {
   ].request();
 }
 
-/// Start the native ForegroundService for geofencing
-Future<void> startGeofenceService() async {
-  try {
-    print("✅✅✅✅✅✅✅5464564565464564✅✅✅✅✅✅✅✅✅✅✅✅");
-
-    await geofenceChannel.invokeMethod("startGeofenceService");
-  } catch (e) {
-    print("Error starting geofence service: $e");
-  }
-}
-
-/// Stop the native ForegroundService for geofencing
-Future<void> stopGeofenceService() async {
-  try {
-    await geofenceChannel.invokeMethod("stopGeofenceService");
-  } catch (e) {
-    print("Error stopping geofence service: $e");
-  }
-}
-
 Future<void> ensureLocationPermissions() async {
-  // Step 1: Request foreground
-  var status = await Permission.locationWhenInUse.request();
+  // Step 1: Request foreground first
+  var fg = await Permission.location.request();
+  if (!fg.isGranted) {
+    print("❌ Foreground location denied");
+    return;
+  }
 
-  if (status.isGranted) {
-    // Step 2: Request background (Always)
+  // Step 2: Request background ("Allow all the time")
+  var bg = await Permission.locationAlways.request();
+  if (!bg.isGranted) {
+    print("⚠️ Background location denied");
 
-    await startGeofenceService();
+    // If permanently denied, guide user to Settings
+    if (await Permission.locationAlways.isPermanentlyDenied) {
+      await openAppSettings();
+    }
+  } else {
+    print("✅ Background location granted");
   }
 }
 

@@ -1,5 +1,9 @@
 package com.parkAlert.Parkalert;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -54,38 +58,76 @@ public class GeofenceForegroundService extends Service {
     public static MethodChannel channel = null;
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d("GeofenceService", "✅ GeofenceForegroundService started");
+public void onCreate() {
+    super.onCreate();
+    Log.d("GeofenceService", "✅ GeofenceForegroundService started");
 
-        createEventChannel();
-        createNotificationChannel();
-        startForeground(1001, buildNotification("Geofence monitoring active").build());
+    createEventChannel();
+    createNotificationChannel();
+    Log.d("GeofenceService", "✅✅ GeofenceForegroundService started");
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult result) {
-                if (result == null) return;
-                for (Location loc : result.getLocations()) {
-                    Log.d("GeofenceService", "Location update: " + loc.getLatitude() + ", " + loc.getLongitude());
-        checkGeofence(loc);
-                }
-            }
-        };
-
-        startLocationUpdates();
+    // Check permissions
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        Log.e("GeofenceService", "FOREGROUND_SERVICE_LOCATION not granted, stopping service");
+        stopSelf();
+        return;
     }
+    Log.d("GeofenceService", "✅✅✅ GeofenceForegroundService started");
+
+    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        Log.e("GeofenceService", "Location permissions not granted, stopping service");
+        stopSelf();
+        return;
+    }
+        Log.d("GeofenceService", "✅✅✅✅ GeofenceForegroundService started");
+
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        Log.e("GeofenceService", "Background location permission not granted, stopping service");
+        stopSelf();
+        return;
+    }
+        Log.d("GeofenceService", "✅✅✅✅✅ GeofenceForegroundService started");
+
+
+    startForeground(1001, buildNotification("Geofence monitoring active").build());
+    Log.d("GeofenceService", "✅✅✅✅✅✅ GeofenceForegroundService started");
+
+    fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+    locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult result) {
+            if (result == null) return;
+            for (Location loc : result.getLocations()) {
+                Log.d("GeofenceService", "Location update: " + loc.getLatitude() + ", " + loc.getLongitude());
+                checkGeofence(loc);
+            }
+        }
+    };
+
+    startLocationUpdates();
+}
 
     private void startLocationUpdates() {
-        LocationRequest request = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(5000)
-                .setSmallestDisplacement(1f);
-
-        fusedLocationClient.requestLocationUpdates(request, locationCallback, getMainLooper());
+    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        Log.e("GeofenceService", "Location permissions not granted, stopping service");
+        stopSelf();
+        return;
     }
+
+    LocationRequest request = LocationRequest.create()
+            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+            .setInterval(5000)
+            .setSmallestDisplacement(1f);
+    Log.d("GeofenceService", "Checking location permissions");
+
+    fusedLocationClient.requestLocationUpdates(request, locationCallback, getMainLooper());
+}
 
     private void checkGeofence(Location location) {
     List<Zone> zones = loadZonesFromPrefs();
@@ -259,7 +301,7 @@ private Zone parseZoneFromJson(JSONObject obj) throws Exception {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        return new NotificationCompat.Builder(this, "geofence_channel")
+        return new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Geofence Service")
                 .setContentText(contentText)
                 .setSmallIcon(android.R.drawable.ic_dialog_map)
@@ -284,7 +326,7 @@ private Zone parseZoneFromJson(JSONObject obj) throws Exception {
     private void createNotificationChannel() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         NotificationChannel channel = new NotificationChannel(
-                "geofence_channel",
+                CHANNEL_ID,
                 "Geofence Service",
                 NotificationManager.IMPORTANCE_HIGH // <-- was LOW
         );

@@ -1,10 +1,13 @@
+import 'package:Parkalert/api/api.dart';
 import 'package:Parkalert/features/controllers/drawerController.dart';
 import 'package:Parkalert/features/screen/helperWidget/sound.dart';
 import 'package:Parkalert/features/screen/information/information.dart';
 import 'package:Parkalert/features/screen/map/test.dart';
 import 'package:Parkalert/features/services/bluetooth_event_handler.dart';
+import 'package:Parkalert/utils/healper/permission.dart';
 import 'package:flutter/material.dart';
 import 'package:Parkalert/app.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -21,11 +24,25 @@ void main() async {
   await NotificationService().requestPermissions();
   BluetoothEventHandler.initialize();
   // await requestGeofencePermissions();
+  const MethodChannel('com.dudu/location').setMethodCallHandler((call) async {
+    if (call.method == 'sendHistory') {
+      final history = Map<String, dynamic>.from(call.arguments);
 
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
-    listenForGeofenceEvents();
-    await ensureLocationPermissions();
+      // Call your API
+      await ApiService().createHistory(
+        index: history['index'],
+        lat: history['lat'],
+        lng: history['lng'],
+        time: history['time'].toString(),
+        name: history['name'],
+      );
+    }
   });
+
+  // WidgetsBinding.instance.addPostFrameCallback((_) async {
+  //   listenForGeofenceEvents();
+  //   await ensureLocationPermissions();
+  // });
   await dotenv.load();
   runApp(const App());
 }

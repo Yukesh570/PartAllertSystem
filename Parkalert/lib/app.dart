@@ -2,15 +2,13 @@ import 'package:Parkalert/features/screen/information/information.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
 import 'package:Parkalert/features/screen/onboarding/onboarding.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
+import 'package:Parkalert/utils/healper/permission.dart';
+import 'package:Parkalert/utils/healper/permissiongate.dart';
 import 'package:flutter/material.dart';
 import 'package:Parkalert/utils/theme/theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
-
-void main() {
-  runApp(App());
-}
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -34,6 +32,9 @@ class _AppState extends State<App> {
     }
     // ✅ Check if user already created an account
     _isRegistered = _box.read('isRegistered') ?? false;
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   requestLocationPermissions(context);
+    // });
   }
 
   void _setLocale(Locale locale) {
@@ -71,11 +72,14 @@ class _AppState extends State<App> {
           child: child!,
         );
       },
-      // home: Alert(),
-      // home: Information(onLocaleChange: _setLocale),
-      home: _isRegistered
-          ? const Alert()
-          : Information(onLocaleChange: _setLocale),
+      home: PermissionGate(
+        isRegistered: _isRegistered,
+        onLocaleChange: _setLocale,
+      ),
+
+      // home: _isRegistered
+      //     ? const Alert()
+      //     : Information(onLocaleChange: _setLocale),
     );
   }
 }
