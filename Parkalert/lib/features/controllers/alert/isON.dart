@@ -42,6 +42,10 @@ class IsOnController extends GetxController {
 
   void toggleSwitch(BuildContext context, RingerData ringerData) async {
     await activeBluetooth();
+    if (ringerData.index >= isOnList.length) {
+      print("Invalid index: ${ringerData.index}");
+      return;
+    }
     print("Current isOnList: $isOnList");
     print("Any true? ${isOnList.any((on) => on)}");
     print(isOnList[ringerData.index]);

@@ -4,6 +4,7 @@ import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class navButton extends StatelessWidget {
@@ -271,8 +272,41 @@ class navButton extends StatelessWidget {
                         : TColors.dark.withOpacity(0.87),
                   ),
                   isDark: isDark,
+                  onTap: () async {
+                    // Show confirmation dialog
+                    final shouldExit = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        backgroundColor:
+                            Colors.white, // Set dialog background to white
+                        title: const Text('Exit App'),
+                        content: const Text(
+                          'Are you sure you want to exit ParkAlert?',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(ctx).pop(false),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(ctx).pop(true),
+                            child: const Text('Exit'),
+                          ),
+                        ],
+                      ),
+                    );
 
-                  onTap: () => Navigator.pop(context),
+                    if (shouldExit == true) {
+                      // Quit the app
+                      Navigator.of(context).pop(); // close the drawer first
+                      Future.delayed(const Duration(milliseconds: 100), () {
+                        // Exit the app
+                        // import 'dart:io';
+                        // exit(0);
+                        SystemNavigator.pop(); // recommended for Flutter
+                      });
+                    }
+                  },
                 ),
               ],
             );
@@ -289,10 +323,11 @@ class navButton extends StatelessWidget {
     required String currentRoute,
   }) async {
     if (currentRoute != targetRoute) {
-      bool didPop = await Navigator.of(context).maybePop();
-      if (didPop) {
-        onNavigate();
-      }
+      Navigator.pop(context); // 👈 closes drawer
+
+      await Navigator.of(context);
+
+      onNavigate();
     }
   }
 

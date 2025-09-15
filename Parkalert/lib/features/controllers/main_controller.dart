@@ -15,6 +15,7 @@ import 'package:Parkalert/features/screen/navItems/working/working.dart';
 import 'package:Parkalert/features/screen/navItems/yourInformation/yourinfo.dart';
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/utils/storage/data/ZoneData.dart';
+import 'package:Parkalert/utils/storage/data/historyData.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
@@ -107,17 +108,18 @@ class MainController extends GetxController {
     Get.off(() => Yourinfo()); //
   }
 
-  void locationHistory() {
-    print("whyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
-
+  void locationHistory({Historydata? historydata}) {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/locationHistory'); // Set current route
 
-    Get.to(() => LocationHistory()); //
+    if (historydata != null) {
+      Get.to(() => LocationHistory(historydata: historydata));
+    } else {
+      Get.to(() => LocationHistory()); // fallback without data
+    }
   }
 
   void activityHistory() {
-    print("whyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy");
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/activity'); // Set current route
 

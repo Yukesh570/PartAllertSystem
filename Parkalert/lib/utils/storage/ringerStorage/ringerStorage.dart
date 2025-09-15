@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:Parkalert/features/controllers/alert/isON.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
 
@@ -97,4 +99,32 @@ Future<void> updateRingers(
 
   printAllSharedPreferences();
   await prefs.setStringList("ringers", updatedJsonList);
+}
+
+Future<void> deleteRinger(int index) async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String>? existingJsonList = prefs.getStringList('ringers');
+
+  if (existingJsonList == null) return;
+
+  // Convert to RingerData list
+  List<RingerData> allRingers = existingJsonList
+      .map((jsonStr) => RingerData.fromJson(jsonDecode(jsonStr)))
+      .toList();
+
+  // Remove the ringer with the given index
+  allRingers.removeWhere((r) => r.index == index);
+
+  // Reassign indices to keep them continuous starting from 0
+  for (int i = 0; i < allRingers.length; i++) {
+    allRingers[i].index = i;
+  }
+
+  // Save the updated list back to SharedPreferences
+  List<String> updatedJsonList = allRingers
+      .map((r) => jsonEncode(r.toJson()))
+      .toList();
+  await prefs.setStringList('ringers', updatedJsonList);
+  final isOnController = Get.find<IsOnController>();
+  isOnController.loadIsOnFromStorage();
 }

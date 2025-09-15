@@ -9,18 +9,35 @@ import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
-class AgreePolicyTextChoice extends StatelessWidget {
-  const AgreePolicyTextChoice({super.key, required this.dark});
-
+class AgreePolicyTextChoice extends StatefulWidget {
   final bool dark;
+  final Function(bool, bool) onChanged; // Pass back both checkbox states
+
+  const AgreePolicyTextChoice({
+    super.key,
+    required this.dark,
+    required this.onChanged,
+  });
+
+  @override
+  State<AgreePolicyTextChoice> createState() => _AgreePolicyTextChoiceState();
+}
+
+class _AgreePolicyTextChoiceState extends State<AgreePolicyTextChoice> {
+  bool _agreePolicy = false;
+  bool _inform = false;
+
+  void _updateState() {
+    widget.onChanged(_agreePolicy, _inform); // Notify parent
+  }
 
   @override
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context);
     if (loc == null) {
-      // This means localization isn't yet loaded or context is not in a localized widget tree
       return const Center(child: CircularProgressIndicator());
     }
+
     return Column(
       children: [
         Row(
@@ -29,12 +46,18 @@ class AgreePolicyTextChoice extends StatelessWidget {
             SizedBox(
               width: 24,
               height: 24,
-              child: Checkbox(value: false, onChanged: (value) {}),
+              child: Checkbox(
+                value: _agreePolicy,
+                onChanged: (value) {
+                  setState(() => _agreePolicy = value ?? false);
+                  _updateState();
+                },
+              ),
             ),
             const SizedBox(width: 10),
             Expanded(
               child: Text.rich(
-                (TextSpan(
+                TextSpan(
                   children: [
                     TextSpan(
                       text: '${loc.iAgreeTo} ',
@@ -43,11 +66,13 @@ class AgreePolicyTextChoice extends StatelessWidget {
                     TextSpan(
                       text: '${loc.privacyPolicy} ',
                       style: Theme.of(context).textTheme.bodyMedium!.apply(
-                        color: dark
+                        color: widget.dark
                             ? Colors.white
                             : Theme.of(context).colorScheme.primary,
                         decoration: TextDecoration.underline,
-                        decorationColor: dark ? Colors.white : TColors.primary,
+                        decorationColor: widget.dark
+                            ? Colors.white
+                            : TColors.primary,
                       ),
                     ),
                     TextSpan(
@@ -57,29 +82,34 @@ class AgreePolicyTextChoice extends StatelessWidget {
                     TextSpan(
                       text: loc.termsOfUse,
                       style: Theme.of(context).textTheme.bodyMedium!.apply(
-                        color: dark ? Colors.white : TColors.primary,
+                        color: widget.dark ? Colors.white : TColors.primary,
                         decoration: TextDecoration.underline,
-                        decorationColor: dark
+                        decorationColor: widget.dark
                             ? Colors.white
                             : Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ],
-                )),
+                ),
               ),
             ),
           ],
         ),
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
         Row(
           children: [
             SizedBox(
               width: 24,
               height: 24,
-              child: Checkbox(value: false, onChanged: (value) {}),
+              child: Checkbox(
+                value: _inform,
+                onChanged: (value) {
+                  setState(() => _inform = value ?? false);
+                  _updateState();
+                },
+              ),
             ),
             const SizedBox(width: 10),
-
             Expanded(
               child: Text(
                 loc.inform,

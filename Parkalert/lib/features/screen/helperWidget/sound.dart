@@ -79,14 +79,14 @@ class NotificationService {
 }
 
 List<String> soundList = [
-  'abhash',
-  'idiot',
-  'sweta',
-  'ujjwal',
-  'nischal',
-  'yugen',
-  'yukesh',
-  'yunik',
+  'tone1',
+  'tone2',
+  'tone3',
+  'tone4',
+  'tone5',
+  'tone6',
+  'tone7',
+  'tone8',
 ];
 
 void showSoundPicker({

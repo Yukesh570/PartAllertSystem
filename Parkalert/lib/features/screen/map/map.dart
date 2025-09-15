@@ -148,18 +148,30 @@ class _MappageState extends State<Mappage> {
   }
 
   void trackUserLocation() async {
+    LatLng? _lastPosition;
+
     _locationSubscription =
         Geolocator.getPositionStream(
           locationSettings: const LocationSettings(
             accuracy: LocationAccuracy.high,
-            distanceFilter: 5, // update every 5 meters
+            distanceFilter: 5,
           ),
         ).listen((Position position) async {
-          final GoogleMapController controller = await _controller.future;
-          LatLng userLatLng = LatLng(position.latitude, position.longitude);
+          LatLng newPos = LatLng(position.latitude, position.longitude);
 
-          // Smooth camera move
-          controller.animateCamera(CameraUpdate.newLatLng(userLatLng));
+          // Only move if the distance is significant
+          if (_lastPosition == null ||
+              Geolocator.distanceBetween(
+                    _lastPosition!.latitude,
+                    _lastPosition!.longitude,
+                    newPos.latitude,
+                    newPos.longitude,
+                  ) >
+                  5) {
+            final GoogleMapController controller = await _controller.future;
+            controller.animateCamera(CameraUpdate.newLatLng(newPos));
+            _lastPosition = newPos;
+          }
         });
   }
 

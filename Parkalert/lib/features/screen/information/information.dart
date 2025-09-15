@@ -7,6 +7,7 @@ import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/features/screen/helperWidget/sound.dart';
 import 'package:Parkalert/features/screen/information/widget/agreePolicy.dart';
 import 'package:Parkalert/features/screen/information/widget/informationForm.dart';
+import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
 import 'package:Parkalert/utils/constants/colors.dart';
@@ -40,6 +41,14 @@ class _InformationState extends State<Information> {
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
+  bool _agreePolicy = false;
+  bool _inform = false;
+  void _updateCheckboxState(bool agreePolicy, bool inform) {
+    setState(() {
+      _agreePolicy = agreePolicy;
+      _inform = inform;
+    });
+  }
 
   void changeLanguage(String langCode) {
     print("Language changed to: $langCode");
@@ -93,17 +102,7 @@ class _InformationState extends State<Information> {
           loc.appTitle,
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: Icon(
-              Icons.menu,
-              color: dark ? Colors.white : Colors.black, // 👈 Set color here
-            ),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
       ),
-      drawer: const navButton(),
       body: Stack(
         children: [
           Positioned.fill(
@@ -174,52 +173,91 @@ class _InformationState extends State<Information> {
                       emailController: emailController,
                       phoneController: phoneController,
                     ),
-                    AgreePolicyTextChoice(dark: dark),
+                    AgreePolicyTextChoice(
+                      dark: dark,
+                      onChanged: _updateCheckboxState,
+                    ),
                     SizedBox(height: 16.0),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            try {
-                              final box = GetStorage();
+                        // onPressed: () async {
+                        //   if (_formKey.currentState!.validate()) {
+                        //     try {
+                        //       final box = GetStorage();
 
-                              box.write(
-                                'isRegistered',
-                                true,
-                              ); // ✅ Save flag that account is created
-                              box.write('userData', {
-                                'firstName': firstNameController.text,
-                                'lastName': lastNameController.text,
-                                'email': emailController.text,
-                                'phone': phoneController.text,
-                              });
-                              final success = await apiService.registerUser(
-                                firstName: firstNameController.text,
-                                lastName: lastNameController.text,
-                                email: emailController.text,
-                                phoneNumber: phoneController.text,
-                              );
-                              print("successssssssss: ${success}");
-                              controller.alertPage();
-                            } catch (e) {
-                              // ❌ Network or unexpected error
-                              Get.snackbar(
-                                'Error',
-                                'Something went wrong: $e',
-                                backgroundColor: Colors.red,
-                                colorText: Colors.white,
-                              );
-                            }
-                          } else {
+                        //       box.write(
+                        //         'isRegistered',
+                        //         true,
+                        //       ); // ✅ Save flag that account is created
+                        //       box.write('userData', {
+                        //         'firstName': firstNameController.text,
+                        //         'lastName': lastNameController.text,
+                        //         'email': emailController.text,
+                        //         'phone': phoneController.text,
+                        //       });
+                        //       final success = await apiService.registerUser(
+                        //         firstName: firstNameController.text,
+                        //         lastName: lastNameController.text,
+                        //         email: emailController.text,
+                        //         phoneNumber: phoneController.text,
+                        //       );
+                        //       print("successssssssss: ${success}");
+                        //       controller.alertPage();
+                        //     } catch (e) {
+                        //       // ❌ Network or unexpected error
+                        //       Get.snackbar(
+                        //         'Error',
+                        //         'No Internet Connection: $e',
+                        //         backgroundColor: Colors.red,
+                        //         colorText: Colors.white,
+                        //       );
+                        //     }
+                        //   } else {
+                        //     Get.snackbar(
+                        //       'Error',
+                        //       'Please fill in all the required fields.',
+                        //       backgroundColor: Colors.red,
+                        //       colorText: Colors.white,
+                        //     );
+                        //   }
+                        // },
+                        onPressed: () {
+                          if (!_agreePolicy || !_inform) {
                             Get.snackbar(
-                              'Error',
-                              'Please fill in all the required fields.',
-                              backgroundColor: Colors.red,
+                              'Warning',
+                              'You must agree to Privacy Policy & Inform consent before creating account.',
+                              backgroundColor: Colors.orange,
                               colorText: Colors.white,
                             );
+                            return;
                           }
+                          if (_formKey.currentState?.validate() != true) {
+                            // Get.snackbar(
+                            //   'Warning',
+                            //   'Please fill in all the required fields.',
+                            //   backgroundColor: Colors.red,
+                            //   colorText: Colors.white,
+                            //   snackPosition: SnackPosition.BOTTOM,
+                            //   margin: const EdgeInsets.all(16),
+                            //   duration: const Duration(seconds: 3),
+                            // );
+                            return;
+                          }
+
+                          final box = GetStorage();
+                          box.write('isRegistered', true);
+                          box.write('userData', {
+                            'firstName': firstNameController.text,
+                            'lastName': lastNameController.text,
+                            'email': emailController.text,
+                            'phone': phoneController.text,
+                          });
+
+                          // ✅ Navigate to Alert screen
+                          controller.alertPage();
                         },
+
                         child: Text(
                           loc.createAccount,
                           style: const TextStyle(

@@ -16,10 +16,10 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
 class Ringers extends StatefulWidget {
   final RingerData ringerData;
-  final VoidCallback onDelete; // Add this callback
+  // final RingerData ringerData;
 
-  const Ringers({Key? key, required this.ringerData, required this.onDelete})
-    : super(key: key);
+  // const Ringers({super.key, required this.ringerData});
+  const Ringers({Key? key, required this.ringerData}) : super(key: key);
 
   @override
   State<Ringers> createState() => _RingersState();
@@ -27,39 +27,66 @@ class Ringers extends StatefulWidget {
 
 class _RingersState extends State<Ringers> {
   bool _showDelete = false;
+  var ringersList = <RingerData>[].obs;
+
+  void initState() {
+    super.initState();
+  }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
-    final ringerData = widget.ringerData;
+    final ringerData = widget.ringerData; // use widget.ringerData
+
     final MainController controller = Get.put(MainController());
-    final isOnController = Get.find<IsOnController>();
+
     final dark = Theme.of(context).brightness == Brightness.dark;
 
+    final isOnController = Get.put(IsOnController(), permanent: true);
     List<Color> colorOptions = [
       AppColors.alert1,
       AppColors.alert2,
       AppColors.alert3,
     ];
+    final Color color = colorOptions[ringerData.index % colorOptions.length];
+    List<Color> colorOptionsdark = [
+      AppColors.alert1Dark,
+      AppColors.alert2Dark,
+      AppColors.alert3Dark,
+    ];
+    final Color colordark =
+        colorOptionsdark[ringerData.index % colorOptionsdark.length];
     List<Color> colorOptions2 = [
       AppColors.button1,
       AppColors.button2,
       AppColors.button3,
     ];
-    List<Color> colorText = [AppColors.text1, AppColors.text2, AppColors.text3];
-
-    final Color color = colorOptions[ringerData.index % colorOptions.length];
     final Color color2 = colorOptions2[ringerData.index % colorOptions2.length];
-    final Color textColor = colorText[ringerData.index % colorText.length];
+
+    List<Color> colorText = [AppColors.text1, AppColors.text2, AppColors.text3];
+    final Color Textcolor = colorText[ringerData.index % colorText.length];
 
     return GestureDetector(
       onTap: () {
         if (_showDelete) {
-          setState(() => _showDelete = false);
+          // If delete button is visible, just hide it
+          setState(() {
+            _showDelete = false;
+          });
         } else {
+          // Normal tap → open edit page
+          print('Container tapped!');
           controller.alertSettingeEditingPage(widget.ringerData);
         }
       },
-      onLongPress: () => setState(() => _showDelete = !_showDelete),
+      onLongPress: () {
+        setState(() {
+          _showDelete = !_showDelete; // show delete button
+        });
+      },
       child: Stack(
         children: [
           Container(
@@ -80,23 +107,13 @@ class _RingersState extends State<Ringers> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Header
+                // Alert 1 Header
                 Row(
                   children: [
                     Obx(() {
-                      if (isOnController.isLoading.value)
+                      if (isOnController.isLoading.value) {
+                        // Show loading or placeholder while loading
                         return CircularProgressIndicator();
-                      if (ringerData.index >= isOnController.isOnList.length) {
-                        return Container(
-                          width: 25,
-                          height: 25,
-                          child: Image.asset(
-                            'assets/logos/partalertlogosplash.png',
-                            width: 25,
-                            height: 25,
-                            fit: BoxFit.contain,
-                          ),
-                        );
                       }
                       bool isOn = isOnController.isOnList[ringerData.index];
                       return Container(
@@ -126,17 +143,26 @@ class _RingersState extends State<Ringers> {
                         ),
                       );
                     }),
+
                     const SizedBox(width: 8.0),
+
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 6,
                           horizontal: 8,
                         ),
+                        // width: 240, // set your width
+                        // height: 40, // set your height
                         decoration: BoxDecoration(
-                          color: color2,
-                          border: Border.all(color: Colors.grey, width: 1),
-                          borderRadius: BorderRadius.circular(16),
+                          color: color2, // or any background color
+                          border: Border.all(
+                            color: Colors.grey, // border color
+                            width: 1, // border width
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            16,
+                          ), // curved edges
                         ),
                         child: Center(
                           child: Text(
@@ -144,7 +170,7 @@ class _RingersState extends State<Ringers> {
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 18,
-                              color: textColor,
+                              color: Textcolor,
                             ),
                           ),
                         ),
@@ -153,13 +179,12 @@ class _RingersState extends State<Ringers> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                // Bluetooth Row
                 Row(
                   children: [
                     Container(
                       width: 24,
                       height: 24,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         color: Colors.white,
                         shape: BoxShape.circle,
                       ),
@@ -171,17 +196,26 @@ class _RingersState extends State<Ringers> {
                         ),
                       ),
                     ),
+
                     const SizedBox(width: 8.0),
+
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                           vertical: 6,
                           horizontal: 8,
                         ),
+                        // width: 240, // set your width
+                        // height: 40, // set your height
                         decoration: BoxDecoration(
-                          color: color2,
-                          border: Border.all(color: Colors.grey, width: 1),
-                          borderRadius: BorderRadius.circular(16),
+                          color: color2, // or any background color
+                          border: Border.all(
+                            color: Colors.grey, // border color
+                            width: 1, // border width
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            16,
+                          ), // curved edges
                         ),
                         child: Center(
                           child: Text(
@@ -189,7 +223,7 @@ class _RingersState extends State<Ringers> {
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 18,
-                              color: textColor,
+                              color: Textcolor,
                             ),
                           ),
                         ),
@@ -198,17 +232,24 @@ class _RingersState extends State<Ringers> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                // Date & Time Row
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
                   children: [
+                    SizedBox(width: 20),
+
                     Container(
-                      width: 120,
-                      height: 40,
+                      width: 120, // set your width
+                      height: 40, // set your height
+
                       decoration: BoxDecoration(
-                        color: color2,
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(16),
+                        color: color2, // or any background color
+                        border: Border.all(
+                          color: Colors.grey, // border color
+                          width: 1, // border width
+                        ),
+                        borderRadius: BorderRadius.circular(16), // curved edges
                       ),
                       child: Center(
                         child: Text(
@@ -216,18 +257,22 @@ class _RingersState extends State<Ringers> {
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 18,
-                            color: textColor,
+                            color: Textcolor,
                           ),
                         ),
                       ),
                     ),
+                    SizedBox(width: 20),
                     Container(
-                      width: 90,
-                      height: 40,
+                      width: 90, // set your width
+                      height: 40, // set your height
                       decoration: BoxDecoration(
-                        color: color2,
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(16),
+                        color: color2, // or any background color
+                        border: Border.all(
+                          color: Colors.grey, // border color
+                          width: 1, // border width
+                        ),
+                        borderRadius: BorderRadius.circular(16), // curved edges
                       ),
                       child: Center(
                         child: Text(
@@ -235,92 +280,103 @@ class _RingersState extends State<Ringers> {
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 18,
-                            color: textColor,
+                            color: Textcolor,
                           ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
-                // Connect Button
+
+                SizedBox(height: 8),
+
                 Obx(() {
-                  if (isOnController.isLoading.value)
+                  if (isOnController.isLoading.value) {
+                    // Show loading or placeholder while loading
                     return CircularProgressIndicator();
-                  if (ringerData.index >= isOnController.isOnList.length) {
-                    return buildConnectButton(
-                      text: 'Connect',
-                      backgroundColor: color2,
-                      textColor: textColor,
-                      onPressed: () {},
-                    );
                   }
+
                   bool isOn = isOnController.isOnList[ringerData.index];
+                  print("Obx is ============================rebuilding");
+
                   return buildConnectButton(
                     text: isOn ? 'Disconnect' : 'Connect',
                     backgroundColor: color2,
-                    textColor: textColor,
-                    onPressed: () =>
-                        isOnController.toggleSwitch(context, ringerData),
+                    textColor: Textcolor,
+                    onPressed: () {
+                      isOnController.toggleSwitch(context, ringerData);
+                    },
                   );
                 }),
+                if (_showDelete)
+                  Positioned(
+                    right: 2,
+                    top: 2,
+                    child: GestureDetector(
+                      onTap: () async {
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: const Text("Delete Ringer"),
+                              content: const Text(
+                                "Are you sure you want to delete this ringer?",
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: const Text("Cancel"),
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red,
+                                    minimumSize: const Size(60, 30),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 4,
+                                    ),
+                                    elevation: 0,
+                                  ),
+                                  onPressed: () => Navigator.pop(context, true),
+                                  child: const Text(
+                                    "Delete",
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+
+                        if (confirm == true) {
+                          await deleteRinger(ringerData.index);
+                          ringersList.removeWhere(
+                            (r) => r.index == ringerData.index,
+                          );
+
+                          setState(() {
+                            _showDelete = false;
+                          });
+                        }
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        padding: const EdgeInsets.all(2),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 16,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
-          // Delete Button
-          if (_showDelete)
-            Positioned(
-              right: 2,
-              top: 2,
-              child: GestureDetector(
-                onTap: () async {
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text("Delete Ringer"),
-                      content: const Text(
-                        "Are you sure you want to delete this ringer?",
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context, false),
-                          child: const Text("Cancel"),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            minimumSize: const Size(60, 30),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            elevation: 0,
-                          ),
-                          onPressed: () => Navigator.pop(context, true),
-                          child: const Text(
-                            "Delete",
-                            style: TextStyle(fontSize: 14),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                  if (confirm == true) {
-                    await deleteRinger(ringerData.index);
-                    widget.onDelete(); // Call the parent's callback
-                    setState(() => _showDelete = false);
-                  }
-                },
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: const EdgeInsets.all(2),
-                  child: const Icon(Icons.close, color: Colors.white, size: 16),
-                ),
-              ),
-            ),
         ],
       ),
     );

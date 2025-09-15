@@ -74,6 +74,7 @@ class _PermissionGateState extends State<PermissionGate>
       context: context,
       barrierDismissible: false,
       builder: (ctx) => AlertDialog(
+        backgroundColor: Colors.white,
         title: const Text("Location Permission Needed"),
         content: const Text(
           "This app requires location access to detect Bluetooth events "

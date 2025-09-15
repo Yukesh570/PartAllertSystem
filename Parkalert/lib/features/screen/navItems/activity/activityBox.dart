@@ -2,6 +2,7 @@ import 'package:Parkalert/features/controllers/navItems/freeZone_controller.dart
 import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
+import 'package:Parkalert/features/screen/map/locationHistory.dart';
 import 'package:Parkalert/utils/storage/data/historyData.dart';
 import 'package:Parkalert/utils/storage/zoneStorage/zoneStorage.dart';
 import 'package:flutter/material.dart';
@@ -152,18 +153,6 @@ class ActivityBoxState extends State<ActivityBox> {
     }
 
     return GestureDetector(
-      onLongPress: () {
-        setState(() {
-          _showExit = !_showExit; // 👈 toggle on long press
-        });
-      },
-      onTap: () {
-        if (_showExit) {
-          setState(() {
-            _showExit = false; // hide exit when tapping anywhere else
-          });
-        }
-      },
       child: Stack(
         children: [
           Container(
@@ -198,8 +187,8 @@ class ActivityBoxState extends State<ActivityBox> {
                             // Show loading or placeholder while loading
                             return CircularProgressIndicator();
                           }
-                          bool isOn =
-                              isOnController.isOnList[widget.historydata.index];
+                          // bool isOn =
+                          //     isOnController.isOnList[widget.historydata.index];
 
                           return Center(
                             child: Container(
@@ -208,14 +197,16 @@ class ActivityBoxState extends State<ActivityBox> {
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
-                                    color: isOn
-                                        ? const Color.fromARGB(
-                                            255,
-                                            22,
-                                            230,
-                                            129,
-                                          ).withOpacity(0.9)
-                                        : Colors.transparent,
+                                    color:
+                                        // isOn
+                                        // ? const Color.fromARGB(
+                                        //     255,
+                                        //     22,
+                                        //     230,
+                                        //     129,
+                                        //   ).withOpacity(0.9)
+                                        // :
+                                        Colors.transparent,
                                     spreadRadius: 2,
                                     blurRadius: 16,
                                   ),
@@ -234,40 +225,13 @@ class ActivityBoxState extends State<ActivityBox> {
                     ),
                     const SizedBox(width: 8), // spacing between icon and text
                     Expanded(
-                      child: TextField(
-                        controller: _nameController,
-                        onSubmitted: (value) {
-                          updateZones(
-                            widget.historydata.index,
-                            null,
-                            null,
-                            value,
-                            null,
-                            null,
-                          );
-                          setState(() {
-                            widget.historydata.name = value;
-                          });
-
-                          print("nnnnaaammmeee===${widget.historydata.name}");
-                          print("nnnnaaammmeee===${_nameController.text}");
-                        },
+                      child: Text(
+                        widget.historydata.name ?? '',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: color2,
-                        ),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          isDense: true,
-                          contentPadding: EdgeInsets.zero,
-                          fillColor: color, // matches the background
-                          filled: true, // ensures the background is painted
-                          focusedBorder:
-                              InputBorder.none, // remove focus border
-                          enabledBorder:
-                              InputBorder.none, // remove enabled border
                         ),
                       ),
                     ),
@@ -288,7 +252,9 @@ class ActivityBoxState extends State<ActivityBox> {
                             // if (_polygons.isNotEmpty) {
                             //   goToPolygon(_polygons.first);
                             // }
-                            // controller.mapPage(widget.hi);
+                            controller.locationHistory(
+                              historydata: widget.historydata,
+                            );
                           },
                         ),
                       ),
@@ -307,83 +273,25 @@ class ActivityBoxState extends State<ActivityBox> {
                 ),
                 const SizedBox(height: 15),
 
-                Obx(() {
-                  if (isOnController.isLoading.value) {
-                    // Show loading or placeholder while loading
-                    return CircularProgressIndicator();
-                  }
+                // Obx(() {
+                //   if (isOnController.isLoading.value) {
+                //     // Show loading or placeholder while loading
+                //     return CircularProgressIndicator();
+                //   }
 
-                  bool isOn = isOnController.isOnList[widget.historydata.index];
-                  print("Obx is ============================rebuilding");
+                //   bool isOn = isOnController.isOnList[widget.historydata.index];
+                //   print("Obx is ============================rebuilding");
 
-                  return buildConnectButton(
-                    text: isOn ? 'Disconnect' : 'Connect',
-                    backgroundColor: color2,
-                    textColor: Textcolor,
-                    onPressed: () {},
-                  );
-                }),
+                //   return buildConnectButton(
+                //     text: isOn ? 'Disconnect' : 'Connect',
+                //     backgroundColor: color2,
+                //     textColor: Textcolor,
+                //     onPressed: () {},
+                //   );
+                // }),
               ],
             ),
           ),
-
-          if (_showExit)
-            Positioned(
-              right: 2,
-              top: 2,
-              child: GestureDetector(
-                onTap: () async {
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text("Delete Zone"),
-                        content: const Text(
-                          "Are you sure you want to delete this zone?",
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, false),
-                            child: const Text("Cancel"),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              minimumSize: const Size(60, 30),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
-                              ),
-                              elevation: 0, // remove shadow
-                            ),
-                            onPressed: () => Navigator.pop(context, true),
-                            child: const Text(
-                              "Delete",
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-
-                  if (confirm == true) {
-                    await deleteZone(widget.historydata.index);
-                    setState(() {
-                      _showExit = false;
-                    });
-                  }
-                },
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: const EdgeInsets.all(2),
-                  child: const Icon(Icons.close, color: Colors.white, size: 16),
-                ),
-              ),
-            ),
         ],
       ),
     );

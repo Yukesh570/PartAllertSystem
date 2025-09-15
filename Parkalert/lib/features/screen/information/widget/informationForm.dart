@@ -38,44 +38,71 @@ class InformationForm extends StatelessWidget {
         children: [
           TextFormField(
             controller: firstNameController,
-            expands: false,
             decoration: InputDecoration(
               labelText: loc.firstName,
               prefixIcon: Icon(Iconsax.user),
             ),
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return '${loc.firstName} is required';
+              }
+              return null;
+            },
           ),
           SizedBox(height: 16.0),
           TextFormField(
             controller: lastNameController,
-            expands: false,
             decoration: InputDecoration(
               labelText: loc.lastName,
               prefixIcon: Icon(Iconsax.user),
             ),
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return '${loc.lastName} is required';
+              }
+              return null;
+            },
           ),
           SizedBox(height: 16.0),
           TextFormField(
             controller: emailController,
-            expands: false,
             decoration: InputDecoration(
               labelText: loc.email,
               prefixIcon: Icon(Iconsax.direct),
             ),
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return '${loc.email} is required';
+              }
+              // Optional: simple email format check
+              if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                return 'Enter a valid email';
+              }
+              return null;
+            },
           ),
           SizedBox(height: 16.0),
           TextFormField(
             controller: phoneController,
-            expands: false,
             decoration: InputDecoration(
               labelText: loc.phoneNo,
               prefixIcon: Icon(Iconsax.call),
             ),
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return '${loc.phoneNo} is required';
+              }
+              // Optional: simple phone number check
+              if (!RegExp(r'^\+?\d{7,15}$').hasMatch(value)) {
+                return 'Enter a valid phone number';
+              }
+              return null;
+            },
           ),
-          SizedBox(height: 16.0),
         ],
       ),
     );

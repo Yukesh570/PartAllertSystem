@@ -1,7 +1,7 @@
 // import 'dart:convert';
 // import 'package:Parkalert/utils/storage/data/historyData.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
-// List<Historydata> _history = [];
+// List<Historydata> history = [];
 // bool _loadingHistory = true;
 
 // Future<List<Historydata>> loadSavedLocations() async {
@@ -25,7 +25,7 @@
 //   }).toList();
   
 //   setState(() {
-//     _history = historyList;
+//     history = historyList;
 //     _loadingHistory = false;
 //   });
 // }

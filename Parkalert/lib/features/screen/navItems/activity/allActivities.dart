@@ -36,7 +36,7 @@ class ActivityHistory extends StatefulWidget {
 
 class _ActivityHistoryState extends State<ActivityHistory> {
   final zoneController = Get.put(FreezoneController());
-  List<Historydata> _history = [];
+  List<Historydata> history = [];
   bool _loadingHistory = true;
 
   Future<void> loadSavedLocations() async {
@@ -60,7 +60,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
     }).toList();
 
     setState(() {
-      _history = historyList;
+      history = historyList;
       _loadingHistory = false;
     });
 
@@ -92,7 +92,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   Widget build(BuildContext context) {
     final drawerCtrl = Get.find<DrawerControllerX>();
     print(
-      "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq${_history}",
+      "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq${history}",
     );
 
     final dark = Theme.of(context).brightness == Brightness.dark;
@@ -193,19 +193,19 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // "Set your Alert" and "My Alerts" text
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                        vertical: 4.0,
-                      ),
-                      child: Text(
-                        'Setup your ringers',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
+                    // const Padding(
+                    //   padding: EdgeInsets.symmetric(
+                    //     horizontal: 8.0,
+                    //     vertical: 4.0,
+                    //   ),
+                    //   child: Text(
+                    //     'Setup your ringers',
+                    //     style: TextStyle(
+                    //       fontSize: 14,
+                    //       fontWeight: FontWeight.w500,
+                    //     ),
+                    //   ),
+                    // ),
                     const Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: 8.0,
@@ -237,7 +237,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                         }
                         return SingleChildScrollView(
                           child: Column(
-                            children: _history
+                            children: history
                                 .map(
                                   (data) => Padding(
                                     padding: const EdgeInsets.all(5.0),

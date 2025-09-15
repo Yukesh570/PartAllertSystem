@@ -35,7 +35,7 @@ class _ActivityState extends State<Activity> {
   //   print("ringersListactivity: $ringersListdemo");
   // }
   Widget build(BuildContext context) {
-    final MainController controller = Get.put(MainController());
+    MainController controller = Get.put(MainController());
     final drawerCtrl = Get.find<DrawerControllerX>();
 
     print("aactivtyyyyyyyyy $ringersList");

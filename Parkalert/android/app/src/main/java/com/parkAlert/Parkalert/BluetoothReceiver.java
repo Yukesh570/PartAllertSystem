@@ -213,7 +213,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        String title = connected ? "Bluetooth Connected" : "Bluetooth Disconnected";
+        String title = connected ? "Exiting The Parking" : "PartAlert is Activated";
         String text = deviceName + (connected ? " connected!" : " disconnected!");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)

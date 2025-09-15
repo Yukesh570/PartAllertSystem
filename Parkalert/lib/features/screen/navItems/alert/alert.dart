@@ -55,14 +55,48 @@ class _AlertState extends State<Alert> {
 
     setState(() {
       ringersListdemo = savedRingers
-          .map((data) => Ringers(ringerData: data))
+          .map(
+            (data) => Ringers(
+              ringerData: data,
+              onDelete: refreshRingers, // Pass the refresh callback
+            ),
+          )
           .toList();
 
       ringersList.value = savedRingers
-          .map((data) => Ringers(ringerData: data))
+          .map(
+            (data) => Ringers(
+              ringerData: data,
+              onDelete: refreshRingers, // Pass the refresh callback
+            ),
+          )
           .toList();
     });
     print("ringersList: $ringersListdemo");
+  }
+
+  void refreshRingers() async {
+    List<RingerData> savedRingers = await loadRingers();
+
+    setState(() {
+      ringersListdemo = savedRingers
+          .map(
+            (data) => Ringers(
+              ringerData: data,
+              onDelete: refreshRingers, // Add onDelete here too
+            ),
+          )
+          .toList();
+
+      ringersList.value = savedRingers
+          .map(
+            (data) => Ringers(
+              ringerData: data,
+              onDelete: refreshRingers, // Add onDelete here too
+            ),
+          )
+          .toList();
+    });
   }
 
   @override
@@ -232,39 +266,39 @@ class _AlertState extends State<Alert> {
                       context: context,
                       icon: Icons.arrow_back,
                       onPressed: () {
-                        final drawerCtrl = Get.find<DrawerControllerX>();
-                        if (drawerCtrl.previousRoute.isNotEmpty) {
-                          drawerCtrl.goBack(); // update drawer highlight
-                          Navigator.of(context).pop(); // pop current page
-                        } else {
-                          // No previous route, same as home page
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Exit ParkAlert'),
-                              content: const Text(
-                                'Are you sure you want to exit the app?',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: const Text('Cancel'),
-                                ),
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(true),
-                                  child: const Text('Exit'),
-                                ),
-                              ],
+                        // final drawerCtrl = Get.find<DrawerControllerX>();
+                        // if (drawerCtrl.previousRoute.isNotEmpty) {
+                        //   drawerCtrl.goBack(); // update drawer highlight
+                        //   Navigator.of(context).pop(); // pop current page
+                        // } else {
+                        // No previous route, same as home page
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Exit ParkAlert'),
+                            content: const Text(
+                              'Are you sure you want to exit the app?',
                             ),
-                          ).then((shouldExit) {
-                            if (shouldExit == true) {
-                              SystemNavigator.pop(); // closes the app
-                            }
-                          });
-                        }
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: const Text('Exit'),
+                              ),
+                            ],
+                          ),
+                        ).then((shouldExit) {
+                          if (shouldExit == true) {
+                            SystemNavigator.pop(); // closes the app
+                          }
+                        });
                       },
+                      // },
                     ),
                     buildMainButton(
                       text: 'Main',

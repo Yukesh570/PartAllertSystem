@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:Parkalert/features/controllers/drawerController.dart';
+import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/features/controllers/pagger.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/features/screen/map/currentLocation.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
+import 'package:Parkalert/utils/storage/data/historyData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,12 +18,14 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 class LocationHistory extends StatefulWidget {
-  const LocationHistory({Key? key}) : super(key: key);
+  final Historydata? historydata;
+  const LocationHistory({Key? key, this.historydata}) : super(key: key);
 
   @override
   State<LocationHistory> createState() => _LocationHistoryState();
@@ -74,18 +78,30 @@ class _LocationHistoryState extends State<LocationHistory> {
   }
 
   void trackUserLocation() async {
+    LatLng? _lastPosition;
+
     _locationSubscription =
         Geolocator.getPositionStream(
           locationSettings: const LocationSettings(
             accuracy: LocationAccuracy.high,
-            distanceFilter: 5, // update every 5 meters
+            distanceFilter: 5,
           ),
         ).listen((Position position) async {
-          final GoogleMapController controller = await _controller.future;
-          LatLng userLatLng = LatLng(position.latitude, position.longitude);
+          LatLng newPos = LatLng(position.latitude, position.longitude);
 
-          // Smooth camera move
-          controller.animateCamera(CameraUpdate.newLatLng(userLatLng));
+          // Only move if the distance is significant
+          if (_lastPosition == null ||
+              Geolocator.distanceBetween(
+                    _lastPosition!.latitude,
+                    _lastPosition!.longitude,
+                    newPos.latitude,
+                    newPos.longitude,
+                  ) >
+                  5) {
+            final GoogleMapController controller = await _controller.future;
+            controller.animateCamera(CameraUpdate.newLatLng(newPos));
+            _lastPosition = newPos;
+          }
         });
   }
 
@@ -277,9 +293,12 @@ class _LocationHistoryState extends State<LocationHistory> {
                   position: LatLng(lat, lng),
                   icon: currentLocationIcon ?? BitmapDescriptor.defaultMarker,
                   infoWindow: InfoWindow(
-                    title: 'Saved Location',
-                    snippet:
-                        'Device: $name\nTime: ${DateTime.fromMillisecondsSinceEpoch(time)}',
+                    title: widget.historydata!.name,
+                    snippet: DateFormat('yyyy-MM-dd HH:mm').format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                        int.parse(widget.historydata!.time),
+                      ),
+                    ),
                   ),
                 ),
               );
@@ -331,6 +350,8 @@ class _LocationHistoryState extends State<LocationHistory> {
 
   @override
   Widget build(BuildContext context) {
+    MainController controller = Get.put(MainController());
+
     final dark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context);
     if (loc == null) {
@@ -428,8 +449,66 @@ class _LocationHistoryState extends State<LocationHistory> {
                                       myLocationEnabled: true,
                                       polygons: _polygons,
                                       markers: allMarkers,
-                                      onMapCreated: (controller) =>
-                                          _controller.complete(controller),
+                                      onMapCreated: (controller) async {
+                                        _controller.complete(controller);
+
+                                        if (widget.historydata != null) {
+                                          // Delay ensures map is fully rendered before moving camera
+                                          WidgetsBinding.instance.addPostFrameCallback((
+                                            _,
+                                          ) async {
+                                            final mapController =
+                                                await _controller.future;
+                                            await mapController.animateCamera(
+                                              CameraUpdate.newCameraPosition(
+                                                CameraPosition(
+                                                  target: LatLng(
+                                                    widget.historydata!.lat,
+                                                    widget.historydata!.lng,
+                                                  ),
+                                                  zoom: 20,
+                                                ),
+                                              ),
+                                            );
+
+                                            setState(() {
+                                              _markers.add(
+                                                Marker(
+                                                  markerId: MarkerId(
+                                                    "history_${widget.historydata!.time}",
+                                                  ),
+                                                  position: LatLng(
+                                                    widget.historydata!.lat,
+                                                    widget.historydata!.lng,
+                                                  ),
+                                                  // icon:
+                                                  //     currentLocationIcon ??
+                                                  //     BitmapDescriptor
+                                                  //         .defaultMarker,
+                                                  infoWindow: InfoWindow(
+                                                    title: widget
+                                                        .historydata!
+                                                        .name,
+                                                    snippet:
+                                                        DateFormat(
+                                                          'yyyy-MM-dd HH:mm',
+                                                        ).format(
+                                                          DateTime.fromMillisecondsSinceEpoch(
+                                                            int.parse(
+                                                              widget
+                                                                  .historydata!
+                                                                  .time,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                  ),
+                                                ),
+                                              );
+                                            });
+                                          });
+                                        }
+                                      },
+
                                       onTap: _onMapTap,
                                       myLocationButtonEnabled: false,
                                       zoomControlsEnabled: false,
@@ -544,7 +623,9 @@ class _LocationHistoryState extends State<LocationHistory> {
                   ),
                   buildMainButton(
                     text: 'Main',
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.alertPage();
+                    },
                     context: context,
                   ),
                   buildCircularIconButton(
