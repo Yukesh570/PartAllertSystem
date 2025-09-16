@@ -123,91 +123,98 @@ class _FreezoneState extends State<Freezone> {
                 right: 22,
                 left: 22,
               ),
-              child: Container(
-                width: double.infinity,
-                height: 680,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 2.0,
-                  horizontal: 10.0,
-                ),
-                decoration: BoxDecoration(
-                  color: dark
-                      ? const Color.fromARGB(255, 34, 34, 34)
-                      : const Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // "Set your Alert" and "My Alerts" text
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                        vertical: 4.0,
-                      ),
-                      child: Text(
-                        'Setup your ringers',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+              child: GestureDetector(
+                onTap: () {
+                  FocusScope.of(
+                    context,
+                  ).unfocus(); // 👈 dismiss keyboard & cursor
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 670,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 2.0,
+                    horizontal: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: dark
+                        ? const Color.fromARGB(255, 34, 34, 34)
+                        : const Color.fromARGB(255, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // "Set your Alert" and "My Alerts" text
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 4.0,
+                        ),
+                        child: Text(
+                          'Setup your ringers',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                        vertical: 4.0,
-                      ),
-                      child: Text(
-                        'Set Alert Zone',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 4.0,
+                        ),
+                        child: Text(
+                          'Set Alert Zone',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 16.0),
+                      const SizedBox(height: 16.0),
 
-                    // Main alert settings card
-                    Expanded(
-                      child: Obx(() {
-                        if (zoneController.zones.isEmpty) {
-                          return const Center(
-                            child: Text(
-                              'No ZoneBox',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
+                      // Main alert settings card
+                      Expanded(
+                        child: Obx(() {
+                          if (zoneController.zones.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                'No ZoneBox',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
+                            );
+                          }
+                          return SingleChildScrollView(
+                            child: Column(
+                              children: zoneController.zones
+                                  .map(
+                                    (data) => Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: ZoneBox(zoneData: data),
+                                    ),
+                                  )
+                                  .toList(),
                             ),
                           );
-                        }
-                        return SingleChildScrollView(
-                          child: Column(
-                            children: zoneController.zones
-                                .map(
-                                  (data) => Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: ZoneBox(zoneData: data),
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        );
-                      }),
-                    ),
+                        }),
+                      ),
 
-                    const SizedBox(
-                      height: 20.0,
-                    ), // Space before bottom navigation
-                  ],
+                      const SizedBox(
+                        height: 20.0,
+                      ), // Space before bottom navigation
+                    ],
+                  ),
                 ),
               ),
             ),
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
+                padding: const EdgeInsets.only(bottom: 12.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

@@ -127,14 +127,14 @@ class _ActivityState extends State<Activity> {
                         decoration: BoxDecoration(
                           color: AppColors.alert3,
                           borderRadius: BorderRadius.circular(25),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
+                          // boxShadow: [
+                          //   BoxShadow(
+                          //     color: Colors.black.withOpacity(0.2),
+                          //     spreadRadius: 2,
+                          //     blurRadius: 5,
+                          //     offset: const Offset(0, 3),
+                          //   ),
+                          // ],
                         ),
 
                         child: GestureDetector(
@@ -162,11 +162,11 @@ class _ActivityState extends State<Activity> {
                                 child: Transform.translate(
                                   offset: const Offset(
                                     14,
-                                    4,
+                                    -15,
                                   ), // 👈 shift upward by 10 pixels
 
                                   child: Transform.scale(
-                                    scale: 2.2,
+                                    scale: 2.0,
 
                                     child: Image.asset(
                                       "assets/logos/allactivity.png",
@@ -249,7 +249,7 @@ class _ActivityState extends State<Activity> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
+                padding: const EdgeInsets.only(bottom: 12.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

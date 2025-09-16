@@ -252,7 +252,7 @@ class _LocationHistoryState extends State<LocationHistory> {
           Marker(
             markerId: MarkerId('Second'),
             position: LatLng(latitude, longitude),
-            infoWindow: InfoWindow(title: 'Second'),
+            // infoWindow: InfoWindow(title: 'Second'),
           ),
         );
         listForPlaces = [];
@@ -293,12 +293,10 @@ class _LocationHistoryState extends State<LocationHistory> {
                   position: LatLng(lat, lng),
                   icon: currentLocationIcon ?? BitmapDescriptor.defaultMarker,
                   infoWindow: InfoWindow(
-                    title: widget.historydata!.name,
-                    snippet: DateFormat('yyyy-MM-dd HH:mm').format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                        int.parse(widget.historydata!.time),
-                      ),
-                    ),
+                    title: name,
+                    snippet: DateFormat(
+                      'yyyy-MM-dd HH:mm',
+                    ).format(DateTime.fromMillisecondsSinceEpoch(time)),
                   ),
                 ),
               );
@@ -466,45 +464,43 @@ class _LocationHistoryState extends State<LocationHistory> {
                                                     widget.historydata!.lat,
                                                     widget.historydata!.lng,
                                                   ),
-                                                  zoom: 20,
+                                                  zoom: 25,
                                                 ),
                                               ),
                                             );
 
-                                            setState(() {
-                                              _markers.add(
-                                                Marker(
-                                                  markerId: MarkerId(
-                                                    "history_${widget.historydata!.time}",
-                                                  ),
-                                                  position: LatLng(
-                                                    widget.historydata!.lat,
-                                                    widget.historydata!.lng,
-                                                  ),
-                                                  // icon:
-                                                  //     currentLocationIcon ??
-                                                  //     BitmapDescriptor
-                                                  //         .defaultMarker,
-                                                  infoWindow: InfoWindow(
-                                                    title: widget
-                                                        .historydata!
-                                                        .name,
-                                                    snippet:
-                                                        DateFormat(
-                                                          'yyyy-MM-dd HH:mm',
-                                                        ).format(
-                                                          DateTime.fromMillisecondsSinceEpoch(
-                                                            int.parse(
-                                                              widget
-                                                                  .historydata!
-                                                                  .time,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                  ),
-                                                ),
-                                              );
-                                            });
+                                            // setState(() {
+                                            //   _markers.add(
+                                            //     Marker(
+                                            //       markerId: MarkerId(
+                                            //         "history_${widget.historydata!.time}",
+                                            //       ),
+                                            //       position: LatLng(
+                                            //         widget.historydata!.lat,
+                                            //         widget.historydata!.lng,
+                                            //       ),
+                                            //       // icon: BitmapDescriptor
+                                            //       //     .defaultMarker,
+                                            //       // infoWindow: InfoWindow(
+                                            //       //   // title: widget
+                                            //       //   //     .historydata!
+                                            //       //   //     .name,
+                                            //       //   snippet:
+                                            //       //       DateFormat(
+                                            //       //         'yyyy-MM-dd HH:mm',
+                                            //       //       ).format(
+                                            //       //         DateTime.fromMillisecondsSinceEpoch(
+                                            //       //           int.parse(
+                                            //       //             widget
+                                            //       //                 .historydata!
+                                            //       //                 .time,
+                                            //       //           ),
+                                            //       //         ),
+                                            //       //       ),
+                                            //       // ),
+                                            //     ),
+                                            //   );
+                                            // });
                                           });
                                         }
                                       },
@@ -533,7 +529,9 @@ class _LocationHistoryState extends State<LocationHistory> {
                                         decoration: InputDecoration(
                                           hintText: _isTyping ? '' : 'Search',
                                           filled: true,
-                                          fillColor: Colors.white,
+                                          fillColor: dark
+                                              ? Colors.grey[850]
+                                              : Colors.white,
                                           prefixIcon: const Icon(Icons.search),
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
@@ -556,7 +554,10 @@ class _LocationHistoryState extends State<LocationHistory> {
                                           maxHeight: 200,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
+                                          color: dark
+                                              ? Colors.grey[850]
+                                              : Colors.white, // <-- adjust here
+
                                           borderRadius: BorderRadius.circular(
                                             10,
                                           ),
@@ -586,19 +587,6 @@ class _LocationHistoryState extends State<LocationHistory> {
                         ),
                       ),
                     ),
-
-                    // Positioned(
-                    //   bottom: MediaQuery.of(context).padding.bottom + 20,
-                    //   right: 20,
-                    //   child: ElevatedButton(
-                    //     onPressed: () {
-                    //       if (_polygons.isNotEmpty) {
-                    //         goToPolygon(_polygons.first);
-                    //       }
-                    //     },
-                    //     child: Text('Go to first Geofence'),
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

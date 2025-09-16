@@ -616,7 +616,9 @@ class _MappageState extends State<Mappage> {
                                         decoration: InputDecoration(
                                           hintText: _isTyping ? '' : 'Search',
                                           filled: true,
-                                          fillColor: Colors.white,
+                                          fillColor: dark
+                                              ? Colors.grey[850]
+                                              : Colors.white,
                                           prefixIcon: const Icon(Icons.search),
                                           border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(
@@ -639,7 +641,10 @@ class _MappageState extends State<Mappage> {
                                           maxHeight: 200,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: Colors.white,
+                                          color: dark
+                                              ? Colors.grey[850]
+                                              : Colors.white, // <-- adjust here
+
                                           borderRadius: BorderRadius.circular(
                                             10,
                                           ),

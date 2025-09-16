@@ -95,7 +95,7 @@ class _AgreePolicyTextChoiceState extends State<AgreePolicyTextChoice> {
             ),
           ],
         ),
-        const SizedBox(height: 16.0),
+        const SizedBox(height: 12.0),
         Row(
           children: [
             SizedBox(
@@ -109,7 +109,7 @@ class _AgreePolicyTextChoiceState extends State<AgreePolicyTextChoice> {
                 },
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 11),
             Expanded(
               child: Text(
                 loc.inform,

@@ -180,7 +180,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                 ),
                 child: SingleChildScrollView(
                   child: Container(
-                    height: 680,
+                    height: 670,
                     padding: const EdgeInsets.symmetric(
                       vertical: 2.0,
                       horizontal: 20.0,
@@ -227,7 +227,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                           // Main alert settings card
                           Container(
                             padding: const EdgeInsets.all(16.0),
-                            height: 580,
+                            height: 550,
 
                             width: double.infinity,
                             decoration: BoxDecoration(
@@ -267,6 +267,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
 
                                 // Name, Bluetooth device, Sound sections
                                 buildAlertFormRow(
+                                  context: context,
                                   icon: Icons.person_outline,
                                   text: 'Name',
                                   controller: _nameController,
@@ -276,6 +277,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                                 ),
                                 const SizedBox(height: 15.0),
                                 buildAlertFormRow(
+                                  context: context,
                                   icon: Icons.bluetooth,
                                   text: 'Bluetooth device',
                                   onTap: () async {
@@ -295,6 +297,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                                 ),
                                 const SizedBox(height: 15.0),
                                 buildAlertFormRow(
+                                  context: context,
                                   icon: Icons.music_note,
                                   text: 'Sound',
                                   controller: soundController,
@@ -309,28 +312,28 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                                 const SizedBox(height: 30),
                                 // Pushes buttons to the bottom
                                 // Connect and Disconnect buttons
-                                buildConnectButton(
-                                  text: 'Connect',
-                                  backgroundColor: AppColors.buttonBackground,
-                                  textColor: AppColors.lightTextColor,
-                                  onPressed: () {
-                                    print("object");
-                                    NotificationService.showBigTextNotification(
-                                      title: "ParkAlert",
-                                      body: "You are out of parking zone",
-                                      fln: flutterLocalNotificationsPlugin,
-                                    );
-                                  },
-                                ),
-                                const SizedBox(height: 5.0),
-                                buildConnectButton(
-                                  text: 'Disconnect',
-                                  backgroundColor: AppColors.buttonBackground,
-                                  textColor: AppColors.lightTextColor,
-                                  onPressed: () {
-                                    /* Handle disconnect */
-                                  },
-                                ),
+                                // buildConnectButton(
+                                //   text: 'Connect',
+                                //   backgroundColor: AppColors.buttonBackground,
+                                //   textColor: AppColors.lightTextColor,
+                                //   onPressed: () {
+                                //     print("object");
+                                //     NotificationService.showBigTextNotification(
+                                //       title: "ParkAlert",
+                                //       body: "You are out of parking zone",
+                                //       fln: flutterLocalNotificationsPlugin,
+                                //     );
+                                //   },
+                                // ),
+                                // const SizedBox(height: 5.0),
+                                // buildConnectButton(
+                                //   text: 'Disconnect',
+                                //   backgroundColor: AppColors.buttonBackground,
+                                //   textColor: AppColors.lightTextColor,
+                                //   onPressed: () {
+                                //     /* Handle disconnect */
+                                //   },
+                                // ),
                               ],
                             ),
                           ),
@@ -347,7 +350,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
+                  padding: const EdgeInsets.only(bottom: 12.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

@@ -277,8 +277,9 @@ class navButton extends StatelessWidget {
                     final shouldExit = await showDialog<bool>(
                       context: context,
                       builder: (ctx) => AlertDialog(
-                        backgroundColor:
-                            Colors.white, // Set dialog background to white
+                        backgroundColor: isDark
+                            ? Colors.grey[900]
+                            : Colors.white,
                         title: const Text('Exit App'),
                         content: const Text(
                           'Are you sure you want to exit ParkAlert?',
@@ -286,11 +287,23 @@ class navButton extends StatelessWidget {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(ctx).pop(false),
-                            child: const Text('Cancel'),
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(
+                                fontSize: 18, // 👈 Bigger text
+                                fontWeight: FontWeight.w600, // 👈 Semi-bold
+                              ),
+                            ),
                           ),
                           TextButton(
                             onPressed: () => Navigator.of(ctx).pop(true),
-                            child: const Text('Exit'),
+                            child: const Text(
+                              'Exit',
+                              style: TextStyle(
+                                fontSize: 20, // 👈 Bigger text
+                                fontWeight: FontWeight.w600, // 👈 Semi-bold
+                              ),
+                            ),
                           ),
                         ],
                       ),

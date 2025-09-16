@@ -52,6 +52,9 @@ Future<void> updateRingers(
   String? bluetooth,
   String? sound,
 ) async {
+  print(
+    "Updating ringer at index================================================================= $index: isOn=$isOn, name=$name, bluetooth=$bluetooth, sound=$sound",
+  );
   final prefs = await SharedPreferences.getInstance();
   List<String>? existingJsonList = prefs.getStringList('ringers');
 

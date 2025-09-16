@@ -84,28 +84,28 @@ class MainController extends GetxController {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/questions'); // Set current route
 
-    Get.off(() => Question()); //
+    Get.to(() => Question()); //
   }
 
   void termsandconditions() {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/terms'); // Set current route
 
-    Get.off(() => Termsandcondtion()); //
+    Get.to(() => Termsandcondtion()); //
   }
 
   void working() {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/working'); // Set current route
 
-    Get.off(() => Working()); //
+    Get.to(() => Working()); //
   }
 
   void yourinfo() {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/yourinfo'); // Set current route
 
-    Get.off(() => Yourinfo()); //
+    Get.to(() => Yourinfo()); //
   }
 
   void locationHistory({Historydata? historydata}) {
@@ -121,7 +121,7 @@ class MainController extends GetxController {
 
   void activityHistory() {
     final drawerCtrl = Get.find<DrawerControllerX>();
-    drawerCtrl.changeRoute('/activity'); // Set current route
+    drawerCtrl.changeRoute('/activityHistory'); // Set current route
 
     Get.to(() => ActivityHistory()); //
   }

@@ -78,16 +78,7 @@ class NotificationService {
   }
 }
 
-List<String> soundList = [
-  'tone1',
-  'tone2',
-  'tone3',
-  'tone4',
-  'tone5',
-  'tone6',
-  'tone7',
-  'tone8',
-];
+List<String> soundList = ['tone1', 'test', 'tone2'];
 
 void showSoundPicker({
   required BuildContext context,

@@ -114,17 +114,28 @@ public class BluetoothReceiver extends BroadcastReceiver {
         String targetBluetoothName = "";
         String targetSound = "";
         String targetName = "";
-
-        if (!jsonString.isEmpty()) {
-            try {
-                JSONObject jsonObject = new JSONObject(jsonString);
-                targetBluetoothName = jsonObject.optString("bluetooth", "");
-                targetSound = jsonObject.optString("sound", "");
-                targetName = jsonObject.optString("name", "");
-            } catch (JSONException e) {
-                Log.e("BluetoothReceiver", "Failed to parse JSON: " + e.getMessage());
-            }
+        Log.d("BluetoothReceiver", "jsonString" + jsonString );
+        // Skip if nothing stored
+        if (jsonString == null || jsonString.trim().isEmpty()) {
+            Log.d("BluetoothReceiver", "⚠ Skipping notification - no activeBluetooth data found");
+            return;
         }
+        
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            targetBluetoothName = jsonObject.optString("bluetooth", "");
+            targetSound = jsonObject.optString("sound", "");
+            targetName = jsonObject.optString("name", "");
+        } catch (JSONException e) {
+            Log.e("BluetoothReceiver", "Failed to parse JSON: " + e.getMessage());
+            return; // If JSON is invalid, don’t proceed
+        }
+        // Skip if bluetooth field itself is empty
+        if (targetBluetoothName.isEmpty()) {
+        Log.d("BluetoothReceiver", "⚠ Skipping notification - bluetooth field is empty");
+        return;
+    }
+        
 
         if (device.getName().contains(targetBluetoothName)) {
             if (!connected) {
@@ -177,61 +188,78 @@ public class BluetoothReceiver extends BroadcastReceiver {
     }
 
     private void showNotification(Context context, String deviceName, boolean connected, String targetSound) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            notificationManager.deleteNotificationChannel(CHANNEL_ID);
-            NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Bluetooth Events",
-                    NotificationManager.IMPORTANCE_HIGH
-            );
-            channel.setDescription("Notifications for Bluetooth events");
-            channel.enableLights(true);
-            channel.setLightColor(Color.BLUE);
-            channel.enableVibration(true);
-
-            if (targetSound != null && !targetSound.isEmpty()) {
-                Uri soundUri = Uri.parse(targetSound);
-                AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build();
-                channel.setSound(soundUri, audioAttributes);
-            }
-
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-        if (intent != null) intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                context,
-                0,
-                intent != null ? intent : new Intent(),
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
-
-        String title = connected ? "Exiting The Parking" : "PartAlert is Activated";
-        String text = deviceName + (connected ? " connected!" : " disconnected!");
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(context.getApplicationInfo().icon)
-                .setContentTitle(title)
-                .setContentText(text)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            if (targetSound != null && !targetSound.isEmpty()) {
-                builder.setSound(Uri.parse(targetSound));
-            } else {
-                builder.setDefaults(NotificationCompat.DEFAULT_ALL);
-            }
-        }
-
-        notificationManager.notify(1, builder.build());
+    Uri soundUri = null;
+    if (targetSound != null && !targetSound.isEmpty()) {
+        // Example: tone1 → res/raw/tone1.wav
+        soundUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + targetSound);
     }
+
+    // Generate a unique channel per sound
+    String channelId;
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        channelId = "bluetooth_channel_" + (targetSound != null ? targetSound : "default");
+        String channelName = "Bluetooth Events (" + (targetSound != null ? targetSound : "default") + ")";
+
+        NotificationChannel channel = new NotificationChannel(
+                channelId,
+                channelName,
+                NotificationManager.IMPORTANCE_HIGH
+        );
+        channel.setDescription("Notifications for Bluetooth events");
+        channel.enableLights(true);
+        channel.setLightColor(Color.BLUE);
+        channel.enableVibration(true);
+
+        if (soundUri != null) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            channel.setSound(soundUri, audioAttributes);
+        } else {
+            channel.setSound(null, null);
+        }
+
+        notificationManager.createNotificationChannel(channel);
+    } else {
+        channelId = ""; // not used pre-Oreo
+    }
+
+    Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+    if (intent != null) {
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    }
+
+    PendingIntent pendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            intent != null ? intent : new Intent(),
+            PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+    );
+
+    String title = connected ? "Exiting The Parking" : "ParkAlert is Activated";
+    String text = deviceName + (connected ? " connected!" : " disconnected!");
+
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(context.getApplicationInfo().icon)
+            .setContentTitle(title)
+            .setContentText(text)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent);
+
+    // Pre-Oreo: set sound directly
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        if (soundUri != null) {
+            builder.setSound(soundUri);
+        } else {
+            builder.setDefaults(NotificationCompat.DEFAULT_ALL);
+        }
+    }
+
+    notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+}
+
 }

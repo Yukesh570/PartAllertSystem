@@ -167,7 +167,7 @@ class _AlertState extends State<Alert> {
               ),
               child: Container(
                 width: double.infinity,
-                height: 680,
+                height: 670,
                 padding: const EdgeInsets.symmetric(
                   vertical: 2.0,
                   horizontal: 10.0,
@@ -258,7 +258,7 @@ class _AlertState extends State<Alert> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
+                padding: const EdgeInsets.only(bottom: 12.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -266,15 +266,15 @@ class _AlertState extends State<Alert> {
                       context: context,
                       icon: Icons.arrow_back,
                       onPressed: () {
-                        // final drawerCtrl = Get.find<DrawerControllerX>();
-                        // if (drawerCtrl.previousRoute.isNotEmpty) {
-                        //   drawerCtrl.goBack(); // update drawer highlight
-                        //   Navigator.of(context).pop(); // pop current page
-                        // } else {
-                        // No previous route, same as home page
+                        final isDark =
+                            Theme.of(context).brightness == Brightness.dark;
                         showDialog(
                           context: context,
                           builder: (context) => AlertDialog(
+                            backgroundColor: isDark
+                                ? Colors.grey[900]
+                                : Colors.white,
+
                             title: const Text('Exit ParkAlert'),
                             content: const Text(
                               'Are you sure you want to exit the app?',
@@ -283,12 +283,24 @@ class _AlertState extends State<Alert> {
                               TextButton(
                                 onPressed: () =>
                                     Navigator.of(context).pop(false),
-                                child: const Text('Cancel'),
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    fontSize: 18, // 👈 Bigger text
+                                    fontWeight: FontWeight.w600, // 👈 Semi-bold
+                                  ),
+                                ),
                               ),
                               TextButton(
                                 onPressed: () =>
                                     Navigator.of(context).pop(true),
-                                child: const Text('Exit'),
+                                child: const Text(
+                                  'Exit',
+                                  style: TextStyle(
+                                    fontSize: 18, // 👈 Bigger text
+                                    fontWeight: FontWeight.w600, // 👈 Semi-bold
+                                  ),
+                                ),
                               ),
                             ],
                           ),

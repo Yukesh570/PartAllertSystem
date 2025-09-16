@@ -134,7 +134,7 @@ class _RingersState extends State<Ringers> {
                           horizontal: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: color2,
+                          color: dark ? AppColors.alert3Dark : color2,
                           border: Border.all(color: Colors.grey, width: 1),
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -144,7 +144,7 @@ class _RingersState extends State<Ringers> {
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 18,
-                              color: textColor,
+                              color: dark ? Colors.white : textColor,
                             ),
                           ),
                         ),
@@ -179,7 +179,7 @@ class _RingersState extends State<Ringers> {
                           horizontal: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: color2,
+                          color: dark ? AppColors.alert3Dark : color2,
                           border: Border.all(color: Colors.grey, width: 1),
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -189,7 +189,7 @@ class _RingersState extends State<Ringers> {
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 18,
-                              color: textColor,
+                              color: dark ? Colors.white : textColor,
                             ),
                           ),
                         ),
@@ -200,13 +200,15 @@ class _RingersState extends State<Ringers> {
                 const SizedBox(height: 8),
                 // Date & Time Row
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start, // align to start
                   children: [
+                    const SizedBox(width: 30), // smaller gap between containers
+
                     Container(
-                      width: 120,
+                      width: 125,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: color2,
+                        color: dark ? AppColors.alert3Dark : color2,
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -216,16 +218,17 @@ class _RingersState extends State<Ringers> {
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 18,
-                            color: textColor,
+                            color: dark ? Colors.white : textColor,
                           ),
                         ),
                       ),
                     ),
+                    const SizedBox(width: 30), // smaller gap between containers
                     Container(
                       width: 90,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: color2,
+                        color: dark ? AppColors.alert3Dark : color2,
                         border: Border.all(color: Colors.grey),
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -235,13 +238,14 @@ class _RingersState extends State<Ringers> {
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 18,
-                            color: textColor,
+                            color: dark ? Colors.white : textColor,
                           ),
                         ),
                       ),
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 8),
                 // Connect Button
                 Obx(() {
@@ -249,17 +253,20 @@ class _RingersState extends State<Ringers> {
                     return CircularProgressIndicator();
                   if (ringerData.index >= isOnController.isOnList.length) {
                     return buildConnectButton(
+                      context: context,
                       text: 'Connect',
                       backgroundColor: color2,
-                      textColor: textColor,
+                      textColor: dark ? Colors.white : textColor,
                       onPressed: () {},
                     );
                   }
                   bool isOn = isOnController.isOnList[ringerData.index];
                   return buildConnectButton(
+                    context: context,
                     text: isOn ? 'Disconnect' : 'Connect',
                     backgroundColor: color2,
-                    textColor: textColor,
+                    textColor: dark ? Colors.white : textColor,
+
                     onPressed: () =>
                         isOnController.toggleSwitch(context, ringerData),
                   );

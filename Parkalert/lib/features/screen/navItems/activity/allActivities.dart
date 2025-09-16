@@ -139,7 +139,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
       return const Center(child: CircularProgressIndicator());
     }
     return PageWrapper(
-      routeName: '/activity', // current route
+      routeName: '/activityHistory', // current route
 
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -178,7 +178,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
               ),
               child: Container(
                 width: double.infinity,
-                height: 680,
+                height: 670,
                 padding: const EdgeInsets.symmetric(
                   vertical: 2.0,
                   horizontal: 10.0,
@@ -260,7 +260,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 20.0),
+                padding: const EdgeInsets.only(bottom: 12.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

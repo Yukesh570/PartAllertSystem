@@ -173,11 +173,13 @@ class _InformationState extends State<Information> {
                       emailController: emailController,
                       phoneController: phoneController,
                     ),
+                    SizedBox(height: 12.0),
+
                     AgreePolicyTextChoice(
                       dark: dark,
                       onChanged: _updateCheckboxState,
                     ),
-                    SizedBox(height: 16.0),
+                    SizedBox(height: 10.0),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(

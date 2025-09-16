@@ -129,24 +129,22 @@ Widget buildCircularAddbButton({
 
 // Helper method to build large action buttons
 Widget buildConnectButton({
+  required BuildContext context,
   required String text,
   required Color backgroundColor,
   required Color textColor,
   required VoidCallback onPressed,
 }) {
+  final dark = Theme.of(context).brightness == Brightness.dark;
+
   return SizedBox(
     width: double.infinity,
     child: ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
+        backgroundColor: dark ? AppColors.alert3Dark : backgroundColor,
         foregroundColor: textColor,
         padding: const EdgeInsets.symmetric(vertical: 15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        elevation: 5,
-        shadowColor: backgroundColor.withOpacity(0.3),
       ),
       child: Text(
         text,

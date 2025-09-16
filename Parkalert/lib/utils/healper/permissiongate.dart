@@ -73,30 +73,54 @@ class _PermissionGateState extends State<PermissionGate>
     await showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: Colors.white,
-        title: const Text("Location Permission Needed"),
-        content: const Text(
-          "This app requires location access to detect Bluetooth events "
-          "and geofences. Please allow access to continue.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _checkingPermissions = false;
-            },
-            child: const Text("Cancel"),
+      builder: (ctx) {
+        final isDark = Theme.of(ctx).brightness == Brightness.dark;
+
+        return AlertDialog(
+          backgroundColor: isDark ? Colors.grey[900] : Colors.white,
+          title: Text(
+            "Location Permission Needed",
+            style: TextStyle(color: isDark ? Colors.white : Colors.black),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(ctx);
-              _requestLocationPermissions();
-            },
-            child: const Text("Okay"),
+          content: Text(
+            "This app requires location access to detect Bluetooth events "
+            "and geofences. Please allow access to continue.",
+            style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
           ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                _checkingPermissions = false;
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black,
+
+                  fontSize: 18, // 👈 Bigger text
+                  fontWeight: FontWeight.w600, // 👈 Semi-bold
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+                _requestLocationPermissions();
+              },
+              child: Text(
+                'okay',
+                style: TextStyle(
+                  color: isDark ? Colors.blue[300] : Colors.blue,
+
+                  fontSize: 18, // 👈 Bigger text
+                  fontWeight: FontWeight.w600, // 👈 Semi-bold
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

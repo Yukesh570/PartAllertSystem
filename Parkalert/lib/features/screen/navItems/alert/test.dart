@@ -300,6 +300,7 @@ class _RingersState extends State<Ringers> {
                   print("Obx is ============================rebuilding");
 
                   return buildConnectButton(
+                    context: context,
                     text: isOn ? 'Disconnect' : 'Connect',
                     backgroundColor: color2,
                     textColor: Textcolor,

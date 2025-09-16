@@ -3,11 +3,14 @@ import 'package:Parkalert/features/screen/navItems/alert/alertSettings.dart';
 import 'package:flutter/material.dart';
 
 Widget buildAlertFormRow({
+  required BuildContext context,
   required IconData icon,
   required String text,
   required VoidCallback? onTap,
   TextEditingController? controller,
 }) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+
   return Row(
     children: [
       Icon(icon, color: AppColors.iconColor, size: 30),
@@ -21,8 +24,9 @@ Widget buildAlertFormRow({
           decoration: InputDecoration(
             hintText: text,
             filled: true,
-            fillColor: Colors.white, // ✅ Makes the background white
-
+            fillColor: isDark
+                ? Colors.grey[850]
+                : Colors.white, // dark/light background
             contentPadding: const EdgeInsets.symmetric(
               vertical: 12.0,
               horizontal: 16.0,
@@ -30,12 +34,9 @@ Widget buildAlertFormRow({
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15.0),
               borderSide: BorderSide(
-                color: const Color.fromARGB(
-                  255,
-                  255,
-                  255,
-                  255,
-                ).withOpacity(0.5),
+                color: isDark
+                    ? Colors.white24
+                    : const Color.fromARGB(255, 255, 255, 255).withOpacity(0.5),
               ),
             ),
           ),
