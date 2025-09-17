@@ -70,6 +70,12 @@ flutter:
     - assets/icons/
     - assets/logos/
     - .env
+    - assets/sounds/tone1.wav
+    - assets/sounds/tone2.wav
+    - assets/sounds/tone3.wav
+    - assets/sounds/tone4.wav
+    - assets/sounds/tone5.wav
+    - assets/sounds/tone6.wav
 
   fonts:
     - family: Nunito

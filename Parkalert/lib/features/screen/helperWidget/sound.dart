@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -78,7 +79,8 @@ class NotificationService {
   }
 }
 
-List<String> soundList = ['tone1', 'test', 'tone2'];
+final AudioPlayer _audioPlayer = AudioPlayer();
+List<String> soundList = ['tone1', 'tone2', 'tone3', 'tone4', 'tone5', 'tone6'];
 
 void showSoundPicker({
   required BuildContext context,
@@ -94,6 +96,18 @@ void showSoundPicker({
           return ListTile(
             leading: const Icon(Icons.music_note),
             title: Text(sound),
+            trailing: IconButton(
+              icon: const Icon(Icons.play_arrow),
+              onPressed: () async {
+                // Stop previous sound
+                await _audioPlayer.stop();
+
+                // Play sound from assets
+                await _audioPlayer.play(
+                  AssetSource('sounds/$sound.wav'), // correct way for assets
+                );
+              },
+            ),
             onTap: () {
               controller.text = sound;
               Navigator.of(context).pop();

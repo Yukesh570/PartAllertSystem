@@ -374,7 +374,7 @@ class _AlertSettingState extends State<AlertSetting> {
                         },
                         context: context,
                       ),
-                      addAlertButton(
+                      checkAlertButton(
                         context: context,
                         onPressed: () async {
                           final String name = _nameController.text.trim();

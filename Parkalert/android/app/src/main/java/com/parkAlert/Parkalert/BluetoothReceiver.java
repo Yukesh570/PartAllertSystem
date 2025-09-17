@@ -192,7 +192,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
     Uri soundUri = null;
     if (targetSound != null && !targetSound.isEmpty()) {
-        // Example: tone1 → res/raw/tone1.wav
         soundUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + targetSound);
     }
 

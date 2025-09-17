@@ -1,5 +1,6 @@
 import 'package:Parkalert/features/controllers/drawerController.dart';
 import 'package:Parkalert/features/controllers/pagger.dart';
+import 'package:Parkalert/utils/storage/bluetoothStorage/bluetoothStorage.dart';
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/features/controllers/alert/isON.dart';
 import 'package:Parkalert/features/controllers/main_controller.dart';
@@ -75,53 +76,6 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     final MainController controller = Get.put(MainController());
-    IsOnController isOnController = Get.put(IsOnController());
-    DateTime now = DateTime.now();
-
-    String currentDate = DateFormat(
-      'yyyy-MM-dd',
-    ).format(now); // e.g., 2025-08-01
-    String currentTime = DateFormat('HH:mm').format(now);
-    List<RingerData> ringersDataList = [];
-    _addRingers({
-      required String name,
-      required String bluetooth,
-      required String sound,
-      required String date,
-      required String time,
-      required bool isOn,
-    }) async {
-      final List<RingerData> savedRingers = await loadRingers();
-
-      final newIndex = savedRingers.length;
-      // Create new RingerData with default or initial values
-      RingerData newRingerData = RingerData(
-        index: newIndex,
-        date: date, // or get from UI
-        time: time, // or get from UI
-        isOn: isOn,
-        name: name,
-        bluetooth: bluetooth,
-        sound: sound,
-      );
-      ringersDataList.add(newRingerData);
-
-      // Extract data to save
-      // List<RingerData> dataToSave = ringersList.map((ringer) {
-      //   return RingerData(
-      //     index: ringer.ringerData.index,
-      //     date: ringer.ringerData.date, // ← Replace with actual data from UI
-      //     time: ringer.ringerData.time, // ← Replace with actual data from UI
-      //     isOn: ringer
-      //         .ringerData
-      //         .isOn, // ← Get this from your controller if dynamic
-      //     name: ringer.ringerData.name,
-      //     bluetooth: ringer.ringerData.bluetooth,
-      //     sound: ringer.ringerData.sound,
-      //   );
-      // }).toList();
-      await saveRingers(ringersDataList);
-    }
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -310,30 +264,6 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                                 ),
 
                                 const SizedBox(height: 30),
-                                // Pushes buttons to the bottom
-                                // Connect and Disconnect buttons
-                                // buildConnectButton(
-                                //   text: 'Connect',
-                                //   backgroundColor: AppColors.buttonBackground,
-                                //   textColor: AppColors.lightTextColor,
-                                //   onPressed: () {
-                                //     print("object");
-                                //     NotificationService.showBigTextNotification(
-                                //       title: "ParkAlert",
-                                //       body: "You are out of parking zone",
-                                //       fln: flutterLocalNotificationsPlugin,
-                                //     );
-                                //   },
-                                // ),
-                                // const SizedBox(height: 5.0),
-                                // buildConnectButton(
-                                //   text: 'Disconnect',
-                                //   backgroundColor: AppColors.buttonBackground,
-                                //   textColor: AppColors.lightTextColor,
-                                //   onPressed: () {
-                                //     /* Handle disconnect */
-                                //   },
-                                // ),
                               ],
                             ),
                           ),
@@ -376,7 +306,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                         },
                         context: context,
                       ),
-                      addAlertButton(
+                      checkAlertButton(
                         context: context,
                         onPressed: () async {
                           final String name = _nameController.text.trim();
@@ -394,6 +324,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                               bluetoothDevice,
                               sound,
                             );
+                            await activeBluetooth();
                             controller.alertPage();
                           }
                         },

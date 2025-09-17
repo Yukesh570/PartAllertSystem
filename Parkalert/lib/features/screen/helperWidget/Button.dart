@@ -101,6 +101,33 @@ Widget addAlertButton({
   );
 }
 
+Widget checkAlertButton({
+  required BuildContext context,
+
+  required VoidCallback onPressed,
+}) {
+  return Container(
+    width: 60,
+    height: 60,
+    decoration: BoxDecoration(
+      color: AppColors.mainButtonColor,
+      shape: BoxShape.circle,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.2),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    ),
+    child: IconButton(
+      icon: Icon(Icons.check, color: AppColors.lightTextColor, size: 30),
+      onPressed: onPressed,
+    ),
+  );
+}
+
 Widget buildCircularAddbButton({
   required BuildContext context,
   required VoidCallback onPressed,
