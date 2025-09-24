@@ -1,21 +1,17 @@
 {
   "@@locale": "en",
-
   "and": "and",
   "skip": "Skip",
   "done": "Done",
   "submit": "Submit",
   "appName": "T Store",
   "tContinue": "Continue",
-
   "onBoardingTitle1": "Choose your product",
   "onBoardingTitle2": "Select Payment Method",
   "onBoardingTitle3": "Deliver at your door step",
-
   "onBoardingSubTitle1": "Welcome to a World of Limitless Choices - Your Perfect Product Awaits!",
   "onBoardingSubTitle2": "For Seamless Transactions, Choose Your Payment Path - Your Convenience, Our Priority!",
   "onBoardingSubTitle3": "From Our Doorstep to Yours - Swift, Secure, and Contactless Delivery!",
-
   "firstName": "First Name",
   "lastName": "Last Name",
   "email": "E-Mail",
@@ -27,7 +23,6 @@
   "termsandconditions": "I agree to the Terms and Conditions",
   "inform": "I want to be kept informed about ParkAlert",
   "language": "Select Language",
-
   "forgetPassword": "Forget Password?",
   "signIn": "Sign In",
   "createAccount": "Create Account",
@@ -39,8 +34,7 @@
   "verificationCode": "verificationCode",
   "resendEmail": "Resend Email",
   "resendEmailIn": "Resend email in",
-  "appTitle":"Your Information",
-
+  "appTitle": "Your Information",
   "loginTitle": "Your Information",
   "loginSubTitle": "Discover Limitless Choices and Unmatched Convenience.",
   "signupTitle": "Let’s create your account",
@@ -53,13 +47,10 @@
   "emailNotReceivedMessage": "Didn’t get the email? Check your junk/spam or resend it.",
   "yourAccountCreatedTitle": "Your account successfully created!",
   "yourAccountCreatedSubTitle": "Welcome to Your Ultimate Shopping Destination: Your Account is Created, Unleash the Joy of Seamless Online Shopping!",
-
   "popularProducts": "Popular Products",
   "homeAppbarTitle": "Good day for shopping",
   "homeAppbarSubTitle": "Taimoor Sikander",
-
-
-  "alerts": "Alerts",
+  "parkingalarms": "Parking Alarms",
   "freezones": "Freezones",
   "activity": "Activity",
   "yourInformation": "Your information",
@@ -67,5 +58,69 @@
   "frequentlyAskedQuestions": "Frequently asked questions",
   "termsAndConditions": "Terms and conditions",
   "privacyPolicyMenu": "Privacy policy",
-  "exitParkAlert": "Exit ParkAlert"
+  "exitParkAlert": "Exit ParkAlert",
+
+  "noringers": "No Ringers",
+  "setupyourparkingalarms": "Setup your parkingalarms",
+  "myparkingalarms": "My Parking Alarms",
+  "setalertzone": "Set Alert zone",
+  "connect": "Connect",
+  "disconnect": "Disconnect",
+  "visitparkalarm":"Visit ParkAlarm",
+  "exitparkalert":"Exit ParkAlert",
+  "changelanguage":"Change Language",
+  "allActivitiesAndLocations": "All Activities & Locations",
+  "allactivities": "All Activities",
+  "alllocation": "All location",
+  "setnoalertzones": "Set no-alert zones",
+  "parkedhistory": "Parked History",
+
+  "theuserjourney": "The User Journey",
+  "theuserjourneyparagraph": "When you first open the Parkalert app, you will be taken through a startup wizard to set up your account and your first alarm.",
+
+  "permissionsAndRegistration": "Permissions & Registration",
+  "personaldata": "Personal Data",
+  "personaldataparagraph": "The app first requests necessary permissions. This includes location access to detect Bluetooth events and geofences. A special, persistent permission is required to allow all the time. to ensure the app works properly even when closed. ",
+  "accountsetup": "Account Setup",
+  "accontsetupparagraph": "You will be directed to the registration page,where you will fill in your details to create your account. Registration is done directly in the app.",
+  "landingpage": "Landing Page",
+  "landingpageparagraph": "After registration, the landing page is always the \"My Alerts\" page.",
+
+  "alarmsetup": "Alarm Setup",
+  "createalert": "Create Alert",
+  "createalertparagraph1": "On the \"My Alerts\" page, clicking the",
+  "createalertparagraph2": "icon opens the \"Create Alert\" form",
+  "fillindetails": "Fill in Details",
+  "fillindetailsparagraph": "Here, you will give your alert a custom name (not related to a location),select a Bluetooth device (your car), and choose a notification sound.",
+  "activatealert": "Activate Alert",
+  "activatealertparagraph": "The newly created alert appears as a box on the \"My Alerts\" page.The alert is not active until you click the separate Connect button on its box.",
+
+  "coreoperationallogic": "Core Operational Logic",
+  "coreoperationallogicparagraph": "The app's behavior is driven by the Bluetooth connection status and your location relative to a Freezone.",
+  "bluetoothdisconnected": "Bluetooth Disconnected",
+  "bluetoothdisconnectedparagraph": "User has left the car, Parkalert is activated.",
+  "bluetoothconnected": "Bluetooth Connected",
+  "bluetoothconnectedparagraph": "User has returned, Parkalert is deactivated.",
+
+  "geofencing": "Geofencing (Freezones)",
+  "freezonesparagraph": "This feature allows you to define \"no alert zones\" to prevent alerts in familiar locations.No time duration is needed for a Freezone.",
+  "creatingandactivatingfreezone": "Creating and Activating a Freezone",
+  "creatingandactivating1": "From the sidebar menu, select \"Freezones\".",
+  "creatingandactivating2Step1": "Click the",
+  "creatingandactivating2Step2": ".A box will appear.",
+  "creatingandactivating3": "Click the location icon in the box to open a map.",
+  "creatingandactivating4": "Click the location icon below the search bar to locate yourself.",
+  "creatingandactivating5": "Click the pencil with a location icon to start drawing your zone.Click on the map to place blue location icons to create a custom shape.",
+  "creatingandactivating6": "Once the shape is complete, click the ✓ (tick icon) to save it.",
+  "creatingandactivating7": "Go back to the \"Set Alert Zone\" screen and click the Connect button on the box to activate your Freezone.",
+
+  "managingafreezone": "Managing a Freezone",
+  "managingafreezonepragraph": "You can edit, rename, or delete your Freezones anytime from the Freezones screen.Only one zone can be activated at a time to avoid conflicts.",
+  "managingafreezonefreezonepragraph": "This feature allows you to define no alert zones to prevent alerts in familiar locations. No time duration is needed for a Freezone.",
+
+  "activitiesandhistory": "Activities and History",
+  "activities": "Activities",
+  "activitiesparagraphs": "This section shows your comprehensive history of alarms and parking locations.The Activity menu has 'All Activities' and 'All Location' views, with a map of Bluetooth disconnection events.",
+  "navigationmeu": "Navigation Menu",
+  "sidebarincludes": "Sidebar Includes"
 }

@@ -71,75 +71,142 @@ class _ActivityState extends State<Activity> {
           ),
         ),
         drawer: const navButton(),
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-            ),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 27),
+        body: SafeArea(
+          minimum: const EdgeInsets.only(bottom: 12.0),
 
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
+              ),
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 27),
 
-                  children: [
-                    const SizedBox(height: 25),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 15,
-                      ), // smaller padding
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
 
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(50),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Text(
-                          "All activities & locations",
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w700,
-                            color: Colors.black,
+                    children: [
+                      const SizedBox(height: 25),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 15,
+                        ), // smaller padding
+
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(50),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Text(
+                            "All activities & locations",
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 25),
+                      const SizedBox(height: 25),
 
-                    ClipRRect(
-                      child: Container(
+                      ClipRRect(
+                        child: Container(
+                          height:
+                              230, // 👈 set the height to your desired value
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 10,
+                          ),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: AppColors.alert3,
+                            borderRadius: BorderRadius.circular(25),
+                            // boxShadow: [
+                            //   BoxShadow(
+                            //     color: Colors.black.withOpacity(0.2),
+                            //     spreadRadius: 2,
+                            //     blurRadius: 5,
+                            //     offset: const Offset(0, 3),
+                            //   ),
+                            // ],
+                          ),
+
+                          child: GestureDetector(
+                            onTap: () {
+                              controller.activityHistory();
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment
+                                  .center, // center horizontally
+                              mainAxisAlignment:
+                                  MainAxisAlignment.center, // align to top
+
+                              children: [
+                                Text(
+                                  " All Activities",
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+
+                                Expanded(
+                                  child: Transform.translate(
+                                    offset: const Offset(
+                                      14,
+                                      -15,
+                                    ), // 👈 shift upward by 10 pixels
+
+                                    child: Transform.scale(
+                                      scale: 2.0,
+
+                                      child: Image.asset(
+                                        "assets/logos/allactivity.png",
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+                      Container(
                         height: 230, // 👈 set the height to your desired value
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
-                          vertical: 10,
+                          vertical: 20,
                         ),
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: AppColors.alert3,
+                          color: AppColors.alert2,
                           borderRadius: BorderRadius.circular(25),
-                          // boxShadow: [
-                          //   BoxShadow(
-                          //     color: Colors.black.withOpacity(0.2),
-                          //     spreadRadius: 2,
-                          //     blurRadius: 5,
-                          //     offset: const Offset(0, 3),
-                          //   ),
-                          // ],
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.2),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
                         ),
-
                         child: GestureDetector(
                           onTap: () {
-                            controller.activityHistory();
+                            controller.locationHistory();
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment
@@ -149,7 +216,7 @@ class _ActivityState extends State<Activity> {
 
                             children: [
                               Text(
-                                " All Activities",
+                                " All location",
                                 style: TextStyle(
                                   fontSize: 17,
                                   fontWeight: FontWeight.w700,
@@ -161,15 +228,15 @@ class _ActivityState extends State<Activity> {
                               Expanded(
                                 child: Transform.translate(
                                   offset: const Offset(
-                                    14,
-                                    -15,
+                                    0,
+                                    -10,
                                   ), // 👈 shift upward by 10 pixels
 
                                   child: Transform.scale(
-                                    scale: 2.0,
+                                    scale: 1.8,
 
                                     child: Image.asset(
-                                      "assets/logos/allactivity.png",
+                                      "assets/logos/location.png",
                                       fit: BoxFit.contain,
                                     ),
                                   ),
@@ -179,107 +246,45 @@ class _ActivityState extends State<Activity> {
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 25),
-                    Container(
-                      height: 230, // 👈 set the height to your desired value
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 20,
-                      ),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: AppColors.alert2,
-                        borderRadius: BorderRadius.circular(25),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          controller.locationHistory();
+                    ],
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildCircularIconButton(
+                        context: context,
+                        icon: Icons.arrow_back,
+                        onPressed: () {
+                          drawerCtrl.goBack(); // update drawer highlight
+
+                          if (Navigator.of(context).canPop()) {
+                            Navigator.of(context).pop();
+                          } else {
+                            // Optionally handle the case where there's no back route
+                            print("No screen to go back to");
+                          }
                         },
-                        child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.center, // center horizontally
-                          mainAxisAlignment:
-                              MainAxisAlignment.center, // align to top
-
-                          children: [
-                            Text(
-                              " All location",
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-
-                            Expanded(
-                              child: Transform.translate(
-                                offset: const Offset(
-                                  0,
-                                  -10,
-                                ), // 👈 shift upward by 10 pixels
-
-                                child: Transform.scale(
-                                  scale: 1.8,
-
-                                  child: Image.asset(
-                                    "assets/logos/location.png",
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
-                    ),
-                  ],
+                      buildMainButton(
+                        text: 'Main',
+                        onPressed: () {
+                          controller.alertPage();
+                        },
+                        context: context,
+                      ),
+                      addAlertButton(context: context, onPressed: () async {}),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    buildCircularIconButton(
-                      context: context,
-                      icon: Icons.arrow_back,
-                      onPressed: () {
-                        drawerCtrl.goBack(); // update drawer highlight
-
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        } else {
-                          // Optionally handle the case where there's no back route
-                          print("No screen to go back to");
-                        }
-                      },
-                    ),
-                    buildMainButton(
-                      text: 'Main',
-                      onPressed: () {
-                        controller.alertPage();
-                      },
-                      context: context,
-                    ),
-                    addAlertButton(context: context, onPressed: () async {}),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

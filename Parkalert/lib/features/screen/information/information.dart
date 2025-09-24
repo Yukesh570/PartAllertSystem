@@ -35,6 +35,7 @@ class Information extends StatefulWidget {
 
 class _InformationState extends State<Information> {
   final _formKey = GlobalKey<FormState>();
+  bool _isLoading = false; // 👈 added
 
   String? selectedLang = 'en'; // No language selected initially
   final firstNameController = TextEditingController();
@@ -56,7 +57,8 @@ class _InformationState extends State<Information> {
       selectedLang = langCode;
     });
     print("selectedLang: $selectedLang");
-
+    final box = GetStorage();
+    box.write('languagecode', langCode);
     widget.onLocaleChange(Locale(langCode.toLowerCase()));
   }
 
@@ -87,7 +89,7 @@ class _InformationState extends State<Information> {
       "DU": "nl",
     };
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
 
       backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
 
@@ -103,199 +105,247 @@ class _InformationState extends State<Information> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: kToolbarHeight + MediaQuery.of(context).padding.top + 16,
-              bottom: 16,
-              left: 16,
-              right: 16,
+      body: Container(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child:
+                  // so background doesn’t block taps
+                  CustomPaint(painter: BackgroundCirclesPainter(dark)),
             ),
-            child: Container(
-              decoration: BoxDecoration(
-                color: dark ? TColors.dark : TColors.white,
-                border: Border.all(color: TColors.black, width: 1.0),
-                borderRadius: BorderRadius.circular(20.0),
-                boxShadow: [
-                  if (!dark)
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.08),
-                      spreadRadius: 1,
-                      blurRadius: 12,
-                      offset: Offset(0, 6),
+            SafeArea(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return SingleChildScrollView(
+                    padding: EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      top: 16,
+                      bottom: MediaQuery.of(context).viewInsets.bottom + 16,
                     ),
-                ],
-              ),
-              padding: const EdgeInsets.all(18), // Space inside the box
 
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      loc.language,
-                      style: Theme.of(context).textTheme.headlineMedium
-                          ?.copyWith(
-                            color: dark
-                                ? const Color.fromARGB(255, 233, 232, 232)
-                                : TColors.dark,
+                    child: Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: dark ? TColors.dark : TColors.white,
+                            border: Border.all(
+                              color: TColors.black,
+                              width: 1.0,
+                            ),
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              if (!dark)
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.08),
+                                  spreadRadius: 1,
+                                  blurRadius: 12,
+                                  offset: Offset(0, 6),
+                                ),
+                            ],
                           ),
-                    ),
-                    SizedBox(height: 16.0),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: languages.entries.map((entry) {
-                          final label = entry.key;
-                          final code = entry.value;
-                          return _LanguageChip(
-                            label: label,
-                            dark: dark,
-                            isSelected: selectedLang == code,
-                            onTap: () => changeLanguage(
-                              code,
-                            ), // Update the selected language
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                    SizedBox(height: 16.0),
-                    InformationForm(
-                      formKey: _formKey,
+                          padding: const EdgeInsets.all(
+                            18,
+                          ), // Space inside the box
 
-                      firstNameController: firstNameController,
-                      lastNameController: lastNameController,
-                      emailController: emailController,
-                      phoneController: phoneController,
-                    ),
-                    SizedBox(height: 12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                loc.language,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium
+                                    ?.copyWith(
+                                      color: dark
+                                          ? const Color.fromARGB(
+                                              255,
+                                              233,
+                                              232,
+                                              232,
+                                            )
+                                          : TColors.dark,
+                                    ),
+                              ),
+                              SizedBox(height: 16.0),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: languages.entries.map((entry) {
+                                    final label = entry.key;
+                                    final code = entry.value;
+                                    return LanguageChip(
+                                      label: label,
+                                      dark: dark,
+                                      isSelected: selectedLang == code,
+                                      onTap: () => changeLanguage(
+                                        code,
+                                      ), // Update the selected language
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                              SizedBox(height: 16.0),
+                              InformationForm(
+                                formKey: _formKey,
 
-                    AgreePolicyTextChoice(
-                      dark: dark,
-                      onChanged: _updateCheckboxState,
-                    ),
-                    SizedBox(height: 10.0),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        // onPressed: () async {
-                        //   if (_formKey.currentState!.validate()) {
-                        //     try {
-                        //       final box = GetStorage();
+                                firstNameController: firstNameController,
+                                lastNameController: lastNameController,
+                                emailController: emailController,
+                                phoneController: phoneController,
+                              ),
+                              SizedBox(height: 12.0),
 
-                        //       box.write(
-                        //         'isRegistered',
-                        //         true,
-                        //       ); // ✅ Save flag that account is created
-                        //       box.write('userData', {
-                        //         'firstName': firstNameController.text,
-                        //         'lastName': lastNameController.text,
-                        //         'email': emailController.text,
-                        //         'phone': phoneController.text,
-                        //       });
-                        //       final success = await apiService.registerUser(
-                        //         firstName: firstNameController.text,
-                        //         lastName: lastNameController.text,
-                        //         email: emailController.text,
-                        //         phoneNumber: phoneController.text,
-                        //       );
-                        //       print("successssssssss: ${success}");
-                        //       controller.alertPage();
-                        //     } catch (e) {
-                        //       // ❌ Network or unexpected error
-                        //       Get.snackbar(
-                        //         'Error',
-                        //         'No Internet Connection: $e',
-                        //         backgroundColor: Colors.red,
-                        //         colorText: Colors.white,
-                        //       );
-                        //     }
-                        //   } else {
-                        //     Get.snackbar(
-                        //       'Error',
-                        //       'Please fill in all the required fields.',
-                        //       backgroundColor: Colors.red,
-                        //       colorText: Colors.white,
-                        //     );
-                        //   }
-                        // },
-                        onPressed: () {
-                          if (!_agreePolicy || !_inform) {
-                            Get.snackbar(
-                              'Warning',
-                              'You must agree to Privacy Policy & Inform consent before creating account.',
-                              backgroundColor: Colors.orange,
-                              colorText: Colors.white,
-                            );
-                            return;
-                          }
-                          if (_formKey.currentState?.validate() != true) {
-                            // Get.snackbar(
-                            //   'Warning',
-                            //   'Please fill in all the required fields.',
-                            //   backgroundColor: Colors.red,
-                            //   colorText: Colors.white,
-                            //   snackPosition: SnackPosition.BOTTOM,
-                            //   margin: const EdgeInsets.all(16),
-                            //   duration: const Duration(seconds: 3),
-                            // );
-                            return;
-                          }
+                              AgreePolicyTextChoice(
+                                dark: dark,
+                                onChanged: _updateCheckboxState,
+                              ),
+                              SizedBox(height: 10.0),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      setState(
+                                        () => _isLoading = true,
+                                      ); // 👈 start loading
 
-                          final box = GetStorage();
-                          box.write('isRegistered', true);
-                          box.write('userData', {
-                            'firstName': firstNameController.text,
-                            'lastName': lastNameController.text,
-                            'email': emailController.text,
-                            'phone': phoneController.text,
-                          });
+                                      try {
+                                        final box = GetStorage();
 
-                          // ✅ Navigate to Alert screen
-                          controller.alertPage();
-                        },
+                                        // ✅ Save flag that account is created
 
-                        child: Text(
-                          loc.createAccount,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w900,
+                                        final success = await apiService
+                                            .registerUser(
+                                              firstName:
+                                                  firstNameController.text,
+                                              lastName: lastNameController.text,
+                                              email: emailController.text,
+                                              phoneNumber: phoneController.text,
+                                            );
+                                        if (success['status'] == 'success') {
+                                          box.write('userData', {
+                                            'firstName':
+                                                firstNameController.text,
+                                            'lastName': lastNameController.text,
+                                            'email': emailController.text,
+                                            'phone': phoneController.text,
+                                          });
+                                          box.write('isRegistered', true);
+                                        }
+
+                                        print("successssssssss: ${success}");
+                                        controller.alertPage();
+                                      } catch (e) {
+                                        // ❌ Network or unexpected error
+                                        Get.snackbar(
+                                          'Error',
+                                          'No Internet Connection: $e',
+                                          backgroundColor: Colors.red,
+                                          colorText: Colors.white,
+                                        );
+                                      } finally {
+                                        setState(
+                                          () => _isLoading = false,
+                                        ); // stop loading
+                                      }
+                                    } else {
+                                      Get.snackbar(
+                                        'Error',
+                                        'Please fill in all the required fields.',
+                                        backgroundColor: Colors.red,
+                                        colorText: Colors.white,
+                                      );
+                                    }
+                                  },
+
+                                  // onPressed: () {
+                                  //   if (!_agreePolicy || !_inform) {
+                                  //     Get.snackbar(
+                                  //       'Warning',
+                                  //       'You must agree to Privacy Policy & Inform consent before creating account.',
+                                  //       backgroundColor: Colors.orange,
+                                  //       colorText: Colors.white,
+                                  //     );
+                                  //     return;
+                                  //   }
+                                  //   if (_formKey.currentState?.validate() != true) {
+                                  //     // Get.snackbar(
+                                  //     //   'Warning',
+                                  //     //   'Please fill in all the required fields.',
+                                  //     //   backgroundColor: Colors.red,
+                                  //     //   colorText: Colors.white,
+                                  //     //   snackPosition: SnackPosition.BOTTOM,
+                                  //     //   margin: const EdgeInsets.all(16),
+                                  //     //   duration: const Duration(seconds: 3),
+                                  //     // );
+                                  //     return;
+                                  //   }
+
+                                  //   final box = GetStorage();
+                                  //   box.write('isRegistered', true);
+                                  //   box.write('userData', {
+                                  //     'firstName': firstNameController.text,
+                                  //     'lastName': lastNameController.text,
+                                  //     'email': emailController.text,
+                                  //     'phone': phoneController.text,
+                                  //   });
+
+                                  //   // ✅ Navigate to Alert screen
+                                  //   controller.alertPage();
+                                  // },
+                                  child: _isLoading
+                                      ? const SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: CircularProgressIndicator(
+                                            color: Colors.white,
+                                            strokeWidth: 2,
+                                          ),
+                                        )
+                                      : Text(
+                                          loc.createAccount,
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                        ),
+                                ),
+                              ),
+                              SizedBox(height: 16.0),
+                              formDivider(),
+
+                              // Text(
+                              //   'This is the information screen where you can find details about the app.',
+                              //   style: Theme.of(context).textTheme.headlineMedium,
+                              // ),
+                              // Add more content here as needed
+                            ],
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                    SizedBox(height: 16.0),
-                    formDivider(),
-
-                    // Text(
-                    //   'This is the information screen where you can find details about the app.',
-                    //   style: Theme.of(context).textTheme.headlineMedium,
-                    // ),
-                    // Add more content here as needed
-                  ],
-                ),
+                  );
+                },
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
-class _LanguageChip extends StatelessWidget {
+class LanguageChip extends StatelessWidget {
   final String label;
   final dynamic dark;
 
   final bool isSelected;
   final VoidCallback onTap;
 
-  const _LanguageChip({
+  const LanguageChip({
     required this.label,
     required this.dark,
     required this.isSelected,

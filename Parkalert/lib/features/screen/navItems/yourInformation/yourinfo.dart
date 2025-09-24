@@ -101,91 +101,95 @@ class _YourinfoState extends State<Yourinfo> {
           ),
         ),
         drawer: const navButton(),
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-              child: userData.isEmpty
-                  ? Center(
-                      child: Text(
-                        "No information available",
-                        style: TextStyle(
-                          color: dark ? Colors.white : Colors.black,
-                          fontSize: 16,
+        body: SafeArea(
+          minimum: const EdgeInsets.only(bottom: 12.0),
+
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                child: userData.isEmpty
+                    ? Center(
+                        child: Text(
+                          "No information available",
+                          style: TextStyle(
+                            color: dark ? Colors.white : Colors.black,
+                            fontSize: 16,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: dark
+                              ? const Color.fromARGB(255, 34, 34, 34)
+                              : const Color.fromARGB(255, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 12,
+                              spreadRadius: 2,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: ListView(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          children: [
+                            _buildInfoCard(
+                              "First Name",
+                              userData['firstName'],
+                              dark,
+                            ),
+                            _buildInfoCard(
+                              "Last Name",
+                              userData['lastName'],
+                              dark,
+                            ),
+                            _buildInfoCard("Email", userData['email'], dark),
+                            _buildInfoCard("Phone", userData['phone'], dark),
+                          ],
                         ),
                       ),
-                    )
-                  : Container(
-                      decoration: BoxDecoration(
-                        color: dark
-                            ? const Color.fromARGB(255, 34, 34, 34)
-                            : const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 12,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 20.0,
+                    left: 16,
+                    right: 16,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildCircularIconButton(
+                        context: context,
+                        icon: Icons.arrow_back,
+                        onPressed: () {
+                          drawerCtrl.goBack();
+                          if (Navigator.of(context).canPop()) {
+                            Navigator.of(context).pop();
+                          } else {
+                            debugPrint("No screen to go back to");
+                          }
+                        },
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: ListView(
-                        padding: const EdgeInsets.only(bottom: 12),
-                        children: [
-                          _buildInfoCard(
-                            "First Name",
-                            userData['firstName'],
-                            dark,
-                          ),
-                          _buildInfoCard(
-                            "Last Name",
-                            userData['lastName'],
-                            dark,
-                          ),
-                          _buildInfoCard("Email", userData['email'], dark),
-                          _buildInfoCard("Phone", userData['phone'], dark),
-                        ],
+                      buildMainButton(
+                        text: 'Main',
+                        onPressed: () => controller.alertPage(),
+                        context: context,
                       ),
-                    ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 20.0,
-                  left: 16,
-                  right: 16,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    buildCircularIconButton(
-                      context: context,
-                      icon: Icons.arrow_back,
-                      onPressed: () {
-                        drawerCtrl.goBack();
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        } else {
-                          debugPrint("No screen to go back to");
-                        }
-                      },
-                    ),
-                    buildMainButton(
-                      text: 'Main',
-                      onPressed: () => controller.alertPage(),
-                      context: context,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

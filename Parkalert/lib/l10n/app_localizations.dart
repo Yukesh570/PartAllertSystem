@@ -399,11 +399,11 @@ abstract class AppLocalizations {
   /// **'Taimoor Sikander'**
   String get homeAppbarSubTitle;
 
-  /// No description provided for @alerts.
+  /// No description provided for @parkingalarms.
   ///
   /// In en, this message translates to:
-  /// **'Alerts'**
-  String get alerts;
+  /// **'Parking Alarms'**
+  String get parkingalarms;
 
   /// No description provided for @freezones.
   ///
@@ -452,6 +452,342 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Exit ParkAlert'**
   String get exitParkAlert;
+
+  /// No description provided for @noringers.
+  ///
+  /// In en, this message translates to:
+  /// **'No Ringers'**
+  String get noringers;
+
+  /// No description provided for @setupyourparkingalarms.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup your parkingalarms'**
+  String get setupyourparkingalarms;
+
+  /// No description provided for @myparkingalarms.
+  ///
+  /// In en, this message translates to:
+  /// **'My Parking Alarms'**
+  String get myparkingalarms;
+
+  /// No description provided for @setalertzone.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Alert zone'**
+  String get setalertzone;
+
+  /// No description provided for @connect.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect'**
+  String get connect;
+
+  /// No description provided for @disconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnect'**
+  String get disconnect;
+
+  /// No description provided for @visitparkalarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Visit ParkAlarm'**
+  String get visitparkalarm;
+
+  /// No description provided for @exitparkalert.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit ParkAlert'**
+  String get exitparkalert;
+
+  /// No description provided for @changelanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Language'**
+  String get changelanguage;
+
+  /// No description provided for @allActivitiesAndLocations.
+  ///
+  /// In en, this message translates to:
+  /// **'All Activities & Locations'**
+  String get allActivitiesAndLocations;
+
+  /// No description provided for @allactivities.
+  ///
+  /// In en, this message translates to:
+  /// **'All Activities'**
+  String get allactivities;
+
+  /// No description provided for @alllocation.
+  ///
+  /// In en, this message translates to:
+  /// **'All location'**
+  String get alllocation;
+
+  /// No description provided for @setnoalertzones.
+  ///
+  /// In en, this message translates to:
+  /// **'Set no-alert zones'**
+  String get setnoalertzones;
+
+  /// No description provided for @parkedhistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Parked History'**
+  String get parkedhistory;
+
+  /// No description provided for @theuserjourney.
+  ///
+  /// In en, this message translates to:
+  /// **'The User Journey'**
+  String get theuserjourney;
+
+  /// No description provided for @theuserjourneyparagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'When you first open the Parkalert app, you will be taken through a startup wizard to set up your account and your first alarm.'**
+  String get theuserjourneyparagraph;
+
+  /// No description provided for @permissionsAndRegistration.
+  ///
+  /// In en, this message translates to:
+  /// **'Permissions & Registration'**
+  String get permissionsAndRegistration;
+
+  /// No description provided for @personaldata.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Data'**
+  String get personaldata;
+
+  /// No description provided for @personaldataparagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'The app first requests necessary permissions. This includes location access to detect Bluetooth events and geofences. A special, persistent permission is required to allow all the time. to ensure the app works properly even when closed. '**
+  String get personaldataparagraph;
+
+  /// No description provided for @accountsetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Setup'**
+  String get accountsetup;
+
+  /// No description provided for @accontsetupparagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'You will be directed to the registration page,where you will fill in your details to create your account. Registration is done directly in the app.'**
+  String get accontsetupparagraph;
+
+  /// No description provided for @landingpage.
+  ///
+  /// In en, this message translates to:
+  /// **'Landing Page'**
+  String get landingpage;
+
+  /// No description provided for @landingpageparagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'After registration, the landing page is always the \"My Alerts\" page.'**
+  String get landingpageparagraph;
+
+  /// No description provided for @alarmsetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Alarm Setup'**
+  String get alarmsetup;
+
+  /// No description provided for @createalert.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Alert'**
+  String get createalert;
+
+  /// No description provided for @createalertparagraph1.
+  ///
+  /// In en, this message translates to:
+  /// **'On the \"My Alerts\" page, clicking the'**
+  String get createalertparagraph1;
+
+  /// No description provided for @createalertparagraph2.
+  ///
+  /// In en, this message translates to:
+  /// **'icon opens the \"Create Alert\" form'**
+  String get createalertparagraph2;
+
+  /// No description provided for @fillindetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in Details'**
+  String get fillindetails;
+
+  /// No description provided for @fillindetailsparagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'Here, you will give your alert a custom name (not related to a location),select a Bluetooth device (your car), and choose a notification sound.'**
+  String get fillindetailsparagraph;
+
+  /// No description provided for @activatealert.
+  ///
+  /// In en, this message translates to:
+  /// **'Activate Alert'**
+  String get activatealert;
+
+  /// No description provided for @activatealertparagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'The newly created alert appears as a box on the \"My Alerts\" page.The alert is not active until you click the separate Connect button on its box.'**
+  String get activatealertparagraph;
+
+  /// No description provided for @coreoperationallogic.
+  ///
+  /// In en, this message translates to:
+  /// **'Core Operational Logic'**
+  String get coreoperationallogic;
+
+  /// No description provided for @coreoperationallogicparagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'The app\'s behavior is driven by the Bluetooth connection status and your location relative to a Freezone.'**
+  String get coreoperationallogicparagraph;
+
+  /// No description provided for @bluetoothdisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth Disconnected'**
+  String get bluetoothdisconnected;
+
+  /// No description provided for @bluetoothdisconnectedparagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'User has left the car, Parkalert is activated.'**
+  String get bluetoothdisconnectedparagraph;
+
+  /// No description provided for @bluetoothconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Bluetooth Connected'**
+  String get bluetoothconnected;
+
+  /// No description provided for @bluetoothconnectedparagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'User has returned, Parkalert is deactivated.'**
+  String get bluetoothconnectedparagraph;
+
+  /// No description provided for @geofencing.
+  ///
+  /// In en, this message translates to:
+  /// **'Geofencing (Freezones)'**
+  String get geofencing;
+
+  /// No description provided for @freezonesparagraph.
+  ///
+  /// In en, this message translates to:
+  /// **'This feature allows you to define \"no alert zones\" to prevent alerts in familiar locations.No time duration is needed for a Freezone.'**
+  String get freezonesparagraph;
+
+  /// No description provided for @creatingandactivatingfreezone.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating and Activating a Freezone'**
+  String get creatingandactivatingfreezone;
+
+  /// No description provided for @creatingandactivating1.
+  ///
+  /// In en, this message translates to:
+  /// **'From the sidebar menu, select \"Freezones\".'**
+  String get creatingandactivating1;
+
+  /// No description provided for @creatingandactivating2Step1.
+  ///
+  /// In en, this message translates to:
+  /// **'Click the'**
+  String get creatingandactivating2Step1;
+
+  /// No description provided for @creatingandactivating2Step2.
+  ///
+  /// In en, this message translates to:
+  /// **'.A box will appear.'**
+  String get creatingandactivating2Step2;
+
+  /// No description provided for @creatingandactivating3.
+  ///
+  /// In en, this message translates to:
+  /// **'Click the location icon in the box to open a map.'**
+  String get creatingandactivating3;
+
+  /// No description provided for @creatingandactivating4.
+  ///
+  /// In en, this message translates to:
+  /// **'Click the location icon below the search bar to locate yourself.'**
+  String get creatingandactivating4;
+
+  /// No description provided for @creatingandactivating5.
+  ///
+  /// In en, this message translates to:
+  /// **'Click the pencil with a location icon to start drawing your zone.Click on the map to place blue location icons to create a custom shape.'**
+  String get creatingandactivating5;
+
+  /// No description provided for @creatingandactivating6.
+  ///
+  /// In en, this message translates to:
+  /// **'Once the shape is complete, click the ✓ (tick icon) to save it.'**
+  String get creatingandactivating6;
+
+  /// No description provided for @creatingandactivating7.
+  ///
+  /// In en, this message translates to:
+  /// **'Go back to the \"Set Alert Zone\" screen and click the Connect button on the box to activate your Freezone.'**
+  String get creatingandactivating7;
+
+  /// No description provided for @managingafreezone.
+  ///
+  /// In en, this message translates to:
+  /// **'Managing a Freezone'**
+  String get managingafreezone;
+
+  /// No description provided for @managingafreezonepragraph.
+  ///
+  /// In en, this message translates to:
+  /// **'You can edit, rename, or delete your Freezones anytime from the Freezones screen.Only one zone can be activated at a time to avoid conflicts.'**
+  String get managingafreezonepragraph;
+
+  /// No description provided for @managingafreezonefreezonepragraph.
+  ///
+  /// In en, this message translates to:
+  /// **'This feature allows you to define no alert zones to prevent alerts in familiar locations. No time duration is needed for a Freezone.'**
+  String get managingafreezonefreezonepragraph;
+
+  /// No description provided for @activitiesandhistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Activities and History'**
+  String get activitiesandhistory;
+
+  /// No description provided for @activities.
+  ///
+  /// In en, this message translates to:
+  /// **'Activities'**
+  String get activities;
+
+  /// No description provided for @activitiesparagraphs.
+  ///
+  /// In en, this message translates to:
+  /// **'This section shows your comprehensive history of alarms and parking locations.The Activity menu has \'All Activities\' and \'All Location\' views, with a map of Bluetooth disconnection events.'**
+  String get activitiesparagraphs;
+
+  /// No description provided for @navigationmeu.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation Menu'**
+  String get navigationmeu;
+
+  /// No description provided for @sidebarincludes.
+  ///
+  /// In en, this message translates to:
+  /// **'Sidebar Includes'**
+  String get sidebarincludes;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

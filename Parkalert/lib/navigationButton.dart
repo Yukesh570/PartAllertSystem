@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:Parkalert/features/controllers/drawerController.dart';
 import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class navButton extends StatelessWidget {
   const navButton({super.key});
@@ -47,7 +50,7 @@ class navButton extends StatelessWidget {
               children: [
                 _buildListTile(
                   icon: Icons.notifications_active_outlined,
-                  label: loc.alerts,
+                  label: loc.parkingalarms,
                   style: menuTextStyle(
                     isDark: isDark,
                     isSelected: isSelected,
@@ -248,6 +251,7 @@ class navButton extends StatelessWidget {
                     onNavigate: controller.privacyPage,
                     currentRoute: isSelected,
                   ),
+
                   // onTap: () {
                   //   if (isSelected != "/privacy") {
                   //     Navigator.pop(context);
@@ -259,12 +263,60 @@ class navButton extends StatelessWidget {
                   //   }
                   // },
                 ),
+                const Divider(height: 20, thickness: 1),
+                _buildListTile(
+                  icon: Icons.language,
+                  label: loc.visitparkalarm,
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: isDark
+                        ? Colors.white
+                        : TColors.dark.withOpacity(0.87),
+                  ),
+                  isDark: isDark,
+                  onTap: () async {
+                    final Uri url = Uri.parse('https://parkalarm.nl/');
+
+                    if (!await launchUrl(
+                      url,
+                      mode: LaunchMode.externalApplication,
+                    )) {
+                      throw Exception('Could not launch $url');
+                    }
+                  },
+                ),
 
                 const Divider(height: 20, thickness: 1),
+                _buildListTile(
+                  icon: Icons.description_outlined,
+                  label: loc.changelanguage,
+                  style: menuTextStyle(
+                    isDark: isDark,
+                    isSelected: isSelected,
+                    routeName: '/changelanguage',
+                  ),
+                  isDark: isDark,
+                  onTap: () => _navigation(
+                    context: context,
+                    targetRoute: '/changelanguage',
+                    onNavigate: controller.changelanguage,
+                    currentRoute: isSelected,
+                  ),
+                  // onTap: () {
+                  //   if (isSelected != "/terms") {
+                  //     Navigator.pop(context);
+                  //     Future.delayed(Duration(milliseconds: 180), () {
+                  //       controller.termsandconditions();
+                  //     });
+                  //   } else {
+                  //     Navigator.pop(context);
+                  //   }
+                  // },
+                ),
 
                 _buildListTile(
                   icon: Icons.exit_to_app,
-                  label: 'Exit ParkAlert',
+                  label: loc.exitparkalert,
                   style: TextStyle(
                     fontSize: 18,
                     color: isDark

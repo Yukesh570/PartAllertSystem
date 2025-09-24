@@ -110,151 +110,145 @@ class _FreezoneState extends State<Freezone> {
           ),
         ),
         drawer: const navButton(),
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 0,
-                bottom: 0,
-                right: 22,
-                left: 22,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              // 🔹 Fixed background
+              Positioned.fill(
+                child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
               ),
-              child: GestureDetector(
-                onTap: () {
-                  FocusScope.of(
-                    context,
-                  ).unfocus(); // 👈 dismiss keyboard & cursor
-                },
-                child: Container(
-                  width: double.infinity,
-                  height: 670,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 2.0,
-                    horizontal: 10.0,
-                  ),
-                  decoration: BoxDecoration(
-                    color: dark
-                        ? const Color.fromARGB(255, 34, 34, 34)
-                        : const Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // "Set your Alert" and "My Alerts" text
-                      const Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                          vertical: 4.0,
-                        ),
-                        child: Text(
-                          'Setup your ringers',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                          vertical: 4.0,
-                        ),
-                        child: Text(
-                          'Set Alert Zone',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16.0),
 
-                      // Main alert settings card
-                      Expanded(
-                        child: Obx(() {
-                          if (zoneController.zones.isEmpty) {
-                            return const Center(
-                              child: Text(
-                                'No ZoneBox',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
+              // 🔹 Scrollable zone list container
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22.0,
+                  vertical: 12.0,
+                ),
+                child: GestureDetector(
+                  onTap: () => FocusScope.of(context).unfocus(),
+                  child: Container(
+                    width: double.infinity,
+                    height: 670,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 2.0,
+                      horizontal: 10.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: dark ? const Color(0xFF222222) : Colors.white,
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.0,
+                            vertical: 4.0,
+                          ),
+                          child: Text(
+                            'Setup your ringers',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.0,
+                            vertical: 4.0,
+                          ),
+                          child: Text(
+                            'Set Alert Zone',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+
+                        // 🔹 Only the zone list scrolls
+                        Expanded(
+                          child: Obx(() {
+                            if (zoneController.zones.isEmpty) {
+                              return const Center(
+                                child: Text(
+                                  'No ZoneBox',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
+                              );
+                            }
+                            return SingleChildScrollView(
+                              padding: EdgeInsets.only(
+                                bottom:
+                                    MediaQuery.of(context).viewInsets.bottom +
+                                    20,
+                              ),
+                              child: Column(
+                                children: zoneController.zones
+                                    .map(
+                                      (data) => Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: ZoneBox(zoneData: data),
+                                      ),
+                                    )
+                                    .toList(),
                               ),
                             );
-                          }
-                          return SingleChildScrollView(
-                            child: Column(
-                              children: zoneController.zones
-                                  .map(
-                                    (data) => Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: ZoneBox(zoneData: data),
-                                    ),
-                                  )
-                                  .toList(),
-                            ),
-                          );
-                        }),
-                      ),
+                          }),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
 
-                      const SizedBox(
-                        height: 20.0,
-                      ), // Space before bottom navigation
+              // 🔹 Fixed bottom buttons
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildCircularIconButton(
+                        context: context,
+                        icon: Icons.arrow_back,
+                        onPressed: () {
+                          drawerCtrl.goBack();
+                          if (Navigator.of(context).canPop())
+                            Navigator.of(context).pop();
+                        },
+                      ),
+                      buildMainButton(
+                        text: 'Main',
+                        onPressed: () {
+                          controller.alertPage();
+                        },
+                        context: context,
+                      ),
+                      addAlertButton(
+                        context: context,
+                        onPressed: () async {
+                          await _addZone(
+                            name: "FreeZone ${zoneController.zones.length + 1}",
+                            initialTime: "--:--",
+                            stopTime: "--:--",
+                            isOn: false,
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    buildCircularIconButton(
-                      context: context,
-                      icon: Icons.arrow_back,
-                      onPressed: () {
-                        drawerCtrl.goBack(); // update drawer highlight
-
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        } else {
-                          // Optionally handle the case where there's no back route
-                          print("No screen to go back to");
-                        }
-                      },
-                    ),
-                    buildMainButton(
-                      text: 'Main',
-                      onPressed: () {
-                        controller.alertPage();
-                      },
-                      context: context,
-                    ),
-                    addAlertButton(
-                      context: context,
-                      onPressed: () async {
-                        await _addZone(
-                          name: "FreeZone ${zoneController.zones.length + 1}",
-                          initialTime: "--:--",
-                          stopTime: "--:--", // or get from UI
-                          isOn: false,
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

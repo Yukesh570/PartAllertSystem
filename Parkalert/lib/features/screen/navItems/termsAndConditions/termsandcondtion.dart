@@ -41,14 +41,18 @@ class _TermsandcondtionState extends State<Termsandcondtion> {
         ),
       ),
       drawer: const navButton(),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-          ),
+      body: SafeArea(
+        minimum: const EdgeInsets.only(bottom: 12.0),
 
-          // other children here...
-        ],
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
+            ),
+
+            // other children here...
+          ],
+        ),
       ),
     );
   }

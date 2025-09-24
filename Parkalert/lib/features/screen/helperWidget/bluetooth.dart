@@ -97,6 +97,7 @@
 // }
 import 'dart:io' show Platform;
 
+import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_classic/flutter_blue_classic.dart';
 import 'package:android_intent_plus/android_intent.dart';
@@ -182,7 +183,12 @@ class _PairedDevicesDialogState extends State<PairedDevicesDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+
     return Dialog(
+      backgroundColor: dark
+          ? AppColors.alert3Dark
+          : Colors.white, // 👈 Dark/Light mode
       insetPadding: EdgeInsets.all(20),
       child: Column(
         mainAxisSize: MainAxisSize.min,

@@ -1,3 +1,6 @@
+import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
+import 'package:Parkalert/l10n/app_localizations.dart';
+import 'package:Parkalert/navigationButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -55,18 +58,48 @@ class _QuestionState extends State<Question> {
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-
+    final loc = AppLocalizations.of(context);
+    if (loc == null) {
+      // This means localization isn't yet loaded or context is not in a localized widget tree
+      return const Center(child: CircularProgressIndicator());
+    }
     return Scaffold(
-      backgroundColor: dark ? Colors.black : Colors.white,
+      resizeToAvoidBottomInset: false,
+
+      backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
+
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text("FAQ"),
+        centerTitle: true,
+
+        title: Text(
+          loc.howParkAlertWorks,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        leading: Builder(
+          builder: (context) => IconButton(
+            onPressed: () => Scaffold.of(context).openDrawer(),
+            icon: Icon(Icons.menu, color: dark ? Colors.white : Colors.black),
+          ),
+        ),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: _showNotification,
-          child: const Text("Show Notification with Sound"),
+      drawer: const navButton(),
+      body: SafeArea(
+        minimum: const EdgeInsets.only(bottom: 12.0),
+
+        child: SafeArea(
+          minimum: const EdgeInsets.only(bottom: 12.0),
+
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
+              ),
+
+              // other children here...
+            ],
+          ),
         ),
       ),
     );

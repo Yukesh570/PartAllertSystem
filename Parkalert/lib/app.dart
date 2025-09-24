@@ -7,6 +7,8 @@ import 'package:Parkalert/utils/healper/permissiongate.dart';
 import 'package:flutter/material.dart';
 import 'package:Parkalert/utils/theme/theme.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -50,7 +52,8 @@ class _AppState extends State<App> {
     print("selectedLansdsdsdg: $_locale");
 
     return GetMaterialApp(
-      locale: _locale,
+      locale: Locale(GetStorage().read("languagecode") ?? "en"),
+      fallbackLocale: const Locale('en'),
       supportedLocales: AppLocalizations.supportedLocales,
 
       localizationsDelegates: const [
@@ -65,16 +68,18 @@ class _AppState extends State<App> {
       themeMode: ThemeMode.system,
       darkTheme: TAppTheme.darkTheme,
       theme: TAppTheme.lightTheme,
-      builder: (context, child) {
-        return Localizations.override(
-          context: context,
-          locale: _locale,
-          child: child!,
-        );
-      },
+      // builder: (context, child) {
+      //   return Localizations.override(
+      //     context: context,
+      //     locale: _locale,
+      //     child: child!,
+      //   );
+      // },
       home: PermissionGate(
         isRegistered: _isRegistered,
-        onLocaleChange: _setLocale,
+        onLocaleChange: (locale) {
+          Get.updateLocale(locale); // ← will update the app instantly
+        },
       ),
 
       // home: _isRegistered

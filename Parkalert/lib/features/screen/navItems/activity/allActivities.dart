@@ -42,10 +42,9 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   Future<void> loadSavedLocations() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = prefs.getString("currentLocation") ?? "[]";
-    final ApiService apiService = ApiService();
 
     final List<dynamic> jsonList = json.decode(jsonString);
-
+    print("🔍 No zones found in SharedPreferences.${jsonList}");
     final historyList = jsonList.asMap().entries.map((entry) {
       final index = entry.key;
       final item = entry.value as Map<String, dynamic>;
@@ -64,20 +63,20 @@ class _ActivityHistoryState extends State<ActivityHistory> {
       _loadingHistory = false;
     });
 
-    for (var history in historyList) {
-      try {
-        await apiService.createHistory(
-          index: history.index,
-          lat: history.lat,
-          lng: history.lng,
-          time: history.time,
-          name: history.name,
-        );
-        print("✅ Sent history index: ${history.index}");
-      } catch (e) {
-        print("❌ Failed to send history index ${history.index}: $e");
-      }
-    }
+    // for (var history in historyList) {
+    //   try {
+    //     await apiService.createHistory(
+    //       index: history.index,
+    //       lat: history.lat,
+    //       lng: history.lng,
+    //       time: history.time,
+    //       name: history.name,
+    //     );
+    //     print("✅ Sent history index: ${history.index}");
+    //   } catch (e) {
+    //     print("❌ Failed to send history index ${history.index}: $e");
+    //   }
+    // }
   }
 
   @override
@@ -99,40 +98,40 @@ class _ActivityHistoryState extends State<ActivityHistory> {
     final loc = AppLocalizations.of(context);
     final MainController controller = Get.put(MainController());
 
-    void printAllSharedPreferences() async {
-      final prefs = await SharedPreferences.getInstance();
-      final zones = prefs.getStringList('zones');
+    // void printAllSharedPreferences() async {
+    //   final prefs = await SharedPreferences.getInstance();
+    //   final zones = prefs.getStringList('zones');
 
-      if (zones == null || zones.isEmpty) {
-        print("🔍 No zones found in SharedPreferences.");
-        return;
-      }
+    //   if (zones == null || zones.isEmpty) {
+    //     print("🔍 No zones found in SharedPreferences.");
+    //     return;
+    //   }
 
-      print("🔐 Saved Zones:");
-      for (var i = 0; i < zones.length; i++) {
-        print("Zone $i → ${zones[i]}");
-      }
-    }
+    //   print("🔐 Saved Zones:");
+    //   for (var i = 0; i < zones.length; i++) {
+    //     print("Zone $i → ${zones[i]}");
+    //   }
+    // }
 
-    printAllSharedPreferences();
-    _addZone({
-      required String name,
-      required String initialTime,
-      required String stopTime,
-      required bool isOn,
-    }) async {
-      final newIndex = zoneController.zones.length;
-      await zoneController.addZone(
-        ZoneData(
-          index: newIndex,
-          initialTime: initialTime, // or get from UI
-          stopTime: stopTime, // or get from UI
-          isOn: isOn,
-          name: name,
-          points: [],
-        ),
-      );
-    }
+    // printAllSharedPreferences();
+    // _addZone({
+    //   required String name,
+    //   required String initialTime,
+    //   required String stopTime,
+    //   required bool isOn,
+    // }) async {
+    //   final newIndex = zoneController.zones.length;
+    //   await zoneController.addZone(
+    //     ZoneData(
+    //       index: newIndex,
+    //       initialTime: initialTime, // or get from UI
+    //       stopTime: stopTime, // or get from UI
+    //       isOn: isOn,
+    //       name: name,
+    //       points: [],
+    //     ),
+    //   );
+    // }
 
     if (loc == null) {
       // This means localization isn't yet loaded or context is not in a localized widget tree
@@ -163,134 +162,135 @@ class _ActivityHistoryState extends State<ActivityHistory> {
           ),
         ),
         drawer: const navButton(),
-        body: Stack(
-          children: [
-            Positioned.fill(
-              child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-            ),
+        body: SafeArea(
+          minimum: const EdgeInsets.only(bottom: 12.0),
 
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 0,
-                bottom: 0,
-                right: 22,
-                left: 22,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
               ),
-              child: Container(
-                width: double.infinity,
-                height: 670,
-                padding: const EdgeInsets.symmetric(
-                  vertical: 2.0,
-                  horizontal: 10.0,
+
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 0,
+                  bottom: 0,
+                  right: 22,
+                  left: 22,
                 ),
-                decoration: BoxDecoration(
-                  color: dark
-                      ? const Color.fromARGB(255, 34, 34, 34)
-                      : const Color.fromARGB(255, 255, 255, 255),
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // "Set your Alert" and "My Alerts" text
-                    // const Padding(
-                    //   padding: EdgeInsets.symmetric(
-                    //     horizontal: 8.0,
-                    //     vertical: 4.0,
-                    //   ),
-                    //   child: Text(
-                    //     'Setup your ringers',
-                    //     style: TextStyle(
-                    //       fontSize: 14,
-                    //       fontWeight: FontWeight.w500,
-                    //     ),
-                    //   ),
-                    // ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 8.0,
-                        vertical: 4.0,
-                      ),
-                      child: Text(
-                        'Set Alert Zone',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                child: Container(
+                  width: double.infinity,
+                  height: 670,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 2.0,
+                    horizontal: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: dark
+                        ? const Color.fromARGB(255, 34, 34, 34)
+                        : const Color.fromARGB(255, 255, 255, 255),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // "Set your Alert" and "My Alerts" text
+                      // const Padding(
+                      //   padding: EdgeInsets.symmetric(
+                      //     horizontal: 8.0,
+                      //     vertical: 4.0,
+                      //   ),
+                      //   child: Text(
+                      //     'Setup your ringers',
+                      //     style: TextStyle(
+                      //       fontSize: 14,
+                      //       fontWeight: FontWeight.w500,
+                      //     ),
+                      //   ),
+                      // ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 4.0,
+                        ),
+                        child: Text(
+                          'Set Alert Zone',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 16.0),
+                      const SizedBox(height: 16.0),
 
-                    // Main alert settings card
-                    Expanded(
-                      child: Obx(() {
-                        if (zoneController.zones.isEmpty) {
-                          return const Center(
-                            child: Text(
-                              'No History Found',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          );
-                        }
-                        return SingleChildScrollView(
-                          child: Column(
-                            children: history
-                                .map(
-                                  (data) => Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: ActivityBox(historydata: data),
+                      // Main alert settings card
+                      Expanded(
+                        child: history.isEmpty
+                            ? const Center(
+                                child: Text(
+                                  'No History Found',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
                                   ),
-                                )
-                                .toList(),
-                          ),
-                        );
-                      }),
-                    ),
+                                ),
+                              )
+                            : SingleChildScrollView(
+                                child: Column(
+                                  children: history
+                                      .map(
+                                        (data) => Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: ActivityBox(historydata: data),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              ),
+                      ),
 
-                    const SizedBox(
-                      height: 20.0,
-                    ), // Space before bottom navigation
-                  ],
+                      const SizedBox(
+                        height: 20.0,
+                      ), // Space before bottom navigation
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    buildCircularIconButton(
-                      context: context,
-                      icon: Icons.arrow_back,
-                      onPressed: () {
-                        drawerCtrl.goBack(); // update drawer highlight
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildCircularIconButton(
+                        context: context,
+                        icon: Icons.arrow_back,
+                        onPressed: () {
+                          drawerCtrl.goBack(); // update drawer highlight
 
-                        if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        } else {
-                          // Optionally handle the case where there's no back route
-                          print("No screen to go back to");
-                        }
-                      },
-                    ),
-                    buildMainButton(
-                      text: 'Main',
-                      onPressed: () {
-                        controller.alertPage();
-                      },
-                      context: context,
-                    ),
-                    addAlertButton(context: context, onPressed: () {}),
-                  ],
+                          if (Navigator.of(context).canPop()) {
+                            Navigator.of(context).pop();
+                          } else {
+                            // Optionally handle the case where there's no back route
+                            print("No screen to go back to");
+                          }
+                        },
+                      ),
+                      buildMainButton(
+                        text: 'Main',
+                        onPressed: () {
+                          controller.alertPage();
+                        },
+                        context: context,
+                      ),
+                      addAlertButton(context: context, onPressed: () {}),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

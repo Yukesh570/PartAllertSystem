@@ -284,29 +284,70 @@ class _RingersState extends State<Ringers> {
                   final confirm = await showDialog<bool>(
                     context: context,
                     builder: (context) => AlertDialog(
-                      title: const Text("Delete Ringer"),
-                      content: const Text(
+                      backgroundColor: dark
+                          ? AppColors.alert3Dark
+                          : Colors.white, // 👈 Dark/Light mode
+                      title: Text(
+                        "Delete Ringer",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: dark
+                              ? Colors.white
+                              : Colors.black, // adjust if needed
+                        ),
+                      ),
+                      content: Text(
                         "Are you sure you want to delete this ringer?",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: dark
+                              ? Colors.white
+                              : Colors.black, // adjust if needed
+                        ),
                       ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context, false),
-                          child: const Text("Cancel"),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            minimumSize: const Size(60, 30),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: dark
+                                  ? Colors.white
+                                  : Colors.black, // adjust if needed
                             ),
-                            elevation: 0,
                           ),
-                          onPressed: () => Navigator.pop(context, true),
-                          child: const Text(
-                            "Delete",
-                            style: TextStyle(fontSize: 14),
+                        ),
+                        Theme(
+                          data: Theme.of(context).copyWith(
+                            elevatedButtonTheme: ElevatedButtonThemeData(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                minimumSize: const Size(60, 30),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 4,
+                                ),
+                                elevation: 0,
+                              ),
+                            ),
+                            splashColor: Colors.transparent, // remove splash
+                            highlightColor:
+                                Colors.transparent, // remove focus highlight
+                            focusColor:
+                                Colors.transparent, // remove focus border
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () => Navigator.pop(context, true),
+                            child: Text(
+                              "Delete",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: dark
+                                    ? Colors.black
+                                    : Colors.white, // adjust if needed
+                              ),
+                            ),
                           ),
                         ),
                       ],

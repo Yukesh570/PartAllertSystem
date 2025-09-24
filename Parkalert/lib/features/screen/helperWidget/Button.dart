@@ -1,6 +1,7 @@
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alertSettings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Widget buildMainButton({
   required BuildContext context,
@@ -133,8 +134,8 @@ Widget buildCircularAddbButton({
   required VoidCallback onPressed,
 }) {
   return Container(
-    width: 60,
-    height: 60,
+    width: 70,
+    height: 70,
     decoration: BoxDecoration(
       color: AppColors.mainButtonColor,
       shape: BoxShape.circle,
@@ -167,7 +168,10 @@ Widget buildConnectButton({
   return SizedBox(
     width: double.infinity,
     child: ElevatedButton(
-      onPressed: onPressed,
+      onPressed: () async {
+        HapticFeedback.vibrate();
+        onPressed();
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: dark ? AppColors.alert3Dark : backgroundColor,
         foregroundColor: textColor,

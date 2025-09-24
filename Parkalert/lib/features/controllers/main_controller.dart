@@ -6,6 +6,7 @@ import 'package:Parkalert/features/screen/navItems/activity/allActivities.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alertSettingEdit.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alertSettings.dart';
+import 'package:Parkalert/features/screen/navItems/changelanguage/changelanguage.dart';
 import 'package:Parkalert/features/screen/navItems/freezones/freezone.dart';
 import 'package:Parkalert/features/screen/navItems/freezones/zoneBox.dart';
 import 'package:Parkalert/features/screen/navItems/privacyPolicy/privacypolicy.dart';
@@ -124,5 +125,12 @@ class MainController extends GetxController {
     drawerCtrl.changeRoute('/activityHistory'); // Set current route
 
     Get.to(() => ActivityHistory()); //
+  }
+
+  void changelanguage() {
+    final drawerCtrl = Get.find<DrawerControllerX>();
+    drawerCtrl.changeRoute('/changelanguage'); // Set current route
+
+    Get.to(() => Changelanguage()); //
   }
 }

@@ -5,6 +5,7 @@ import 'package:Parkalert/features/controllers/navItems/freeZone_controller.dart
 import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
+import 'package:Parkalert/features/screen/helperWidget/snackbar.dart';
 import 'package:Parkalert/features/screen/map/map.dart';
 import 'package:Parkalert/utils/storage/data/ZoneData.dart';
 import 'package:Parkalert/utils/storage/zoneStorage/zoneStorage.dart';
@@ -159,6 +160,116 @@ class ZoneBoxState extends State<ZoneBox> {
       );
     }
 
+    Future<void> _showEditDialog(BuildContext context) async {
+      final nameController = TextEditingController(text: widget.zoneData.name);
+      final initialTimeController = TextEditingController(
+        text: widget.zoneData.initialTime,
+      );
+      final stopTimeController = TextEditingController(
+        text: widget.zoneData.stopTime,
+      );
+
+      final result = await showDialog<bool>(
+        context: context,
+        builder: (context) {
+          final dark = Theme.of(context).brightness == Brightness.dark;
+          return AlertDialog(
+            backgroundColor: dark
+                ? AppColors.alert3Dark
+                : Colors.white, // 👈 Dark/Light mode
+
+            title: const Text("Edit Zone"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(labelText: "Zone Name"),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: initialTimeController,
+                  decoration: const InputDecoration(
+                    labelText: "Initial Time (HH:mm)",
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                TextField(
+                  controller: stopTimeController,
+                  decoration: const InputDecoration(
+                    labelText: "Stop Time (HH:mm)",
+                  ),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: dark
+                        ? Colors.white
+                        : Colors.black, // adjust if needed
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(
+                    255,
+                    90,
+                    102,
+                    224,
+                  ), // light mode background
+                  foregroundColor: Colors.white, // text/icon stays white
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                onPressed: () {
+                  // Update zone values
+                  updateZones(
+                    widget.zoneData.index,
+                    null,
+                    null,
+                    nameController.text,
+                    null,
+                    null,
+                  );
+
+                  setState(() {
+                    widget.zoneData.name = nameController.text;
+                    // widget.zoneData.initialTime = initialTimeController.text;
+                    // widget.zoneData.stopTime = stopTimeController.text;
+                    // _initialTimeController.text = initialTimeController.text;
+                    // _stopTimeController.text = stopTimeController.text;
+                  });
+
+                  Navigator.pop(context, true);
+                },
+                child: const Text("Save"),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (result == true) {
+        CustomSnackBar.show(
+          context,
+          message: "Zone updated successfully",
+          backgroundColor: Colors.green[600]!,
+        );
+      }
+    }
+
     return GestureDetector(
       onLongPress: () {
         setState(() {
@@ -168,10 +279,12 @@ class ZoneBoxState extends State<ZoneBox> {
       onTap: () {
         if (showExit) {
           setState(() {
-            showExit = false; // hide exit when tapping anywhere else
+            showExit = false;
           });
+        } else {
+          _showEditDialog(context); // 👈 open popup
         }
-        FocusScope.of(context).unfocus(); // 👈 dismiss keyboard & cursor
+        FocusScope.of(context).unfocus();
       },
       child: Stack(
         children: [
@@ -248,40 +361,15 @@ class ZoneBoxState extends State<ZoneBox> {
                       child: SizedBox(
                         height: 34, // tighter height
                         width: 160, // fixed width instead of expanding
-                        child: TextField(
-                          controller: _nameController,
-                          onSubmitted: (value) {
-                            updateZones(
-                              widget.zoneData.index,
-                              null,
-                              null,
-                              value,
-                              null,
-                              null,
-                            );
-                            setState(() {
-                              widget.zoneData.name = value;
-                            });
-
-                            print("nnnnaaammmeee===${widget.zoneData.name}");
-                            print("nnnnaaammmeee===${_nameController.text}");
-                          },
+                        child: Text(
+                          widget
+                              .zoneData
+                              .name, // 👈 replaces _nameController.text
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 18, // slightly smaller font
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: color2,
-                          ),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            isDense: true,
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 6,
-                            ), // reduces vertical padding
-                            fillColor: dark ? Colors.grey[850] : color,
-                            filled: true,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
                           ),
                         ),
                       ),
@@ -384,29 +472,70 @@ class ZoneBoxState extends State<ZoneBox> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        title: const Text("Delete Zone"),
-                        content: const Text(
+                        backgroundColor: dark
+                            ? AppColors.alert3Dark
+                            : Colors.white, // 👈 Dark/Light mode
+                        title: Text(
+                          "Delete Zone",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: dark
+                                ? Colors.white
+                                : Colors.black, // adjust if needed
+                          ),
+                        ),
+                        content: Text(
                           "Are you sure you want to delete this zone?",
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: dark
+                                ? Colors.white
+                                : Colors.black, // adjust if needed
+                          ),
                         ),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context, false),
-                            child: const Text("Cancel"),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.red,
-                              minimumSize: const Size(60, 30),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 4,
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: dark
+                                    ? Colors.white
+                                    : Colors.black, // adjust if needed
                               ),
-                              elevation: 0, // remove shadow
                             ),
-                            onPressed: () => Navigator.pop(context, true),
-                            child: const Text(
-                              "Delete",
-                              style: TextStyle(fontSize: 14),
+                          ),
+                          Theme(
+                            data: Theme.of(context).copyWith(
+                              elevatedButtonTheme: ElevatedButtonThemeData(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  minimumSize: const Size(60, 30),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  elevation: 0,
+                                ),
+                              ),
+                              splashColor: Colors.transparent, // remove splash
+                              highlightColor:
+                                  Colors.transparent, // remove focus highlight
+                              focusColor:
+                                  Colors.transparent, // remove focus border
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.pop(context, true),
+                              child: Text(
+                                "Delete",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: dark
+                                      ? Colors.black
+                                      : Colors.white, // adjust if needed
+                                ),
+                              ),
                             ),
                           ),
                         ],

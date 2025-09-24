@@ -395,6 +395,8 @@ class _LocationHistoryState extends State<LocationHistory> {
         ),
         drawer: const navButton(),
         body: SafeArea(
+          minimum: const EdgeInsets.only(bottom: 12.0),
+
           child: Column(
             children: [
               Expanded(

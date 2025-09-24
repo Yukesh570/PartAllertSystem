@@ -14,16 +14,24 @@ class ApiService {
     required String phoneNumber,
   }) async {
     final url = Uri.parse("${baseUrl}api/auth/register/");
-    final response = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonEncode({
-        "firstName": firstName,
-        "lastName": lastName,
-        "email": email,
-        "phoneNumber": phoneNumber,
-      }),
-    );
+    final response = await http
+        .post(
+          url,
+          headers: {"Content-Type": "application/json"},
+          body: jsonEncode({
+            "firstName": firstName,
+            "lastName": lastName,
+            "email": email,
+            "phoneNumber": phoneNumber,
+          }),
+        )
+        .timeout(
+          const Duration(seconds: 5),
+          onTimeout: () {
+            throw Exception("⏳ Request timed out. Please check your internet.");
+          },
+        );
+
     print("✅ Registration successful: ${response}");
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
@@ -39,9 +47,9 @@ class ApiService {
           print("⚠️ Token was not saved");
         }
       }
-      return {data};
+      return data;
     } else {
-      print("❌ Failed: ${response.statusCode} - ${response.body}");
+      throw Exception("❌ Failed: ${response.statusCode} - ${response.body}");
     }
   }
 

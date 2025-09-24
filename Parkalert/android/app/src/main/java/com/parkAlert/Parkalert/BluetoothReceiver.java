@@ -180,8 +180,16 @@ public class BluetoothReceiver extends BroadcastReceiver {
             JSONArray locationsArray = new JSONArray(existingLocationsJson);
             locationsArray.put(locObj);
 
+            String backupLocationsJson = prefs.getString("flutter.backupcurrentLocation", "[]");
+            JSONArray backuplocationsArray = new JSONArray(backupLocationsJson);
+            backuplocationsArray.put(locObj);
+
             prefs.edit().putString("flutter.currentLocation", locationsArray.toString()).apply();
+            prefs.edit().putString("flutter.backupcurrentLocation", locationsArray.toString()).apply();
+
             Log.d("BluetoothReceiver", "📌 Saved current location: " + locObj.toString());
+
+
         } catch (JSONException e) {
             Log.e("BluetoothReceiver", "Failed to save location: " + e.getMessage());
         }
