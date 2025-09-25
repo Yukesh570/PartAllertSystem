@@ -39,9 +39,6 @@ dependencies:
   #icons
   iconsax_flutter: ^1.0.1
 
-  #flutter splash screen
-  flutter_native_splash: ^2.4.6
-
   cupertino_icons: ^1.0.8
   smooth_page_indicator: ^1.2.1
 
@@ -56,6 +53,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_native_splash: ^2.3.0
+
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
 
@@ -63,6 +62,20 @@ flutter_launcher_icons:
   android: true
   ios: true
   image_path: "assets/logos/iconlogo.png"
+flutter_native_splash:
+  color: "#0A0E61"
+  image: "assets/logos/logopartalert.png"
+  branding: "assets/logos/brandingforparkalert.png"
+
+  android_12:
+    color: "#0A0E61"
+    image: "assets/logos/logopartalert.png"
+    branding: "assets/logos/brandingforparkalert.png"
+
+  web: false
+  android: true
+  ios: true
+
 flutter:
   uses-material-design: true
   generate: true

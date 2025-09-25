@@ -195,27 +195,27 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // "Set your Alert" and "My Alerts" text
-                      // const Padding(
-                      //   padding: EdgeInsets.symmetric(
-                      //     horizontal: 8.0,
-                      //     vertical: 4.0,
-                      //   ),
-                      //   child: Text(
-                      //     'Setup your ringers',
-                      //     style: TextStyle(
-                      //       fontSize: 14,
-                      //       fontWeight: FontWeight.w500,
-                      //     ),
-                      //   ),
-                      // ),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 8.0,
                           vertical: 4.0,
                         ),
                         child: Text(
-                          'Set Alert Zone',
-                          style: TextStyle(
+                          loc.thenandnowoverview,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                          vertical: 4.0,
+                        ),
+                        child: Text(
+                          loc.allactivities,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),

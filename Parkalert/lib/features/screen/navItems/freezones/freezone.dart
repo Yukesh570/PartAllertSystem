@@ -140,27 +140,27 @@ class _FreezoneState extends State<Freezone> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 8.0,
                             vertical: 4.0,
                           ),
                           child: Text(
-                            'Setup your ringers',
-                            style: TextStyle(
+                            loc.whereyoudontwantalarm,
+                            style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 8.0,
                             vertical: 4.0,
                           ),
                           child: Text(
-                            'Set Alert Zone',
-                            style: TextStyle(
+                            loc.freezones,
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),

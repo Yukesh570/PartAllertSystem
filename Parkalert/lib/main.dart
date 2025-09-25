@@ -5,6 +5,7 @@ import 'package:Parkalert/features/screen/helperWidget/sound.dart';
 import 'package:Parkalert/features/screen/information/information.dart';
 import 'package:Parkalert/features/screen/map/test.dart';
 import 'package:Parkalert/features/services/bluetooth_event_handler.dart';
+import 'package:Parkalert/gerofence_bt_service.dart';
 import 'package:Parkalert/utils/healper/permission.dart';
 import 'package:flutter/material.dart';
 import 'package:Parkalert/app.dart';
@@ -32,7 +33,9 @@ void main() async {
   await NotificationService.initialize();
 
   await NotificationService().requestPermissions();
-  BluetoothEventHandler.initialize();
+  GeofenceBtService.initListener();
+
+  // BluetoothEventHandler.initialize();
   // await requestGeofencePermissions();
   // const MethodChannel('com.dudu/location').setMethodCallHandler((call) async {
   //   if (call.method == 'sendHistory') {

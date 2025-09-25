@@ -408,7 +408,7 @@ abstract class AppLocalizations {
   /// No description provided for @freezones.
   ///
   /// In en, this message translates to:
-  /// **'Freezones'**
+  /// **'No Alarm Zone'**
   String get freezones;
 
   /// No description provided for @activity.
@@ -453,6 +453,12 @@ abstract class AppLocalizations {
   /// **'Exit ParkAlert'**
   String get exitParkAlert;
 
+  /// No description provided for @whereyoudontwantalarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Where you don\'t want alarm to activate'**
+  String get whereyoudontwantalarm;
+
   /// No description provided for @noringers.
   ///
   /// In en, this message translates to:
@@ -474,7 +480,7 @@ abstract class AppLocalizations {
   /// No description provided for @setalertzone.
   ///
   /// In en, this message translates to:
-  /// **'Set Alert zone'**
+  /// **'Set No Alarm Zone'**
   String get setalertzone;
 
   /// No description provided for @connect.
@@ -674,6 +680,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'User has returned, Parkalert is deactivated.'**
   String get bluetoothconnectedparagraph;
+
+  /// No description provided for @thenandnowoverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Then and now, an overview of all activities'**
+  String get thenandnowoverview;
 
   /// No description provided for @geofencing.
   ///

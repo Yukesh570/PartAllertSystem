@@ -162,7 +162,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get parkingalarms => 'Parking Alarms';
 
   @override
-  String get freezones => 'Freezones';
+  String get freezones => 'No Alarm Zone';
 
   @override
   String get activity => 'Activity';
@@ -186,6 +186,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exitParkAlert => 'Exit ParkAlert';
 
   @override
+  String get whereyoudontwantalarm => 'Where you don\'t want alarm to activate';
+
+  @override
   String get noringers => 'No Ringers';
 
   @override
@@ -195,7 +198,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myparkingalarms => 'My Parking Alarms';
 
   @override
-  String get setalertzone => 'Set Alert zone';
+  String get setalertzone => 'Set No Alarm Zone';
 
   @override
   String get connect => 'Connect';
@@ -295,6 +298,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bluetoothconnectedparagraph => 'User has returned, Parkalert is deactivated.';
+
+  @override
+  String get thenandnowoverview => 'Then and now, an overview of all activities';
 
   @override
   String get geofencing => 'Geofencing (Freezones)';
