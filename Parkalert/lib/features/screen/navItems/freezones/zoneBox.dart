@@ -392,6 +392,7 @@ class ZoneBoxState extends State<ZoneBox> {
                             // if (_polygons.isNotEmpty) {
                             //   goToPolygon(_polygons.first);
                             // }
+
                             controller.mapPage(widget.zoneData);
                           },
                         ),
@@ -555,8 +556,8 @@ class ZoneBoxState extends State<ZoneBox> {
                     color: Colors.red,
                     shape: BoxShape.circle,
                   ),
-                  padding: const EdgeInsets.all(2),
-                  child: const Icon(Icons.close, color: Colors.white, size: 16),
+                  padding: const EdgeInsets.all(4),
+                  child: const Icon(Icons.close, color: Colors.white, size: 20),
                 ),
               ),
             ),

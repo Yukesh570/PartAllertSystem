@@ -46,22 +46,22 @@ class _FreezoneState extends State<Freezone> {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context);
     final MainController controller = Get.put(MainController());
-    void printAllSharedPreferences() async {
-      final prefs = await SharedPreferences.getInstance();
-      final zones = prefs.getStringList('zones');
+    // void printAllSharedPreferences() async {
+    //   final prefs = await SharedPreferences.getInstance();
+    //   final zones = prefs.getStringList('zones');
 
-      if (zones == null || zones.isEmpty) {
-        print("🔍 No zones found in SharedPreferences.");
-        return;
-      }
+    //   if (zones == null || zones.isEmpty) {
+    //     print("🔍 No zones found in SharedPreferences.");
+    //     return;
+    //   }
 
-      print("🔐 Saved Zones:");
-      for (var i = 0; i < zones.length; i++) {
-        print("Zone $i → ${zones[i]}");
-      }
-    }
+    //   print("🔐 Saved Zones:");
+    //   for (var i = 0; i < zones.length; i++) {
+    //     print("Zone $i → ${zones[i]}");
+    //   }
+    // }
 
-    printAllSharedPreferences();
+    // printAllSharedPreferences();
     _addZone({
       required String name,
       required String initialTime,
@@ -125,7 +125,7 @@ class _FreezoneState extends State<Freezone> {
                   vertical: 12.0,
                 ),
                 child: GestureDetector(
-                  onTap: () => FocusScope.of(context).unfocus(),
+                  // onTap: () => FocusScope.of(context).unfocus(),
                   child: Container(
                     width: double.infinity,
                     height: 670,
@@ -146,7 +146,7 @@ class _FreezoneState extends State<Freezone> {
                             vertical: 4.0,
                           ),
                           child: Text(
-                            loc.whereyoudontwantalarm,
+                            loc.createzonewhereparkalarmwillbequit,
                             style: const TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,

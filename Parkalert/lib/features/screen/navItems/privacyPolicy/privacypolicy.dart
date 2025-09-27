@@ -1,3 +1,4 @@
+import 'package:Parkalert/features/controllers/pagger.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
@@ -19,39 +20,42 @@ class _PrivacypolicyState extends State<Privacypolicy> {
       // This means localization isn't yet loaded or context is not in a localized widget tree
       return const Center(child: CircularProgressIndicator());
     }
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
+    return PageWrapper(
+      routeName: '/privacy',
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
 
-      backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
+        backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
 
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          centerTitle: true,
 
-        title: Text(
-          loc.privacyPolicy,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        leading: Builder(
-          builder: (context) => IconButton(
-            onPressed: () => Scaffold.of(context).openDrawer(),
-            icon: Icon(Icons.menu, color: dark ? Colors.white : Colors.black),
+          title: Text(
+            loc.privacyPolicy,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          leading: Builder(
+            builder: (context) => IconButton(
+              onPressed: () => Scaffold.of(context).openDrawer(),
+              icon: Icon(Icons.menu, color: dark ? Colors.white : Colors.black),
+            ),
           ),
         ),
-      ),
-      drawer: const navButton(),
-      body: SafeArea(
-        minimum: const EdgeInsets.only(bottom: 12.0),
+        drawer: const navButton(),
+        body: SafeArea(
+          minimum: const EdgeInsets.only(bottom: 12.0),
 
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-            ),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
+              ),
 
-            // other children here...
-          ],
+              // other children here...
+            ],
+          ),
         ),
       ),
     );

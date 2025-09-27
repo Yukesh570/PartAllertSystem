@@ -1,6 +1,7 @@
 import 'package:Parkalert/features/screen/information/information.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
 import 'package:Parkalert/features/screen/onboarding/onboarding.dart';
+import 'package:Parkalert/features/screen/splash_screen.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/utils/healper/permission.dart';
 import 'package:Parkalert/utils/healper/permissiongate.dart';
@@ -75,12 +76,14 @@ class _AppState extends State<App> {
       //     child: child!,
       //   );
       // },
-      home: PermissionGate(
-        isRegistered: _isRegistered,
-        onLocaleChange: (locale) {
-          Get.updateLocale(locale); // ← will update the app instantly
-        },
-      ),
+
+      // home: PermissionGate(
+      //   isRegistered: _isRegistered,
+      //   onLocaleChange: (locale) {
+      //     Get.updateLocale(locale); // ← will update the app instantly
+      //   },
+      // ),
+      home: const SplashScreen(),
 
       // home: _isRegistered
       //     ? const Alert()

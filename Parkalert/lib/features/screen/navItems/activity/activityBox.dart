@@ -116,7 +116,7 @@ class ActivityBoxState extends State<ActivityBox> {
       int timestamp = int.parse(time);
 
       DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-      time = date.hour.toString() + ":" + date.minute.toString();
+      String formattedTime = DateFormat('HH:mm').format(date);
 
       return Container(
         width: 70,
@@ -133,7 +133,7 @@ class ActivityBoxState extends State<ActivityBox> {
 
         child: Center(
           child: Text(
-            time,
+            formattedTime,
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,

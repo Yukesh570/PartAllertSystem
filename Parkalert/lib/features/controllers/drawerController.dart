@@ -5,8 +5,15 @@ class DrawerControllerX extends GetxController {
   final List<String> history = [];
 
   void changeRoute(String route) {
-    if (history.isEmpty || history.last != route) {
-      history.add(route); // push new route
+    print("1111111111111111111111111111111111111111111111111111111${route}");
+    if (route == "/alerts") {
+      // Clear history and make alert the root
+      history.clear();
+      history.add(route);
+    } else {
+      if (history.isEmpty || history.last != route) {
+        history.add(route); // push new route
+      }
     }
     currentRoute.value = route;
     print("===================currentRoute changed to: $route");

@@ -108,9 +108,16 @@ public class BluetoothReceiver extends BroadcastReceiver {
     }
 
     private void handleBluetoothEvent(Context context, BluetoothDevice device, boolean connected) {
+        new android.os.Handler(context.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
         SharedPreferences prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
         String jsonString = prefs.getString("flutter.activeBluetooth", "");
         boolean isInsideGeofence = prefs.getBoolean("flutter.insideGeofence", false);
+
+            Log.d("BluetoothReceiver", "isInsideGeofence: " + isInsideGeofence);
+
         String targetBluetoothName = "";
         String targetSound = "";
         String targetName = "";
@@ -138,16 +145,19 @@ public class BluetoothReceiver extends BroadcastReceiver {
         
 
         if (device.getName().contains(targetBluetoothName)) {
-            if (!connected) {
+            if (!connected) {  //to save the location when disconnected
                     getCurrentLocation(context, targetName);
                 }
             if (!isInsideGeofence) {
-                
+                Log.d("BluetoothReceiver", "OUTSIDE geofence → sending notification");
+
                 showNotification(context, device.getName(), connected, targetSound);
             } else {
                 Log.d("BluetoothReceiver", "Inside geofence → skipping notification");
             }
         }
+    }
+        },2000); // 3 second delay to ensure GeofenceService has updated the value
     }
 
     private void getCurrentLocation(Context context, String targetName) {

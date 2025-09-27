@@ -43,11 +43,11 @@ class _AlertState extends State<Alert> {
     final box = GetStorage();
     final userData = box.read('userData');
 
-    if (userData != null) {
-      print("📦 Saved user data: $userData");
-    } else {
-      print("⚠️ No user data found in storage.");
-    }
+    // if (userData != null) {
+    //   print("📦 Saved user data: $userData");
+    // } else {
+    //   print("⚠️ No user data found in storage.");
+    // }
   }
 
   void loadAndSetRingers() async {
@@ -72,7 +72,7 @@ class _AlertState extends State<Alert> {
           )
           .toList();
     });
-    print("ringersList: $ringersListdemo");
+    // print("ringersList: $ringersListdemo");
   }
 
   void refreshRingers() async {
@@ -103,23 +103,23 @@ class _AlertState extends State<Alert> {
   Widget build(BuildContext context) {
     final MainController controller = Get.put(MainController());
 
-    void printAllSharedPreferences() async {
-      final prefs = await SharedPreferences.getInstance();
-      final keys = prefs.getKeys();
+    // void printAllSharedPreferences() async {
+    //   final prefs = await SharedPreferences.getInstance();
+    //   final keys = prefs.getKeys();
 
-      if (keys.isEmpty) {
-        print("🔍 SharedPreferences is empty.");
-        return;
-      }
+    //   if (keys.isEmpty) {
+    //     print("🔍 SharedPreferences is empty.");
+    //     return;
+    //   }
 
-      print("🔐 SharedPreferences Contents:");
-      for (String key in keys) {
-        final value = prefs.get(key);
-        print("yjkesh: $key → Value: $value");
-      }
-    }
+    //   print("🔐 SharedPreferences Contents:");
+    //   for (String key in keys) {
+    //     final value = prefs.get(key);
+    //     print("yjkesh: $key → Value: $value");
+    //   }
+    // }
 
-    printAllSharedPreferences();
+    // printAllSharedPreferences();
 
     final dark = Theme.of(context).brightness == Brightness.dark;
     bool isOn = false;

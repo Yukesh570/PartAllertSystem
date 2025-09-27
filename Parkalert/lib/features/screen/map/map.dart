@@ -35,8 +35,8 @@ class _MappageState extends State<Mappage> {
   bool _isTyping = false;
 
   static const CameraPosition _initialPosition = CameraPosition(
-    target: LatLng(27.66115, 85.3028), // Kathmandu, Nepal
-    zoom: 15,
+    target: LatLng(20, 0), // near Africa, good "center"
+    zoom: 2,
   );
 
   final List<LatLng> _drawingPoints = [];
@@ -228,8 +228,13 @@ class _MappageState extends State<Mappage> {
     super.initState();
     loadCustomIcon();
     fenceIcon();
-    goToPolygon(widget.zoneData);
-
+    goToPolygon(widget.zoneData).then((cameraMoved) {
+      // 2. If the camera was NOT moved (meaning zoneData.points was empty),
+      //    move the camera to the user's current location.
+      if (!cameraMoved) {
+        packData();
+      }
+    });
     searchController.addListener(_onSearchChanged);
     loadPolygonsFromZones();
     loadMarkersromZones();
@@ -323,24 +328,30 @@ class _MappageState extends State<Mappage> {
     return await Geolocator.getCurrentPosition();
   }
 
-  packData() {
-    getUserLocation().then((value) async {
-      // _currrentLocationMarker.add(
-      //   Marker(
-      //     markerId: MarkerId('UserLocation'),
-      //     position: LatLng(value.latitude, value.longitude),
+  Future<void> packData() async {
+    try {
+      // 1. Get last known location (cached, fast)
+      Position? lastKnown = await Geolocator.getLastKnownPosition();
 
-      //     infoWindow: InfoWindow(title: 'My Location'),
-      //   ),
-      // );
-      CameraPosition cameraPosition = CameraPosition(
-        target: LatLng(value.latitude, value.longitude),
-        zoom: 17,
+      if (lastKnown != null) {
+        _moveCameraTo(LatLng(lastKnown.latitude, lastKnown.longitude));
+      }
+
+      // 2. Get fresh location in background (might take a bit)
+      Position fresh = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
       );
-      final GoogleMapController controller = await _controller.future;
-      controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-      setState(() {});
-    });
+      _moveCameraTo(LatLng(fresh.latitude, fresh.longitude));
+    } catch (e) {
+      print("Error getting location: $e");
+    }
+  }
+
+  Future<void> _moveCameraTo(LatLng target) async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(CameraPosition(target: target, zoom: 17)),
+    );
   }
 
   Future<void> goToPlace(String placeId) async {
@@ -451,8 +462,8 @@ class _MappageState extends State<Mappage> {
     );
   }
 
-  Future<void> goToPolygon(ZoneData zoneData) async {
-    if (zoneData.points.isEmpty) return; // safety check
+  Future<bool> goToPolygon(ZoneData zoneData) async {
+    if (zoneData.points.isEmpty) return false; // safety check
 
     final GoogleMapController controller = await _controller.future;
     List<LatLng> googlePoints = zoneData.points
@@ -490,6 +501,7 @@ class _MappageState extends State<Mappage> {
         ),
       );
     });
+    return true;
   }
 
   @override

@@ -186,13 +186,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exitParkAlert => 'Exit ParkAlert';
 
   @override
-  String get whereyoudontwantalarm => 'Where you don\'t want alarm to activate';
+  String get createzonewhereparkalarmwillbequit => 'Create the zones where ParkAlarm will be quit';
 
   @override
   String get noringers => 'No Ringers';
 
   @override
-  String get setupyourparkingalarms => 'Setup your parkingalarms';
+  String get setupyourparkingalarms => 'Setup your ParkingAlarms';
 
   @override
   String get myparkingalarms => 'My Parking Alarms';

@@ -17,6 +17,7 @@ class navButton extends StatelessWidget {
     required String isSelected,
     required String routeName,
   }) {
+    print("fsdfsdfsdfsdf${isSelected}");
     return TextStyle(
       fontSize: 18,
       color: isSelected == routeName
@@ -387,11 +388,20 @@ class navButton extends StatelessWidget {
     required VoidCallback onNavigate,
     required String currentRoute,
   }) async {
+    final drawerCtrl = Get.find<DrawerControllerX>();
+    // Close drawer first
+    if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
+    }
+
+    // Update the route history in controller
+    drawerCtrl.changeRoute(targetRoute);
+
+    // Small delay to ensure drawer is closed
+    await Future.delayed(const Duration(milliseconds: 100));
+
+    // Only navigate if we're not already on the target route
     if (currentRoute != targetRoute) {
-      Navigator.pop(context); // 👈 closes drawer
-
-      await Navigator.of(context);
-
       onNavigate();
     }
   }

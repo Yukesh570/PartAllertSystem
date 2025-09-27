@@ -37,8 +37,8 @@ class _LocationHistoryState extends State<LocationHistory> {
   bool _isTyping = false;
 
   static const CameraPosition _initialPosition = CameraPosition(
-    target: LatLng(27.66115, 85.3028), // Kathmandu, Nepal
-    zoom: 15,
+    target: LatLng(20, 0), // near Africa, good "center"
+    zoom: 2,
   );
 
   final List<LatLng> _drawingPoints = [];
@@ -209,24 +209,30 @@ class _LocationHistoryState extends State<LocationHistory> {
     return await Geolocator.getCurrentPosition();
   }
 
-  packData() {
-    getUserLocation().then((value) async {
-      // _currrentLocationMarker.add(
-      //   Marker(
-      //     markerId: MarkerId('UserLocation'),
-      //     position: LatLng(value.latitude, value.longitude),
+  Future<void> packData() async {
+    try {
+      // 1. Get last known location (cached, fast)
+      Position? lastKnown = await Geolocator.getLastKnownPosition();
 
-      //     infoWindow: InfoWindow(title: 'My Location'),
-      //   ),
-      // );
-      CameraPosition cameraPosition = CameraPosition(
-        target: LatLng(value.latitude, value.longitude),
-        zoom: 17,
+      if (lastKnown != null) {
+        _moveCameraTo(LatLng(lastKnown.latitude, lastKnown.longitude));
+      }
+
+      // 2. Get fresh location in background (might take a bit)
+      Position fresh = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
       );
-      final GoogleMapController controller = await _controller.future;
-      controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
-      setState(() {});
-    });
+      _moveCameraTo(LatLng(fresh.latitude, fresh.longitude));
+    } catch (e) {
+      print("Error getting location: $e");
+    }
+  }
+
+  Future<void> _moveCameraTo(LatLng target) async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(CameraPosition(target: target, zoom: 17)),
+    );
   }
 
   Future<void> goToPlace(String placeId) async {
@@ -454,56 +460,24 @@ class _LocationHistoryState extends State<LocationHistory> {
 
                                         if (widget.historydata != null) {
                                           // Delay ensures map is fully rendered before moving camera
-                                          WidgetsBinding.instance.addPostFrameCallback((
-                                            _,
-                                          ) async {
-                                            final mapController =
-                                                await _controller.future;
-                                            await mapController.animateCamera(
-                                              CameraUpdate.newCameraPosition(
-                                                CameraPosition(
-                                                  target: LatLng(
-                                                    widget.historydata!.lat,
-                                                    widget.historydata!.lng,
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) async {
+                                                final mapController =
+                                                    await _controller.future;
+                                                await mapController.animateCamera(
+                                                  CameraUpdate.newCameraPosition(
+                                                    CameraPosition(
+                                                      target: LatLng(
+                                                        widget.historydata!.lat,
+                                                        widget.historydata!.lng,
+                                                      ),
+                                                      zoom: 25,
+                                                    ),
                                                   ),
-                                                  zoom: 25,
-                                                ),
-                                              ),
-                                            );
-
-                                            // setState(() {
-                                            //   _markers.add(
-                                            //     Marker(
-                                            //       markerId: MarkerId(
-                                            //         "history_${widget.historydata!.time}",
-                                            //       ),
-                                            //       position: LatLng(
-                                            //         widget.historydata!.lat,
-                                            //         widget.historydata!.lng,
-                                            //       ),
-                                            //       // icon: BitmapDescriptor
-                                            //       //     .defaultMarker,
-                                            //       // infoWindow: InfoWindow(
-                                            //       //   // title: widget
-                                            //       //   //     .historydata!
-                                            //       //   //     .name,
-                                            //       //   snippet:
-                                            //       //       DateFormat(
-                                            //       //         'yyyy-MM-dd HH:mm',
-                                            //       //       ).format(
-                                            //       //         DateTime.fromMillisecondsSinceEpoch(
-                                            //       //           int.parse(
-                                            //       //             widget
-                                            //       //                 .historydata!
-                                            //       //                 .time,
-                                            //       //           ),
-                                            //       //         ),
-                                            //       //       ),
-                                            //       // ),
-                                            //     ),
-                                            //   );
-                                            // });
-                                          });
+                                                );
+                                              });
+                                        } else {
+                                          packData();
                                         }
                                       },
 

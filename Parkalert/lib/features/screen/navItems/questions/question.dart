@@ -1,3 +1,4 @@
+import 'package:Parkalert/features/controllers/pagger.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
@@ -63,42 +64,46 @@ class _QuestionState extends State<Question> {
       // This means localization isn't yet loaded or context is not in a localized widget tree
       return const Center(child: CircularProgressIndicator());
     }
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
+    return PageWrapper(
+      routeName: '/questions',
 
-      backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
 
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
+        backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
 
-        title: Text(
-          loc.howParkAlertWorks,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        leading: Builder(
-          builder: (context) => IconButton(
-            onPressed: () => Scaffold.of(context).openDrawer(),
-            icon: Icon(Icons.menu, color: dark ? Colors.white : Colors.black),
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          centerTitle: true,
+
+          title: Text(
+            loc.howParkAlertWorks,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          leading: Builder(
+            builder: (context) => IconButton(
+              onPressed: () => Scaffold.of(context).openDrawer(),
+              icon: Icon(Icons.menu, color: dark ? Colors.white : Colors.black),
+            ),
           ),
         ),
-      ),
-      drawer: const navButton(),
-      body: SafeArea(
-        minimum: const EdgeInsets.only(bottom: 12.0),
-
-        child: SafeArea(
+        drawer: const navButton(),
+        body: SafeArea(
           minimum: const EdgeInsets.only(bottom: 12.0),
 
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-              ),
+          child: SafeArea(
+            minimum: const EdgeInsets.only(bottom: 12.0),
 
-              // other children here...
-            ],
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
+                ),
+
+                // other children here...
+              ],
+            ),
           ),
         ),
       ),

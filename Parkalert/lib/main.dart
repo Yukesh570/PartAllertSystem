@@ -29,6 +29,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await GetStorage.init();
   Get.put(DrawerControllerX()); // 👈 this is key
+  // await Future.delayed(Duration(seconds: 2));
 
   await NotificationService.initialize();
 

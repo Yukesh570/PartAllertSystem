@@ -453,11 +453,11 @@ abstract class AppLocalizations {
   /// **'Exit ParkAlert'**
   String get exitParkAlert;
 
-  /// No description provided for @whereyoudontwantalarm.
+  /// No description provided for @createzonewhereparkalarmwillbequit.
   ///
   /// In en, this message translates to:
-  /// **'Where you don\'t want alarm to activate'**
-  String get whereyoudontwantalarm;
+  /// **'Create the zones where ParkAlarm will be quit'**
+  String get createzonewhereparkalarmwillbequit;
 
   /// No description provided for @noringers.
   ///
@@ -468,7 +468,7 @@ abstract class AppLocalizations {
   /// No description provided for @setupyourparkingalarms.
   ///
   /// In en, this message translates to:
-  /// **'Setup your parkingalarms'**
+  /// **'Setup your ParkingAlarms'**
   String get setupyourparkingalarms;
 
   /// No description provided for @myparkingalarms.
