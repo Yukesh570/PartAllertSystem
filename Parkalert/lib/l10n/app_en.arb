@@ -58,8 +58,8 @@
   "frequentlyAskedQuestions": "Frequently asked questions",
   "termsAndConditions": "Terms and conditions",
   "privacyPolicyMenu": "Privacy policy",
-  "exitParkAlert": "Exit ParkAlert",
- "createzonewhereparkalarmwillbequit": "Create the zones where ParkAlarm will be quit",
+  "exitParkAlarm": "Exit ParkAlarm",
+  "createzonewhereparkalarmwillbequit": "Create the zones where ParkAlarm will be quit",
   "noringers": "No Ringers",
   "setupyourparkingalarms": "Setup your ParkingAlarms",
   "myparkingalarms": "My Parking Alarms",
@@ -67,7 +67,7 @@
   "connect": "Connect",
   "disconnect": "Disconnect",
   "visitparkalarm":"Visit ParkAlarm",
-  "exitparkalert":"Exit ParkAlert",
+  "exitparkalarm":"Exit ParkAlarm",
   "changelanguage":"Change Language",
   "allActivitiesAndLocations": "All Activities & Locations",
   "allactivities": "All Activities",
@@ -122,5 +122,212 @@
   "activities": "Activities",
   "activitiesparagraphs": "This section shows your comprehensive history of alarms and parking locations.The Activity menu has 'All Activities' and 'All Location' views, with a map of Bluetooth disconnection events.",
   "navigationmeu": "Navigation Menu",
-  "sidebarincludes": "Sidebar Includes"
+  "sidebarincludes": "Sidebar Includes",
+
+
+
+
+
+
+
+
+  
+"generalinformation": "General Information",
+"generalinformationparagraph1": "ParkAlarm is a trade name of Muza Holding B.V., located in Barendrecht at Weerkant 27 First floor. We are registered with the Chamber of Commerce under number 24471820.",
+"generalinformationparagraph2": "This privacy policy describes how we handle your personal data when using our ParkAlarm app and services. We respect your privacy and act in accordance with the General Data Protection Regulation (GDPR).",
+ 
+"whatdatadowecollect": "What Data Do We Collect?",
+"whatdatadowecollectparagraph": "For the operation of ParkAlarm, we collect the following data:",
+"locationdata": "Location data:",
+"locationdatatext": "To alert you about parking zones and restrictions",
+"devicedata": "Device Data",
+"devicedatatext": "Device type, operating system, and app version for technical support",
+"usagedata": "Usage data",
+"usagedatatext": "How you use the app to improve our service",
+"contactdetails": "Email address if you contact us",
+ 
+"whydoweprocessyourdata": "Why Do We Process Your Data",
+"whydoweprocessyourdataparagraph": "We process your personal data for the following purposes:",
+"whydoweprocessyourdata1": "Providing parking alarm services",
+"whydoweprocessyourdata2": "Improving our app and service delivery",
+"whydoweprocessyourdata3": "Technical support and troubleshooting",
+"whydoweprocessyourdata4": "Communication about our services",
+ 
+"legalbasis": "Legal Basis",
+"legalbasisparagraph": "We process your personal data based on your consent and our legitimate interest to provide you with quality service delivery. For location data, we always ask for your explicit consent.",
+ 
+"sharingwiththirdparties": "Sharing with Third Parties",
+"sharingwiththirdpartiesparagraph": "We do not share your personal data with third parties, except when necessary for the operation of our service or when we are legally required to do so. Any third parties who have access to your data are contractually obligated to treat it confidentially.",
+ 
+"datasecurity": "Data Security",
+"datasecurityparagraph": "We take appropriate technical and organizational measures to protect your personal data against loss, misuse, unauthorized access, and unwanted disclosure. Your data is stored and transmitted encrypted.",
+ 
+"retentionperiod": "Retention Period",
+"retentionperiodparagraph": "We do not keep your personal data longer than necessary for the purposes for which it was collected. Usage data is retained for a maximum of 2 years, unless you request deletion earlier.",
+ 
+"yourrights": "Your Rights",
+"yourrightsparagraph": "You have the following rights regarding your personal data:",
+"yourrights1": "Right to access your data",
+"yourrights2": "Right to rectification (correction of incorrect data)",
+"yourrights3": "Right to erasure ('right to be forgotten')",
+"yourrights4": "Right to restriction of processing",
+"yourrights5": "Right to data portability",
+"yourrights6": "Right to object to processing",
+"yourrights7": "Right to withdraw consent",
+ 
+"contactandcomplaints": "Contact and Complaints",
+"contactandcomplaintsparagraph": "For questions about this privacy policy or exercising your rights, you can contact us through the contact details in our app. You also have the right to file a complaint with the relevant data protection authority.",
+ 
+"changes": "Changes",
+"changesparagraph": "We may update this privacy policy from time to time. Changes will be announced through our app and website. We recommend regularly reviewing this privacy policy.",
+ 
+"contactdetails": "Contact Details",
+"contactdetails1": "Muza Holding B.V.",
+"contactdetails2": "Weerkant 27 First floor",
+"contactdetails3": "Barendrecht",
+"contactdetails4": "Chamber of Commerce number: 24471820",
+"contactdetails5": "Trade name: ParkAlarm",
+ 
+ 
+
+
+ 
+"lastupdated":"Last updated: September 22, 2025",
+
+"generalprovisions": "General Provisions",
+"generalprovisionsparagraph1": "These terms of service apply to the use of the ParkAlarm app and services, offered by Muza Holding B.V., located in Barendrecht at Weerkant 27 First floor, registered with the Chamber of Commerce under number 24471820.",
+"generalprovisionsparagraph2": "By using our app and services, you agree to these terms. Please read them carefully before using our services.",
+ 
+"servicedescription": "Service Description",
+"servicedescriptionparagraph": "ParkAlarm is a mobile application that helps users manage parking times and receive notifications about parking zones and restrictions. Our services include:",
+"servicedescription1": "Location-based parking alarms",
+"servicedescription2": "Notifications about parking zones and times",
+"servicedescription3": "Information about parking rules and costs",
+"servicedescription4": "User support and app updates",
+ 
+"useoftheapp": "Use of the App",
+"useoftheappparagrapgh": "You may use the ParkAlarm app for personal, non-commercial purposes. It is not permitted to:",
+"useoftheapp1": "Use the app for illegal purposes",
+"useoftheapp2": "Disrupt the app's operation or attempt to hack it",
+"useoftheapp3": "Provide false information",
+"useoftheapp4": "Infringe on intellectual property rights",
+"useoftheapp5": "Use the app in a way that could harm others",
+ 
+"useraccount": "User Account",
+"useraccountparagraph": "For some features, it may be necessary to create an account. You are responsible for:",
+"useraccount1": "Providing accurate and complete information",
+"useraccount2": "Securing your account credentials",
+"useraccount3": "All activities that occur through your account",
+"useraccount4": "Immediately reporting unauthorized use",
+ 
+"availabilityandmaintenance": "Availability and Maintenance",
+"availabilityandmaintenanceparagraph": "We strive to keep our services available 24/7, but cannot guarantee that the app will always work without interruption. We reserve the right to:",
+"availabilityandmaintenance1": "Perform maintenance and updates",
+"availabilityandmaintenance2": "Temporarily interrupt the service",
+"availabilityandmaintenance3": "Modify or remove features",
+"availabilityandmaintenance4": "Terminate the service with reasonable notice",
+ 
+"intellectualproperty": "Intellectual Property",
+"intellectualpropertyparagraph": "All rights to the ParkAlarm app, including but not limited to software, design, texts, logos, and other materials, belong to Muza Holding B.V. or our licensors. You receive a limited, non-exclusive license to use the app in accordance with these terms.",
+ 
+"privacyanddataprotection": "Privacy and Data Protection",
+"privacyanddataprotectionparagraph": "Your privacy is important to us. The use of your personal data is governed by ourPrivacy Policy, which forms part of these terms.",
+ 
+"liability": "Liability",
+"liabilityparagraph1": "ParkAlarm is a tool that assists you in managing parking times. We are not liable for:",
+"liability1": "Parking tickets or other costs you incur",
+"liability1": "Damage due to incorrect or incomplete information",
+"liability1": "Technical failures or interruptions",
+"liability1": "Indirect or consequential damages",
+"liabilityparagraph2": "You remain responsible at all times for complying with parking rules and times.",
+ 
+"termination": "Termination",
+"terminationparagraph": "You can terminate your use of ParkAlarm at any time by deleting the app. We may terminate your access in case of violation of these terms. After termination, certain provisions remain in effect, including intellectual property rights and liability limitations.",
+ 
+"changes": "Changes",
+"changesparagraph": "We reserve the right to modify these terms. Important changes will be announced through the app or website. Continued use after changes means you agree to the new terms.",
+ 
+"applicablelawanddisputes": "Applicable Law and Disputes",
+"applicablelawanddisputesparagraph": "These terms are governed by Dutch law. Disputes are preferably resolved through mutual consultation. If this is not possible, the competent Dutch courts have exclusive jurisdiction.",
+ 
+"contact": "Contact",
+"contactparagraph": "For questions about these terms or our services, you can contact us through the contact details in our app.",
+"contact1": "Muza Holding B.V.",
+"contact2": "Weerkant 27 First floor",
+"contact3": "Barendrecht",
+"contact4": "Chamber of Commerce number: 24471820",
+"contact5": "Trade name: ParkAlarm",
+ 
+"finalprovisions": "Final Provisions",
+"finalprovisionsparagraph": "Should one or more provisions of these terms be invalid, the remaining provisions remain fully effective. Invalid provisions are deemed to be replaced by valid provisions that align as closely as possible with the intention of the original provisions.",
+ 
+ 
+ 
+ 
+ 
+ "locationpermission":"Location Permission Needed",
+ 
+  "locationpermissionparagraph":"This app requires location access to detect Bluetooth events and geofences. Please allow access to continue.",
+ 
+ 
+  "cancel":"Cancel",
+  "okay":"Okay",
+  "allowlocation":"Allow 'All the time' Location",
+  "allowlocationparagraph":"To detect Bluetooth events and geofences even when the app is closed, please enable 'Allow all the time' in Settings.",
+  "opensettings":"Open Settings",
+  "exitapp":"Exit App",
+  "exitappparagraph":"Are you sure you want to exit ParkAlert?",
+  "exit":"Exit",
+  "error":"Error",
+  "pleasefillinalltherequiredfields":"Please fill in all the required fields.",
+  "isrequired":"is required",
+  "enteravalidphonenumber":"Enter a valid phone number",
+  "enteravalidemail":"Enter a valid email",
+  "nointernetconnection":"No Internet Connection",
+  "history":"History",
+  "search":"Search",
+  "description":"Description",
+  "main":"Main",
+  "addatleast3pointstoformapolygon":"Add at least 3 points to form a polygon",
+  "activityhistory":"Activity History",
+  "ascending":"Ascending",
+  "descending":"Descending",
+  "nohistoryfound":"No History Found",
+  "setyouralarm":"Set your Alarm",
+  "myalarms":"My Alarms",
+  "editalarm":"Edit Alarm",
+  "name":"Name",
+  "bluetoothdevice":"Bluetooth device",
+  "sound":"Sound",
+  "deleteringer":"Delete Ringer",
+  "areyousureyouwanttodeletethisringer":"Are you sure you want to delete this ringer?",
+  "delete":"Delete",
+  "yes":"Yes",
+  "nozonebox":"NoZoneBox",
+  "editzone":"Edit Zone",
+  "initialtime":"Initial Time (HH:mm)",
+  "zonename":"Zone Name",
+  "stoptime":"Stop Time (HH:mm)",
+  "zoneupdatedsuccessfully":"Zone updated successfully",
+  "deletezone":"Delete zone",
+  "areyousureyouwanttodeletethiszone":"Are you sure you want to delete this zone?",
+  "informationSaved":"Information Saved",
+  "yourInformationHasBeenUpdated":"Your Information Has Been Updated",
+  "noInformationAvailable":"No Information Available",
+  "save":"Save",
+  "cancel":"Cancel",
+  "cancel":"Cancel",
+  "cancel":"Cancel",
+  "cancel":"Cancel",
+  "cancel":"Cancel",
+  "cancel":"Cancel",
+  "cancel":"Cancel",
+  "cancel":"Cancel",
+  "cancel":"Cancel",
+  "cancel":"Cancel",
+  "cancel":"Cancel"
+
+ 
+
+
 }

@@ -38,7 +38,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   final zoneController = Get.put(FreezoneController());
   List<Historydata> history = [];
   bool _loadingHistory = true;
-
+  bool _isAscending = true;
   Future<void> loadSavedLocations() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = prefs.getString("currentLocation") ?? "[]";
@@ -77,6 +77,18 @@ class _ActivityHistoryState extends State<ActivityHistory> {
     //     print("❌ Failed to send history index ${history.index}: $e");
     //   }
     // }
+  }
+
+  // function to sort by time
+  void _sortHistory() {
+    setState(() {
+      _isAscending = !_isAscending;
+      history.sort((a, b) {
+        final timeA = int.tryParse(a.time) ?? 0;
+        final timeB = int.tryParse(b.time) ?? 0;
+        return _isAscending ? timeA.compareTo(timeB) : timeB.compareTo(timeA);
+      });
+    });
   }
 
   @override
@@ -142,6 +154,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
 
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        drawerEnableOpenDragGesture: false,
 
         backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
 
@@ -151,7 +164,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
           centerTitle: true,
 
           title: Text(
-            "Activity History",
+            loc.activityhistory,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           leading: Builder(
@@ -160,6 +173,53 @@ class _ActivityHistoryState extends State<ActivityHistory> {
               icon: Icon(Icons.menu, color: dark ? Colors.white : Colors.black),
             ),
           ),
+          actions: [
+            PopupMenuButton<String>(
+              tooltip: 'Sort by',
+              color: dark ? Colors.grey[900] : Colors.white,
+              onSelected: (value) {
+                setState(() {
+                  _isAscending = (value == 'desc');
+                  _sortHistory(); // sort after choosing option
+                });
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 'asc',
+                  child: Row(
+                    children: [
+                      const Icon(Icons.arrow_upward_rounded, size: 18),
+                      const SizedBox(width: 8),
+                      Text(loc.ascending),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: 'desc',
+                  child: Row(
+                    children: [
+                      const Icon(Icons.arrow_downward_rounded, size: 18),
+                      const SizedBox(width: 8),
+                      Text(loc.descending),
+                    ],
+                  ),
+                ),
+              ],
+              child: Row(
+                children: [
+                  // Text(
+                  //   'Sort by',
+                  //   style: TextStyle(
+                  //     color: dark ? Colors.white : Colors.black,
+                  //     fontWeight: FontWeight.w500,
+                  //   ),
+                  // ),
+                  Icon(Icons.sort, color: dark ? Colors.white : Colors.black),
+                  const SizedBox(width: 10),
+                ],
+              ),
+            ),
+          ],
         ),
         drawer: const navButton(),
         body: SafeArea(
@@ -226,10 +286,10 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                       // Main alert settings card
                       Expanded(
                         child: history.isEmpty
-                            ? const Center(
+                            ? Center(
                                 child: Text(
-                                  'No History Found',
-                                  style: TextStyle(
+                                  loc.nohistoryfound,
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -278,7 +338,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                         },
                       ),
                       buildMainButton(
-                        text: 'Main',
+                        text: loc.main,
                         onPressed: () {
                           controller.alertPage();
                         },

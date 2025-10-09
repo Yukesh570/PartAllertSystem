@@ -183,7 +183,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get privacyPolicyMenu => 'Politique de confidentialité';
 
   @override
-  String get exitParkAlert => 'Quitter ParkAlert';
+  String get exitParkAlarm => 'Exit ParkAlarm';
 
   @override
   String get createzonewhereparkalarmwillbequit => 'Create the zones where ParkAlarm will be quit';
@@ -210,7 +210,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get visitparkalarm => 'Visit ParkAlarm';
 
   @override
-  String get exitparkalert => 'Exit ParkAlert';
+  String get exitparkalarm => 'Exit ParkAlarm';
 
   @override
   String get changelanguage => 'Change Language';
@@ -358,4 +358,427 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get sidebarincludes => 'Sidebar Includes';
+
+  @override
+  String get generalinformation => 'General Information';
+
+  @override
+  String get generalinformationparagraph1 => 'ParkAlarm is a trade name of Muza Holding B.V., located in Barendrecht at Weerkant 27 First floor. We are registered with the Chamber of Commerce under number 24471820.';
+
+  @override
+  String get generalinformationparagraph2 => 'This privacy policy describes how we handle your personal data when using our ParkAlarm app and services. We respect your privacy and act in accordance with the General Data Protection Regulation (GDPR).';
+
+  @override
+  String get whatdatadowecollect => 'What Data Do We Collect?';
+
+  @override
+  String get whatdatadowecollectparagraph => 'For the operation of ParkAlarm, we collect the following data:';
+
+  @override
+  String get locationdata => 'Location data:';
+
+  @override
+  String get locationdatatext => 'To alert you about parking zones and restrictions';
+
+  @override
+  String get devicedata => 'Device Data';
+
+  @override
+  String get devicedatatext => 'Device type, operating system, and app version for technical support';
+
+  @override
+  String get usagedata => 'Usage data';
+
+  @override
+  String get usagedatatext => 'How you use the app to improve our service';
+
+  @override
+  String get contactdetails => 'Contact Details';
+
+  @override
+  String get whydoweprocessyourdata => 'Why Do We Process Your Data';
+
+  @override
+  String get whydoweprocessyourdataparagraph => 'We process your personal data for the following purposes:';
+
+  @override
+  String get whydoweprocessyourdata1 => 'Providing parking alarm services';
+
+  @override
+  String get whydoweprocessyourdata2 => 'Improving our app and service delivery';
+
+  @override
+  String get whydoweprocessyourdata3 => 'Technical support and troubleshooting';
+
+  @override
+  String get whydoweprocessyourdata4 => 'Communication about our services';
+
+  @override
+  String get legalbasis => 'Legal Basis';
+
+  @override
+  String get legalbasisparagraph => 'We process your personal data based on your consent and our legitimate interest to provide you with quality service delivery. For location data, we always ask for your explicit consent.';
+
+  @override
+  String get sharingwiththirdparties => 'Sharing with Third Parties';
+
+  @override
+  String get sharingwiththirdpartiesparagraph => 'We do not share your personal data with third parties, except when necessary for the operation of our service or when we are legally required to do so. Any third parties who have access to your data are contractually obligated to treat it confidentially.';
+
+  @override
+  String get datasecurity => 'Data Security';
+
+  @override
+  String get datasecurityparagraph => 'We take appropriate technical and organizational measures to protect your personal data against loss, misuse, unauthorized access, and unwanted disclosure. Your data is stored and transmitted encrypted.';
+
+  @override
+  String get retentionperiod => 'Retention Period';
+
+  @override
+  String get retentionperiodparagraph => 'We do not keep your personal data longer than necessary for the purposes for which it was collected. Usage data is retained for a maximum of 2 years, unless you request deletion earlier.';
+
+  @override
+  String get yourrights => 'Your Rights';
+
+  @override
+  String get yourrightsparagraph => 'You have the following rights regarding your personal data:';
+
+  @override
+  String get yourrights1 => 'Right to access your data';
+
+  @override
+  String get yourrights2 => 'Right to rectification (correction of incorrect data)';
+
+  @override
+  String get yourrights3 => 'Right to erasure (\'right to be forgotten\')';
+
+  @override
+  String get yourrights4 => 'Right to restriction of processing';
+
+  @override
+  String get yourrights5 => 'Right to data portability';
+
+  @override
+  String get yourrights6 => 'Right to object to processing';
+
+  @override
+  String get yourrights7 => 'Right to withdraw consent';
+
+  @override
+  String get contactandcomplaints => 'Contact and Complaints';
+
+  @override
+  String get contactandcomplaintsparagraph => 'For questions about this privacy policy or exercising your rights, you can contact us through the contact details in our app. You also have the right to file a complaint with the relevant data protection authority.';
+
+  @override
+  String get changes => 'Changes';
+
+  @override
+  String get changesparagraph => 'We reserve the right to modify these terms. Important changes will be announced through the app or website. Continued use after changes means you agree to the new terms.';
+
+  @override
+  String get contactdetails1 => 'Muza Holding B.V.';
+
+  @override
+  String get contactdetails2 => 'Weerkant 27 First floor';
+
+  @override
+  String get contactdetails3 => 'Barendrecht';
+
+  @override
+  String get contactdetails4 => 'Chamber of Commerce number: 24471820';
+
+  @override
+  String get contactdetails5 => 'Trade name: ParkAlarm';
+
+  @override
+  String get lastupdated => 'Last updated: September 22, 2025';
+
+  @override
+  String get generalprovisions => 'General Provisions';
+
+  @override
+  String get generalprovisionsparagraph1 => 'These terms of service apply to the use of the ParkAlarm app and services, offered by Muza Holding B.V., located in Barendrecht at Weerkant 27 First floor, registered with the Chamber of Commerce under number 24471820.';
+
+  @override
+  String get generalprovisionsparagraph2 => 'By using our app and services, you agree to these terms. Please read them carefully before using our services.';
+
+  @override
+  String get servicedescription => 'Service Description';
+
+  @override
+  String get servicedescriptionparagraph => 'ParkAlarm is a mobile application that helps users manage parking times and receive notifications about parking zones and restrictions. Our services include:';
+
+  @override
+  String get servicedescription1 => 'Location-based parking alarms';
+
+  @override
+  String get servicedescription2 => 'Notifications about parking zones and times';
+
+  @override
+  String get servicedescription3 => 'Information about parking rules and costs';
+
+  @override
+  String get servicedescription4 => 'User support and app updates';
+
+  @override
+  String get useoftheapp => 'Use of the App';
+
+  @override
+  String get useoftheappparagrapgh => 'You may use the ParkAlarm app for personal, non-commercial purposes. It is not permitted to:';
+
+  @override
+  String get useoftheapp1 => 'Use the app for illegal purposes';
+
+  @override
+  String get useoftheapp2 => 'Disrupt the app\'s operation or attempt to hack it';
+
+  @override
+  String get useoftheapp3 => 'Provide false information';
+
+  @override
+  String get useoftheapp4 => 'Infringe on intellectual property rights';
+
+  @override
+  String get useoftheapp5 => 'Use the app in a way that could harm others';
+
+  @override
+  String get useraccount => 'User Account';
+
+  @override
+  String get useraccountparagraph => 'For some features, it may be necessary to create an account. You are responsible for:';
+
+  @override
+  String get useraccount1 => 'Providing accurate and complete information';
+
+  @override
+  String get useraccount2 => 'Securing your account credentials';
+
+  @override
+  String get useraccount3 => 'All activities that occur through your account';
+
+  @override
+  String get useraccount4 => 'Immediately reporting unauthorized use';
+
+  @override
+  String get availabilityandmaintenance => 'Availability and Maintenance';
+
+  @override
+  String get availabilityandmaintenanceparagraph => 'We strive to keep our services available 24/7, but cannot guarantee that the app will always work without interruption. We reserve the right to:';
+
+  @override
+  String get availabilityandmaintenance1 => 'Perform maintenance and updates';
+
+  @override
+  String get availabilityandmaintenance2 => 'Temporarily interrupt the service';
+
+  @override
+  String get availabilityandmaintenance3 => 'Modify or remove features';
+
+  @override
+  String get availabilityandmaintenance4 => 'Terminate the service with reasonable notice';
+
+  @override
+  String get intellectualproperty => 'Intellectual Property';
+
+  @override
+  String get intellectualpropertyparagraph => 'All rights to the ParkAlarm app, including but not limited to software, design, texts, logos, and other materials, belong to Muza Holding B.V. or our licensors. You receive a limited, non-exclusive license to use the app in accordance with these terms.';
+
+  @override
+  String get privacyanddataprotection => 'Privacy and Data Protection';
+
+  @override
+  String get privacyanddataprotectionparagraph => 'Your privacy is important to us. The use of your personal data is governed by ourPrivacy Policy, which forms part of these terms.';
+
+  @override
+  String get liability => 'Liability';
+
+  @override
+  String get liabilityparagraph1 => 'ParkAlarm is a tool that assists you in managing parking times. We are not liable for:';
+
+  @override
+  String get liability1 => 'Indirect or consequential damages';
+
+  @override
+  String get liabilityparagraph2 => 'You remain responsible at all times for complying with parking rules and times.';
+
+  @override
+  String get termination => 'Termination';
+
+  @override
+  String get terminationparagraph => 'You can terminate your use of ParkAlarm at any time by deleting the app. We may terminate your access in case of violation of these terms. After termination, certain provisions remain in effect, including intellectual property rights and liability limitations.';
+
+  @override
+  String get applicablelawanddisputes => 'Applicable Law and Disputes';
+
+  @override
+  String get applicablelawanddisputesparagraph => 'These terms are governed by Dutch law. Disputes are preferably resolved through mutual consultation. If this is not possible, the competent Dutch courts have exclusive jurisdiction.';
+
+  @override
+  String get contact => 'Contact';
+
+  @override
+  String get contactparagraph => 'For questions about these terms or our services, you can contact us through the contact details in our app.';
+
+  @override
+  String get contact1 => 'Muza Holding B.V.';
+
+  @override
+  String get contact2 => 'Weerkant 27 First floor';
+
+  @override
+  String get contact3 => 'Barendrecht';
+
+  @override
+  String get contact4 => 'Chamber of Commerce number: 24471820';
+
+  @override
+  String get contact5 => 'Trade name: ParkAlarm';
+
+  @override
+  String get finalprovisions => 'Final Provisions';
+
+  @override
+  String get finalprovisionsparagraph => 'Should one or more provisions of these terms be invalid, the remaining provisions remain fully effective. Invalid provisions are deemed to be replaced by valid provisions that align as closely as possible with the intention of the original provisions.';
+
+  @override
+  String get locationpermission => 'Location Permission Needed';
+
+  @override
+  String get locationpermissionparagraph => 'This app requires location access to detect Bluetooth events and geofences. Please allow access to continue.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get okay => 'Okay';
+
+  @override
+  String get allowlocation => 'Allow \'All the time\' Location';
+
+  @override
+  String get allowlocationparagraph => 'To detect Bluetooth events and geofences even when the app is closed, please enable \'Allow all the time\' in Settings.';
+
+  @override
+  String get opensettings => 'Open Settings';
+
+  @override
+  String get exitapp => 'Exit App';
+
+  @override
+  String get exitappparagraph => 'Are you sure you want to exit ParkAlert?';
+
+  @override
+  String get exit => 'Exit';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get pleasefillinalltherequiredfields => 'Please fill in all the required fields.';
+
+  @override
+  String get isrequired => 'is required';
+
+  @override
+  String get enteravalidphonenumber => 'Enter a valid phone number';
+
+  @override
+  String get enteravalidemail => 'Enter a valid email';
+
+  @override
+  String get nointernetconnection => 'No Internet Connection';
+
+  @override
+  String get history => 'History';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get main => 'Main';
+
+  @override
+  String get addatleast3pointstoformapolygon => 'Add at least 3 points to form a polygon';
+
+  @override
+  String get activityhistory => 'Activity History';
+
+  @override
+  String get ascending => 'Ascending';
+
+  @override
+  String get descending => 'Descending';
+
+  @override
+  String get nohistoryfound => 'No History Found';
+
+  @override
+  String get setyouralarm => 'Set your Alarm';
+
+  @override
+  String get myalarms => 'My Alarms';
+
+  @override
+  String get editalarm => 'Edit Alarm';
+
+  @override
+  String get name => 'Name';
+
+  @override
+  String get bluetoothdevice => 'Bluetooth device';
+
+  @override
+  String get sound => 'Sound';
+
+  @override
+  String get deleteringer => 'Delete Ringer';
+
+  @override
+  String get areyousureyouwanttodeletethisringer => 'Are you sure you want to delete this ringer?';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get nozonebox => 'NoZoneBox';
+
+  @override
+  String get editzone => 'Edit Zone';
+
+  @override
+  String get initialtime => 'Initial Time (HH:mm)';
+
+  @override
+  String get zonename => 'Zone Name';
+
+  @override
+  String get stoptime => 'Stop Time (HH:mm)';
+
+  @override
+  String get zoneupdatedsuccessfully => 'Zone updated successfully';
+
+  @override
+  String get deletezone => 'Delete zone';
+
+  @override
+  String get areyousureyouwanttodeletethiszone => 'Are you sure you want to delete this zone?';
+
+  @override
+  String get informationSaved => 'Information Saved';
+
+  @override
+  String get yourInformationHasBeenUpdated => 'Your Information Has Been Updated';
+
+  @override
+  String get noInformationAvailable => 'No Information Available';
+
+  @override
+  String get save => 'Save';
 }

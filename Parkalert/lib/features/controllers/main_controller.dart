@@ -78,7 +78,7 @@ class MainController extends GetxController {
     final drawerCtrl = Get.find<DrawerControllerX>();
     drawerCtrl.changeRoute('/privacy'); // Set current route
 
-    Get.off(() => Privacypolicy()); //
+    Get.to(() => Privacypolicy()); //
   }
 
   void question() {

@@ -90,6 +90,7 @@ class _FreezoneState extends State<Freezone> {
 
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        drawerEnableOpenDragGesture: false,
 
         backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
 
@@ -171,11 +172,30 @@ class _FreezoneState extends State<Freezone> {
                         // 🔹 Only the zone list scrolls
                         Expanded(
                           child: Obx(() {
-                            if (zoneController.zones.isEmpty) {
+                            if (zoneController.isLoading.value) {
+                              // 🌀 Show loading spinner while data loads
                               return const Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircularProgressIndicator(),
+                                    SizedBox(height: 12),
+                                    // Text(
+                                    //   "Loading Free Zones...",
+                                    //   style: TextStyle(
+                                    //     fontSize: 16,
+                                    //     fontWeight: FontWeight.w500,
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
+                              );
+                            }
+                            if (zoneController.zones.isEmpty) {
+                              return Center(
                                 child: Text(
-                                  'No ZoneBox',
-                                  style: TextStyle(
+                                  loc.nozonebox,
+                                  style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -226,7 +246,7 @@ class _FreezoneState extends State<Freezone> {
                         },
                       ),
                       buildMainButton(
-                        text: 'Main',
+                        text: loc.main,
                         onPressed: () {
                           controller.alertPage();
                         },
@@ -236,7 +256,8 @@ class _FreezoneState extends State<Freezone> {
                         context: context,
                         onPressed: () async {
                           await _addZone(
-                            name: "FreeZone ${zoneController.zones.length + 1}",
+                            name:
+                                "${loc.freezones} ${zoneController.zones.length + 1}",
                             initialTime: "--:--",
                             stopTime: "--:--",
                             isOn: false,

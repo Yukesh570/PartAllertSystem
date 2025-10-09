@@ -45,7 +45,7 @@ class InformationForm extends StatelessWidget {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return '${loc.firstName} is required';
+                return '${loc.firstName} ${loc.isrequired}';
               }
               return null;
             },
@@ -60,7 +60,7 @@ class InformationForm extends StatelessWidget {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return '${loc.lastName} is required';
+                return '${loc.lastName} ${loc.isrequired}';
               }
               return null;
             },
@@ -75,11 +75,11 @@ class InformationForm extends StatelessWidget {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return '${loc.email} is required';
+                return '${loc.email} ${loc.isrequired}';
               }
               // Optional: simple email format check
               if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                return 'Enter a valid email';
+                return loc.enteravalidemail;
               }
               return null;
             },
@@ -94,11 +94,11 @@ class InformationForm extends StatelessWidget {
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
-                return '${loc.phoneNo} is required';
+                return '${loc.phoneNo} ${loc.isrequired}';
               }
               // Optional: simple phone number check
               if (!RegExp(r'^\+?\d{7,15}$').hasMatch(value)) {
-                return 'Enter a valid phone number';
+                return loc.enteravalidphonenumber;
               }
               return null;
             },

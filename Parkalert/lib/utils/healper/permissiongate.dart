@@ -1,3 +1,4 @@
+import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
@@ -75,16 +76,18 @@ class _PermissionGateState extends State<PermissionGate>
       barrierDismissible: false,
       builder: (ctx) {
         final isDark = Theme.of(ctx).brightness == Brightness.dark;
-
+        final loc = AppLocalizations.of(ctx); // ✅ add this line
+        if (loc == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
         return AlertDialog(
           backgroundColor: isDark ? Colors.grey[900] : Colors.white,
           title: Text(
-            "Location Permission Needed",
+            loc.locationpermission,
             style: TextStyle(color: isDark ? Colors.white : Colors.black),
           ),
           content: Text(
-            "This app requires location access to detect Bluetooth events "
-            "and geofences. Please allow access to continue.",
+            loc.locationpermissionparagraph,
             style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
           ),
           actions: [
@@ -94,7 +97,7 @@ class _PermissionGateState extends State<PermissionGate>
                 _checkingPermissions = false;
               },
               child: Text(
-                'Cancel',
+                loc.cancel,
                 style: TextStyle(
                   color: isDark ? Colors.white : Colors.black,
 
@@ -109,7 +112,7 @@ class _PermissionGateState extends State<PermissionGate>
                 _requestLocationPermissions();
               },
               child: Text(
-                'okay',
+                loc.okay,
                 style: TextStyle(
                   color: isDark ? Colors.blue[300] : Colors.blue,
 
@@ -146,30 +149,33 @@ class _PermissionGateState extends State<PermissionGate>
       await showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (ctx) => AlertDialog(
-          title: const Text("Allow 'All the time' Location"),
-          content: const Text(
-            "To detect Bluetooth events and geofences even when the app is closed, "
-            "please enable 'Allow all the time' in Settings.",
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                _checkingPermissions = false;
-              },
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                openAppSettings();
-                _checkingPermissions = false;
-              },
-              child: const Text("Open Settings"),
-            ),
-          ],
-        ),
+        builder: (ctx) {
+          final loc = AppLocalizations.of(ctx); // ✅ add this line
+          if (loc == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return AlertDialog(
+            title: Text(loc.allowlocation),
+            content: Text(loc.allowlocationparagraph),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  _checkingPermissions = false;
+                },
+                child: Text(loc.cancel),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(ctx);
+                  openAppSettings();
+                  _checkingPermissions = false;
+                },
+                child: Text(loc.opensettings),
+              ),
+            ],
+          );
+        },
       );
       return;
     }
@@ -181,12 +187,35 @@ class _PermissionGateState extends State<PermissionGate>
 
   @override
   Widget build(BuildContext context) {
-    if (!_ready) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    final loc = AppLocalizations.of(context);
+    if (loc == null) {
+      // This means localization isn't yet loaded or context is not in a localized widget tree
+      return const Center(child: CircularProgressIndicator());
     }
+    return Stack(
+      children: [
+        // 🖼 Background Splash Image
+        Image.asset(
+          'assets/logos/parkalramsplash.png',
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        ),
 
-    return widget.isRegistered
-        ? const Alert()
-        : Information(onLocaleChange: widget.onLocaleChange);
+        // ⚪ Foreground content (either loader or next screen)
+        if (!_ready)
+          const Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Center(child: CircularProgressIndicator()),
+          )
+        else
+          Scaffold(
+            backgroundColor: Colors.transparent,
+            body: widget.isRegistered
+                ? const Alert()
+                : Information(onLocaleChange: widget.onLocaleChange),
+          ),
+      ],
+    );
   }
 }

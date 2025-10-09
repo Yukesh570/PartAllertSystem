@@ -131,207 +131,257 @@ class _AlertState extends State<Alert> {
 
     return PageWrapper(
       routeName: '/alerts',
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
+      child: WillPopScope(
+        onWillPop: () async {
+          final shouldExit = await showDialog<bool>(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              backgroundColor: dark ? Colors.grey[900] : Colors.white,
+              title: Text(loc.exitapp),
+              content: Text(loc.exitappparagraph),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(ctx).pop(false),
+                  child: Text(
+                    loc.cancel,
+                    style: TextStyle(
+                      fontSize: 18, // 👈 Bigger text
+                      fontWeight: FontWeight.w600, // 👈 Semi-bold
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(ctx).pop(true),
+                  child: Text(
+                    loc.exit,
+                    style: TextStyle(
+                      fontSize: 20, // 👈 Bigger text
+                      fontWeight: FontWeight.w600, // 👈 Semi-bold
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
 
-        backgroundColor: dark ? Colors.black : Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          centerTitle: true,
+          if (shouldExit == true) {
+            // Quit the app
+            Navigator.of(context).pop(); // close the drawer first
+            Future.delayed(const Duration(milliseconds: 100), () {
+              // Exit the app
+              // import 'dart:io';
+              // exit(0);
+              SystemNavigator.pop(); // recommended for Flutter
+            });
+          }
+          return false; // prevent normal back
+        },
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          drawerEnableOpenDragGesture: false,
 
-          title: Text(
-            loc.parkingalarms,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          leading: Builder(
-            builder: (context) => IconButton(
-              onPressed: () => Scaffold.of(context).openDrawer(),
-              icon: Icon(Icons.menu, color: dark ? Colors.white : Colors.black),
+          backgroundColor: dark ? Colors.black : Colors.white,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            centerTitle: true,
+
+            title: Text(
+              loc.parkingalarms,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            leading: Builder(
+              builder: (context) => IconButton(
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                icon: Icon(
+                  Icons.menu,
+                  color: dark ? Colors.white : Colors.black,
+                ),
+              ),
             ),
           ),
-        ),
-        drawer: const navButton(),
-        body: SafeArea(
-          minimum: const EdgeInsets.only(bottom: 12.0),
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
-              ),
-              // other children here...
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 0,
-                  bottom: 0,
-                  right: 22,
-                  left: 22,
+          drawer: const navButton(),
+          body: SafeArea(
+            minimum: const EdgeInsets.only(bottom: 12.0),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
                 ),
-                child: Container(
-                  width: double.infinity,
-                  height: 690,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 2.0,
-                    horizontal: 10.0,
+                // other children here...
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 0,
+                    bottom: 0,
+                    right: 22,
+                    left: 22,
                   ),
-                  decoration: BoxDecoration(
-                    color: dark
-                        ? const Color.fromARGB(255, 34, 34, 34)
-                        : const Color.fromARGB(255, 255, 255, 255),
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // "Set your Alert" and "My Alerts" text
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                          vertical: 4.0,
-                        ),
-                        child: Text(
-                          loc.setupyourparkingalarms,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                          vertical: 4.0,
-                        ),
-                        child: Text(
-                          loc.myparkingalarms,
-
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16.0),
-                      if (ringersList.isEmpty)
-                        const Padding(
-                          padding: EdgeInsets.symmetric(
+                  child: Container(
+                    width: double.infinity,
+                    height: 690,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 2.0,
+                      horizontal: 10.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: dark
+                          ? const Color.fromARGB(255, 34, 34, 34)
+                          : const Color.fromARGB(255, 255, 255, 255),
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // "Set your Alert" and "My Alerts" text
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 8.0,
                             vertical: 4.0,
                           ),
+                          child: Text(
+                            loc.setupyourparkingalarms,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0,
+                            vertical: 4.0,
+                          ),
+                          child: Text(
+                            loc.myparkingalarms,
 
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 200.0),
-                            child: Center(
-                              child: Text(
-                                'No Ringers',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 16.0),
+                        if (ringersList.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                              vertical: 4.0,
+                            ),
+
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 200.0),
+                              child: Center(
+                                child: Text(
+                                  loc.noringers,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
 
-                      // Main alert settings card
-                      Expanded(
-                        child: Obx(
-                          () => SingleChildScrollView(
-                            child: Column(
-                              children: ringersList
-                                  .map(
-                                    (ringer) => (Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: ringer,
-                                    )),
-                                  )
-                                  .toList(),
+                        // Main alert settings card
+                        Expanded(
+                          child: Obx(
+                            () => SingleChildScrollView(
+                              child: Column(
+                                children: ringersList
+                                    .map(
+                                      (ringer) => (Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: ringer,
+                                      )),
+                                    )
+                                    .toList(),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20.0,
-                      ), // Space before bottom navigation
-                    ],
+                        const SizedBox(
+                          height: 20.0,
+                        ), // Space before bottom navigation
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              // Bottom navigation buttons
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    bottom: 20.0,
-                    right: 20.0,
-                  ), // padding from bottom and left
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end, // align to left
-                    children: [
-                      //   buildCircularIconButton(
-                      //     context: context,
-                      //     icon: Icons.arrow_back,
-                      //     onPressed: () {
-                      //       final isDark =
-                      //           Theme.of(context).brightness == Brightness.dark;
-                      //       showDialog(
-                      //         context: context,
-                      //         builder: (context) => AlertDialog(
-                      //           backgroundColor: isDark
-                      //               ? Colors.grey[900]
-                      //               : Colors.white,
+                // Bottom navigation buttons
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 20.0,
+                      right: 20.0,
+                    ), // padding from bottom and left
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end, // align to left
+                      children: [
+                        //   buildCircularIconButton(
+                        //     context: context,
+                        //     icon: Icons.arrow_back,
+                        //     onPressed: () {
+                        //       final isDark =
+                        //           Theme.of(context).brightness == Brightness.dark;
+                        //       showDialog(
+                        //         context: context,
+                        //         builder: (context) => AlertDialog(
+                        //           backgroundColor: isDark
+                        //               ? Colors.grey[900]
+                        //               : Colors.white,
 
-                      //           title: const Text('Exit ParkAlert'),
-                      //           content: const Text(
-                      //             'Are you sure you want to exit the app?',
-                      //           ),
-                      //           actions: [
-                      //             TextButton(
-                      //               onPressed: () =>
-                      //                   Navigator.of(context).pop(false),
-                      //               child: const Text(
-                      //                 'Cancel',
-                      //                 style: TextStyle(
-                      //                   fontSize: 18, // 👈 Bigger text
-                      //                   fontWeight:
-                      //                       FontWeight.w600, // 👈 Semi-bold
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //             TextButton(
-                      //               onPressed: () =>
-                      //                   Navigator.of(context).pop(true),
-                      //               child: const Text(
-                      //                 'Exit',
-                      //                 style: TextStyle(
-                      //                   fontSize: 18, // 👈 Bigger text
-                      //                   fontWeight:
-                      //                       FontWeight.w600, // 👈 Semi-bold
-                      //                 ),
-                      //               ),
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       ).then((shouldExit) {
-                      //         if (shouldExit == true) {
-                      //           SystemNavigator.pop(); // closes the app
-                      //         }
-                      //       });
-                      //     },
-                      //     // },
-                      //   ),
-                      // const SizedBox(width: 100),
-                      buildCircularAddbButton(
-                        context: context,
-                        onPressed: () {
-                          controller.alertSettingPage();
-                        },
-                      ),
-                    ],
+                        //           title: const Text('Exit ParkAlert'),
+                        //           content: const Text(
+                        //             'Are you sure you want to exit the app?',
+                        //           ),
+                        //           actions: [
+                        //             TextButton(
+                        //               onPressed: () =>
+                        //                   Navigator.of(context).pop(false),
+                        //               child: const Text(
+                        //                 'Cancel',
+                        //                 style: TextStyle(
+                        //                   fontSize: 18, // 👈 Bigger text
+                        //                   fontWeight:
+                        //                       FontWeight.w600, // 👈 Semi-bold
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //             TextButton(
+                        //               onPressed: () =>
+                        //                   Navigator.of(context).pop(true),
+                        //               child: const Text(
+                        //                 'Exit',
+                        //                 style: TextStyle(
+                        //                   fontSize: 18, // 👈 Bigger text
+                        //                   fontWeight:
+                        //                       FontWeight.w600, // 👈 Semi-bold
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ).then((shouldExit) {
+                        //         if (shouldExit == true) {
+                        //           SystemNavigator.pop(); // closes the app
+                        //         }
+                        //       });
+                        //     },
+                        //     // },
+                        //   ),
+                        // const SizedBox(width: 100),
+                        buildCircularAddbButton(
+                          context: context,
+                          onPressed: () {
+                            controller.alertSettingPage();
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/features/controllers/alert/isON.dart';
 import 'package:Parkalert/features/controllers/main_controller.dart';
@@ -40,7 +41,10 @@ class _RingersState extends State<Ringers> {
 
   Widget build(BuildContext context) {
     final ringerData = widget.ringerData; // use widget.ringerData
-
+    final loc = AppLocalizations.of(context);
+    if (loc == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     final MainController controller = Get.put(MainController());
 
     final dark = Theme.of(context).brightness == Brightness.dark;
@@ -301,7 +305,7 @@ class _RingersState extends State<Ringers> {
 
                   return buildConnectButton(
                     context: context,
-                    text: isOn ? 'Disconnect' : 'Connect',
+                    text: isOn ? loc.disconnect : loc.connect,
                     backgroundColor: color2,
                     textColor: Textcolor,
                     onPressed: () {
@@ -319,9 +323,9 @@ class _RingersState extends State<Ringers> {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
-                              title: const Text("Delete Ringer"),
-                              content: const Text(
-                                "Are you sure you want to delete this ringer?",
+                              title: Text(loc.deleteringer),
+                              content: Text(
+                                loc.areyousureyouwanttodeletethisringer,
                               ),
                               actions: [
                                 TextButton(
@@ -340,9 +344,9 @@ class _RingersState extends State<Ringers> {
                                     elevation: 0,
                                   ),
                                   onPressed: () => Navigator.pop(context, true),
-                                  child: const Text(
-                                    "Delete",
-                                    style: TextStyle(fontSize: 14),
+                                  child: Text(
+                                    loc.delete,
+                                    style: const TextStyle(fontSize: 14),
                                   ),
                                 ),
                               ],

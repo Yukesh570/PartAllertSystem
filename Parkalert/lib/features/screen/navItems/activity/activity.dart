@@ -38,8 +38,8 @@ class _ActivityState extends State<Activity> {
     MainController controller = Get.put(MainController());
     final drawerCtrl = Get.find<DrawerControllerX>();
 
-    print("aactivtyyyyyyyyy $ringersList");
-    print("ringersListactivity: $ringersListdemo");
+    // print("aactivtyyyyyyyyy $ringersList");
+    // print("ringersListactivity: $ringersListdemo");
 
     final dark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context);
@@ -51,6 +51,7 @@ class _ActivityState extends State<Activity> {
       routeName: '/activity',
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        drawerEnableOpenDragGesture: false,
 
         backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
 
@@ -108,7 +109,7 @@ class _ActivityState extends State<Activity> {
                         ),
                         child: Center(
                           child: Text(
-                            "All activities & locations",
+                            loc.allActivitiesAndLocations,
                             style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w700,
@@ -153,7 +154,7 @@ class _ActivityState extends State<Activity> {
 
                               children: [
                                 Text(
-                                  " All Activities",
+                                  loc.allactivities,
                                   style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w700,
@@ -216,7 +217,7 @@ class _ActivityState extends State<Activity> {
 
                             children: [
                               Text(
-                                " All location",
+                                loc.alllocation,
                                 style: TextStyle(
                                   fontSize: 17,
                                   fontWeight: FontWeight.w700,
@@ -272,13 +273,12 @@ class _ActivityState extends State<Activity> {
                         },
                       ),
                       buildMainButton(
-                        text: 'Main',
+                        text: loc.main,
                         onPressed: () {
                           controller.alertPage();
                         },
                         context: context,
                       ),
-                      addAlertButton(context: context, onPressed: () async {}),
                     ],
                   ),
                 ),

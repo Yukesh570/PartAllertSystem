@@ -7,6 +7,7 @@ import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:Parkalert/features/screen/helperWidget/snackbar.dart';
 import 'package:Parkalert/features/screen/map/map.dart';
+import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/utils/storage/data/ZoneData.dart';
 import 'package:Parkalert/utils/storage/zoneStorage/zoneStorage.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,11 @@ class ZoneBoxState extends State<ZoneBox> {
 
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-
+    final loc = AppLocalizations.of(context);
+    if (loc == null) {
+      // This means localization isn't yet loaded or context is not in a localized widget tree
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     final isOnController = Get.put(FreezoneController(), permanent: true);
     List<Color> colorOptions = [
       AppColors.alert1,
@@ -178,28 +183,24 @@ class ZoneBoxState extends State<ZoneBox> {
                 ? AppColors.alert3Dark
                 : Colors.white, // 👈 Dark/Light mode
 
-            title: const Text("Edit Zone"),
+            title: Text(loc.editzone),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: nameController,
-                  decoration: const InputDecoration(labelText: "Zone Name"),
+                  decoration: InputDecoration(labelText: loc.zonename),
                 ),
                 const SizedBox(height: 16),
                 TextField(
                   controller: initialTimeController,
-                  decoration: const InputDecoration(
-                    labelText: "Initial Time (HH:mm)",
-                  ),
+                  decoration: InputDecoration(labelText: loc.initialtime),
                 ),
                 const SizedBox(height: 16),
 
                 TextField(
                   controller: stopTimeController,
-                  decoration: const InputDecoration(
-                    labelText: "Stop Time (HH:mm)",
-                  ),
+                  decoration: InputDecoration(labelText: loc.stoptime),
                 ),
               ],
             ),
@@ -207,7 +208,7 @@ class ZoneBoxState extends State<ZoneBox> {
               TextButton(
                 onPressed: () => Navigator.pop(context, false),
                 child: Text(
-                  "Cancel",
+                  loc.cancel,
                   style: TextStyle(
                     fontSize: 14,
                     color: dark
@@ -264,7 +265,7 @@ class ZoneBoxState extends State<ZoneBox> {
       if (result == true) {
         CustomSnackBar.show(
           context,
-          message: "Zone updated successfully",
+          message: loc.zoneupdatedsuccessfully,
           backgroundColor: Colors.green[600]!,
         );
       }
@@ -430,7 +431,7 @@ class ZoneBoxState extends State<ZoneBox> {
 
                   return buildConnectButton(
                     context: context,
-                    text: isOn ? 'Disconnect' : 'Connect',
+                    text: isOn ? loc.disconnect : loc.connect,
                     backgroundColor: color2,
                     textColor: dark ? Colors.white : Textcolor,
 
@@ -477,7 +478,7 @@ class ZoneBoxState extends State<ZoneBox> {
                             ? AppColors.alert3Dark
                             : Colors.white, // 👈 Dark/Light mode
                         title: Text(
-                          "Delete Zone",
+                          loc.deletezone,
                           style: TextStyle(
                             fontSize: 14,
                             color: dark
@@ -486,7 +487,7 @@ class ZoneBoxState extends State<ZoneBox> {
                           ),
                         ),
                         content: Text(
-                          "Are you sure you want to delete this zone?",
+                          loc.areyousureyouwanttodeletethiszone,
                           style: TextStyle(
                             fontSize: 14,
                             color: dark
@@ -498,7 +499,7 @@ class ZoneBoxState extends State<ZoneBox> {
                           TextButton(
                             onPressed: () => Navigator.pop(context, false),
                             child: Text(
-                              "Cancel",
+                              loc.cancel,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: dark
@@ -529,7 +530,7 @@ class ZoneBoxState extends State<ZoneBox> {
                             child: ElevatedButton(
                               onPressed: () => Navigator.pop(context, true),
                               child: Text(
-                                "Delete",
+                                loc.delete,
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: dark

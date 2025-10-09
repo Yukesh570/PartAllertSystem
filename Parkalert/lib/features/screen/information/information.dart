@@ -59,6 +59,8 @@ class _InformationState extends State<Information> {
     print("selectedLang: $selectedLang");
     final box = GetStorage();
     box.write('languagecode', langCode);
+    Get.updateLocale(Locale(langCode)); // 💥 instantly updates all text
+
     widget.onLocaleChange(Locale(langCode.toLowerCase()));
   }
 
@@ -217,32 +219,31 @@ class _InformationState extends State<Information> {
 
                                         // ✅ Save flag that account is created
 
-                                        final success = await apiService
-                                            .registerUser(
-                                              firstName:
-                                                  firstNameController.text,
-                                              lastName: lastNameController.text,
-                                              email: emailController.text,
-                                              phoneNumber: phoneController.text,
-                                            );
-                                        if (success['status'] == 'success') {
-                                          box.write('userData', {
-                                            'firstName':
-                                                firstNameController.text,
-                                            'lastName': lastNameController.text,
-                                            'email': emailController.text,
-                                            'phone': phoneController.text,
-                                          });
-                                          box.write('isRegistered', true);
-                                        }
+                                        // final success = await apiService
+                                        //     .registerUser(
+                                        //       firstName:
+                                        //           firstNameController.text,
+                                        //       lastName: lastNameController.text,
+                                        //       email: emailController.text,
+                                        //       phoneNumber: phoneController.text,
+                                        //     );
+                                        // if (success['status'] == 'success') {
+                                        box.write('userData', {
+                                          'firstName': firstNameController.text,
+                                          'lastName': lastNameController.text,
+                                          'email': emailController.text,
+                                          'phone': phoneController.text,
+                                        });
+                                        box.write('isRegistered', true);
+                                        // }
 
-                                        print("successssssssss: ${success}");
+                                        // print("successssssssss: ${success}");
                                         controller.alertPage();
                                       } catch (e) {
                                         // ❌ Network or unexpected error
                                         Get.snackbar(
-                                          'Error',
-                                          'No Internet Connection: $e',
+                                          loc.error,
+                                          loc.nointernetconnection,
                                           backgroundColor: Colors.red,
                                           colorText: Colors.white,
                                         );
@@ -253,8 +254,8 @@ class _InformationState extends State<Information> {
                                       }
                                     } else {
                                       Get.snackbar(
-                                        'Error',
-                                        'Please fill in all the required fields.',
+                                        loc.error,
+                                        loc.pleasefillinalltherequiredfields,
                                         backgroundColor: Colors.red,
                                         colorText: Colors.white,
                                       );

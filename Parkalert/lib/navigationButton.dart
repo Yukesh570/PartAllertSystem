@@ -182,32 +182,6 @@ class navButton extends StatelessWidget {
                   //   }
                   // },
                 ),
-                _buildListTile(
-                  icon: Icons.question_answer_outlined,
-                  label: loc.frequentlyAskedQuestions,
-                  style: menuTextStyle(
-                    isDark: isDark,
-                    isSelected: isSelected,
-                    routeName: '/questions',
-                  ),
-                  isDark: isDark,
-                  onTap: () => _navigation(
-                    context: context,
-                    targetRoute: '/questions',
-                    onNavigate: controller.question,
-                    currentRoute: isSelected,
-                  ),
-                  // onTap: () {
-                  //   if (isSelected != "/questions") {
-                  //     Navigator.pop(context);
-                  //     Future.delayed(Duration(milliseconds: 180), () {
-                  //       controller.question();
-                  //     });
-                  //   } else {
-                  //     Navigator.pop(context);
-                  //   }
-                  // },
-                ),
 
                 const Divider(height: 20, thickness: 1),
 
@@ -317,7 +291,7 @@ class navButton extends StatelessWidget {
 
                 _buildListTile(
                   icon: Icons.exit_to_app,
-                  label: loc.exitparkalert,
+                  label: loc.exitParkAlarm,
                   style: TextStyle(
                     fontSize: 18,
                     color: isDark
@@ -333,15 +307,13 @@ class navButton extends StatelessWidget {
                         backgroundColor: isDark
                             ? Colors.grey[900]
                             : Colors.white,
-                        title: const Text('Exit App'),
-                        content: const Text(
-                          'Are you sure you want to exit ParkAlert?',
-                        ),
+                        title: Text(loc.exitapp),
+                        content: Text(loc.exitappparagraph),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(ctx).pop(false),
-                            child: const Text(
-                              'Cancel',
+                            child: Text(
+                              loc.cancel,
                               style: TextStyle(
                                 fontSize: 18, // 👈 Bigger text
                                 fontWeight: FontWeight.w600, // 👈 Semi-bold
@@ -350,8 +322,8 @@ class navButton extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () => Navigator.of(ctx).pop(true),
-                            child: const Text(
-                              'Exit',
+                            child: Text(
+                              loc.exit,
                               style: TextStyle(
                                 fontSize: 20, // 👈 Bigger text
                                 fontWeight: FontWeight.w600, // 👈 Semi-bold

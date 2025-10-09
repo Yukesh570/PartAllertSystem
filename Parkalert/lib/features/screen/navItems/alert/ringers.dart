@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/features/controllers/alert/isON.dart';
 import 'package:Parkalert/features/controllers/main_controller.dart';
@@ -34,7 +35,11 @@ class _RingersState extends State<Ringers> {
     final MainController controller = Get.put(MainController());
     final isOnController = Get.find<IsOnController>();
     final dark = Theme.of(context).brightness == Brightness.dark;
-
+    final loc = AppLocalizations.of(context);
+    if (loc == null) {
+      // This means localization isn't yet loaded or context is not in a localized widget tree
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     List<Color> colorOptions = [
       AppColors.alert1,
       AppColors.alert2,
@@ -254,7 +259,7 @@ class _RingersState extends State<Ringers> {
                   if (ringerData.index >= isOnController.isOnList.length) {
                     return buildConnectButton(
                       context: context,
-                      text: 'Connect',
+                      text: loc.connect,
                       backgroundColor: color2,
                       textColor: dark ? Colors.white : textColor,
                       onPressed: () {},
@@ -263,7 +268,7 @@ class _RingersState extends State<Ringers> {
                   bool isOn = isOnController.isOnList[ringerData.index];
                   return buildConnectButton(
                     context: context,
-                    text: isOn ? 'Disconnect' : 'Connect',
+                    text: isOn ? loc.disconnect : loc.connect,
                     backgroundColor: color2,
                     textColor: dark ? Colors.white : textColor,
 
@@ -288,7 +293,7 @@ class _RingersState extends State<Ringers> {
                           ? AppColors.alert3Dark
                           : Colors.white, // 👈 Dark/Light mode
                       title: Text(
-                        "Delete Ringer",
+                        loc.deleteringer,
                         style: TextStyle(
                           fontSize: 14,
                           color: dark
@@ -297,7 +302,7 @@ class _RingersState extends State<Ringers> {
                         ),
                       ),
                       content: Text(
-                        "Are you sure you want to delete this ringer?",
+                        loc.areyousureyouwanttodeletethisringer,
                         style: TextStyle(
                           fontSize: 14,
                           color: dark
@@ -309,7 +314,7 @@ class _RingersState extends State<Ringers> {
                         TextButton(
                           onPressed: () => Navigator.pop(context, false),
                           child: Text(
-                            "Cancel",
+                            loc.cancel,
                             style: TextStyle(
                               fontSize: 14,
                               color: dark
@@ -340,7 +345,7 @@ class _RingersState extends State<Ringers> {
                           child: ElevatedButton(
                             onPressed: () => Navigator.pop(context, true),
                             child: Text(
-                              "Delete",
+                              loc.delete,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: dark

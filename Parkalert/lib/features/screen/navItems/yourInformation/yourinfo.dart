@@ -18,6 +18,13 @@ class Yourinfo extends StatefulWidget {
 
 class _YourinfoState extends State<Yourinfo> {
   Map<String, dynamic> userData = {};
+  bool _isEditing = false;
+
+  // Controllers for text fields
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   final drawerCtrl = Get.find<DrawerControllerX>();
   final MainController controller = Get.put(MainController());
@@ -28,46 +35,118 @@ class _YourinfoState extends State<Yourinfo> {
     _loadUserData();
   }
 
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
+
   void _loadUserData() {
     final box = GetStorage();
     final data = box.read('userData');
     if (data != null && data is Map<String, dynamic>) {
       setState(() {
         userData = data;
+        // Populate controllers with loaded data
+        _firstNameController.text = userData['firstName'] ?? '';
+        _lastNameController.text = userData['lastName'] ?? '';
+        _emailController.text = userData['email'] ?? '';
+        _phoneController.text = userData['phone'] ?? '';
       });
     }
   }
 
-  Widget _buildInfoCard(String label, String? value, bool dark) {
+  // New method to handle the cancellation of editing
+  void _cancelEditing() {
+    // 1. Revert text field content back to saved data
+    _loadUserData();
+    // 2. Toggle editing mode off
+    setState(() {
+      _isEditing = false;
+    });
+  }
+
+  void _saveUserData(AppLocalizations loc) {
+    // 1. Update the userData map from controllers
+    final newUserData = {
+      'firstName': _firstNameController.text,
+      'lastName': _lastNameController.text,
+      'email': _emailController.text,
+      'phone': _phoneController.text,
+    };
+
+    // 2. Persist to GetStorage
+    final box = GetStorage();
+    box.write('userData', newUserData);
+
+    // 3. Update state and toggle editing mode
+    setState(() {
+      userData = newUserData;
+      _isEditing = false;
+    });
+
+    // Optional: Show a confirmation message
+    // Localize the hardcoded snackbar strings using loc
+    Get.snackbar(
+      loc.informationSaved,
+      loc.yourInformationHasBeenUpdated,
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: Colors.green,
+      colorText: Colors.white,
+    );
+  }
+
+  Widget _buildInfoCard(
+    String label,
+    TextEditingController controller,
+    bool dark, {
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    const double baseFontSize = 17.0;
+
     return Card(
       color: dark ? Colors.grey[850] : Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 3,
-      margin: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 4,
-      ), // smaller vertical gap
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-        child: Row(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "$label: ",
+              "$label:",
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                fontSize: baseFontSize,
                 color: dark ? Colors.white : Colors.black,
               ),
             ),
-            Expanded(
-              child: Text(
-                value ?? "-",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: dark ? Colors.white70 : Colors.black87,
-                ),
-              ),
-            ),
+            const SizedBox(height: 6),
+            _isEditing
+                ? TextFormField(
+                    controller: controller,
+                    keyboardType: keyboardType,
+                    cursorColor: dark ? Colors.blueAccent : Colors.blue,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    style: TextStyle(
+                      fontSize: baseFontSize,
+                      color: dark ? Colors.white : Colors.black,
+                    ),
+                  )
+                : Text(
+                    controller.text.isNotEmpty ? controller.text : "-",
+                    style: TextStyle(
+                      fontSize: baseFontSize,
+                      color: dark ? Colors.white70 : Colors.black87,
+                    ),
+                  ),
           ],
         ),
       ),
@@ -80,10 +159,16 @@ class _YourinfoState extends State<Yourinfo> {
     final loc = AppLocalizations.of(context);
     if (loc == null) return const Center(child: CircularProgressIndicator());
 
+    // NOTE: Ensure these localization keys are available in your .arb files:
+    // "firstName", "lastName", "email", "phoneNo", "noInformationAvailable",
+    // "save", "informationSaved", "yourInformationHasBeenUpdated", "yourInformation"
+
     return PageWrapper(
       routeName: '/yourinfo',
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        drawerEnableOpenDragGesture: false,
+
         backgroundColor: dark ? Colors.black : Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -91,19 +176,62 @@ class _YourinfoState extends State<Yourinfo> {
           centerTitle: true,
           title: Text(
             loc.yourInformation,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          leading: Builder(
-            builder: (context) => IconButton(
-              onPressed: () => Scaffold.of(context).openDrawer(),
-              icon: Icon(Icons.menu, color: dark ? Colors.white : Colors.black),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: dark ? Colors.white : Colors.black,
             ),
           ),
+          leading: Builder(
+            builder: (context) {
+              if (_isEditing) {
+                // Show Cancel button when editing
+                return IconButton(
+                  onPressed: _cancelEditing,
+                  icon: Icon(
+                    Icons.close,
+                    color: dark ? Colors.redAccent : Colors.red,
+                    size: 28, // ↑ Increase icon size (default is 24)
+                  ),
+                  iconSize: 28,
+                  padding: const EdgeInsets.all(8), // optional, adjust tap area
+                  tooltip: "cancel",
+                );
+              } else {
+                // Show Drawer Menu icon when not editing
+                return IconButton(
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                  icon: Icon(
+                    Icons.menu,
+                    color: dark ? Colors.white : Colors.black,
+                  ),
+                );
+              }
+            },
+          ),
+          actions: [
+            // Edit / Save Button
+            IconButton(
+              icon: Icon(
+                _isEditing ? Icons.save : Icons.edit,
+                color: dark
+                    ? Colors.white
+                    : const Color.fromARGB(255, 90, 102, 224),
+              ),
+              onPressed: () {
+                if (_isEditing) {
+                  _saveUserData(loc);
+                } else {
+                  setState(() {
+                    _isEditing = true;
+                  });
+                }
+              },
+            ),
+          ],
         ),
         drawer: const navButton(),
         body: SafeArea(
           minimum: const EdgeInsets.only(bottom: 12.0),
-
           child: Stack(
             children: [
               Positioned.fill(
@@ -111,10 +239,12 @@ class _YourinfoState extends State<Yourinfo> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-                child: userData.isEmpty
+                child:
+                    userData.isEmpty &&
+                        !_isEditing // Show 'No info' only if not editing
                     ? Center(
                         child: Text(
-                          "No information available",
+                          loc.noInformationAvailable,
                           style: TextStyle(
                             color: dark ? Colors.white : Colors.black,
                             fontSize: 16,
@@ -141,17 +271,28 @@ class _YourinfoState extends State<Yourinfo> {
                           padding: const EdgeInsets.only(bottom: 12),
                           children: [
                             _buildInfoCard(
-                              "First Name",
-                              userData['firstName'],
+                              loc.firstName,
+                              _firstNameController,
                               dark,
                             ),
                             _buildInfoCard(
-                              "Last Name",
-                              userData['lastName'],
+                              loc.lastName,
+                              _lastNameController,
                               dark,
                             ),
-                            _buildInfoCard("Email", userData['email'], dark),
-                            _buildInfoCard("Phone", userData['phone'], dark),
+                            _buildInfoCard(
+                              loc.email,
+                              _emailController,
+                              dark,
+                              keyboardType: TextInputType.emailAddress,
+                            ),
+                            // I've used 'phoneNo' for the localization key here, assuming it exists
+                            _buildInfoCard(
+                              loc.phoneNo,
+                              _phoneController,
+                              dark,
+                              keyboardType: TextInputType.phone,
+                            ),
                           ],
                         ),
                       ),
@@ -171,19 +312,33 @@ class _YourinfoState extends State<Yourinfo> {
                         context: context,
                         icon: Icons.arrow_back,
                         onPressed: () {
-                          drawerCtrl.goBack();
-                          if (Navigator.of(context).canPop()) {
-                            Navigator.of(context).pop();
+                          // If user cancels editing, revert the state
+                          if (_isEditing) {
+                            _loadUserData(); // Revert changes by reloading
+                            setState(() => _isEditing = false);
                           } else {
-                            debugPrint("No screen to go back to");
+                            drawerCtrl.goBack();
+                            if (Navigator.of(context).canPop()) {
+                              Navigator.of(context).pop();
+                            } else {
+                              debugPrint("No screen to go back to");
+                            }
                           }
                         },
                       ),
-                      buildMainButton(
-                        text: 'Main',
-                        onPressed: () => controller.alertPage(),
-                        context: context,
-                      ),
+                      // Show a save button below only if in editing mode
+                      if (_isEditing)
+                        buildMainButton(
+                          text: loc.save,
+                          onPressed: () => _saveUserData(loc),
+                          context: context,
+                        )
+                      else
+                        buildMainButton(
+                          text: loc.main,
+                          onPressed: () => controller.alertPage(),
+                          context: context,
+                        ),
                     ],
                   ),
                 ),

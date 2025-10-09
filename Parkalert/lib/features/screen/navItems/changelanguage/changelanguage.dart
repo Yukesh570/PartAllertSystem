@@ -53,21 +53,24 @@ class _ChangelanguageState extends State<Changelanguage> {
     String flag,
   ) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-
+    final loc = AppLocalizations.of(context);
+    if (loc == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     final isSelected = selectedLanguageCode == code;
     return GestureDetector(
       onTap: () async => await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
           backgroundColor: dark ? Colors.grey[900] : Colors.white,
-          title: const Text('Change Language'),
+          title: Text(loc.changelanguage),
           content: const Text('Are you sure you want to change language?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text(
-                'Cancel',
-                style: TextStyle(
+              child: Text(
+                loc.cancel,
+                style: const TextStyle(
                   fontSize: 18, // 👈 Bigger text
                   fontWeight: FontWeight.w600, // 👈 Semi-bold
                 ),
@@ -75,9 +78,9 @@ class _ChangelanguageState extends State<Changelanguage> {
             ),
             TextButton(
               onPressed: () => _onLanguageSelected(code),
-              child: const Text(
-                'Yes',
-                style: TextStyle(
+              child: Text(
+                loc.yes,
+                style: const TextStyle(
                   fontSize: 20, // 👈 Bigger text
                   fontWeight: FontWeight.w600, // 👈 Semi-bold
                 ),
@@ -147,8 +150,11 @@ class _ChangelanguageState extends State<Changelanguage> {
       routeName: '/changelanguage',
       child: Scaffold(
         backgroundColor: dark ? Colors.black : Colors.white,
+        drawerEnableOpenDragGesture: false,
+
         appBar: AppBar(
           backgroundColor: Colors.transparent,
+
           elevation: 0,
           centerTitle: true,
           title: Text(
@@ -236,7 +242,7 @@ class _ChangelanguageState extends State<Changelanguage> {
                         },
                       ),
                       buildMainButton(
-                        text: 'Main',
+                        text: loc.main,
                         onPressed: () => controller.alertPage(),
                         context: context,
                       ),

@@ -170,13 +170,13 @@ public void onCreate() {
 
     if (insideAnyZone && !isInsideZone) {
         Log.d("GeofenceService", "Entered ALERT zone: " + (activeZoneName != null ? activeZoneName : "zone"));
-        showEventNotification("Entered Zone", activeZoneName != null ? activeZoneName : "zone");
+        // showEventNotification("Entered Zone", activeZoneName != null ? activeZoneName : "zone");
         if (channel != null) {
             channel.invokeMethod("enteredZone", activeZoneName != null ? activeZoneName : "zone");
         }
     } else if (!insideAnyZone && isInsideZone) {
         Log.d("GeofenceService", "Exited ALERT zone");
-        showEventNotification("Exited ALERT Zone", "geofenced area");
+        // showEventNotification("Exited ALERT Zone", "geofenced area");
         if (channel != null) {
             channel.invokeMethod("exitedZone", "geofenced area");
         }

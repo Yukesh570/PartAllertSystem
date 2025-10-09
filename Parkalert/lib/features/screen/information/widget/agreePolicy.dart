@@ -1,3 +1,5 @@
+import 'package:Parkalert/features/screen/information/widget/policy.dart';
+import 'package:Parkalert/features/screen/information/widget/terms.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:Parkalert/common/widgets/login_signUp/form_divider.dart';
@@ -8,6 +10,7 @@ import 'package:Parkalert/utils/constants/text_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
+import 'package:flutter/gestures.dart';
 
 class AgreePolicyTextChoice extends StatefulWidget {
   final bool dark;
@@ -74,6 +77,13 @@ class _AgreePolicyTextChoiceState extends State<AgreePolicyTextChoice> {
                             ? Colors.white
                             : TColors.primary,
                       ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const Policy()),
+                          );
+                        },
                     ),
                     TextSpan(
                       text: '${loc.and} ',
@@ -88,6 +98,13 @@ class _AgreePolicyTextChoiceState extends State<AgreePolicyTextChoice> {
                             ? Colors.white
                             : Theme.of(context).colorScheme.primary,
                       ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const Terms()),
+                          );
+                        },
                     ),
                   ],
                 ),

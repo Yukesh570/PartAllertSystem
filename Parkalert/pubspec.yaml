@@ -79,7 +79,6 @@ flutter:
   generate: true
 
   assets:
-    - assets/images/on_boarding_images/
     - assets/icons/
     - assets/logos/
     - .env

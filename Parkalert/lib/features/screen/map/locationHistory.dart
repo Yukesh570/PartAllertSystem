@@ -382,6 +382,8 @@ class _LocationHistoryState extends State<LocationHistory> {
       routeName: '/locationHistory',
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        drawerEnableOpenDragGesture: false,
+
         backgroundColor: dark ? Colors.black : Colors.white,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -389,7 +391,7 @@ class _LocationHistoryState extends State<LocationHistory> {
           elevation: 0,
           centerTitle: true,
           title: Text(
-            "History",
+            loc.history,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           leading: Builder(
@@ -434,11 +436,11 @@ class _LocationHistoryState extends State<LocationHistory> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Parked History',
-                                style: TextStyle(
+                                loc.parkedhistory,
+                                style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -503,7 +505,7 @@ class _LocationHistoryState extends State<LocationHistory> {
                                           });
                                         },
                                         decoration: InputDecoration(
-                                          hintText: _isTyping ? '' : 'Search',
+                                          hintText: _isTyping ? '' : loc.search,
                                           filled: true,
                                           fillColor: dark
                                               ? Colors.grey[850]
@@ -586,7 +588,7 @@ class _LocationHistoryState extends State<LocationHistory> {
                     },
                   ),
                   buildMainButton(
-                    text: 'Main',
+                    text: loc.main,
                     onPressed: () {
                       controller.alertPage();
                     },

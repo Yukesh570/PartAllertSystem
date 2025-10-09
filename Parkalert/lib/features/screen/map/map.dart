@@ -393,9 +393,11 @@ class _MappageState extends State<Mappage> {
   }
 
   void _finishDrawing() async {
+    final loc = AppLocalizations.of(context)!;
+
     if (_drawingPoints.length < 3) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Add at least 3 points to form a polygon')),
+        SnackBar(content: Text(loc.addatleast3pointstoformapolygon)),
       );
       return;
     }
@@ -531,6 +533,8 @@ class _MappageState extends State<Mappage> {
       routeName: '/map',
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        drawerEnableOpenDragGesture: false,
+
         backgroundColor: dark ? Colors.black : Colors.white,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
@@ -583,11 +587,11 @@ class _MappageState extends State<Mappage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Set no-alert zones',
-                                style: TextStyle(
+                                loc.setnoalertzones,
+                                style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,
                                 ),
@@ -628,7 +632,7 @@ class _MappageState extends State<Mappage> {
                                           });
                                         },
                                         decoration: InputDecoration(
-                                          hintText: _isTyping ? '' : 'Search',
+                                          hintText: _isTyping ? '' : loc.search,
                                           filled: true,
                                           fillColor: dark
                                               ? Colors.grey[850]
@@ -756,7 +760,7 @@ class _MappageState extends State<Mappage> {
                     },
                   ),
                   buildMainButton(
-                    text: 'Main',
+                    text: loc.main,
                     onPressed: () {},
                     context: context,
                   ),

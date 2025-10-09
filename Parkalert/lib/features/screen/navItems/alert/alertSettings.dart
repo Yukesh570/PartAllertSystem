@@ -126,6 +126,7 @@ class _AlertSettingState extends State<AlertSetting> {
         routeName: '/alertSetting',
         child: Scaffold(
           resizeToAvoidBottomInset: false,
+          drawerEnableOpenDragGesture: false,
 
           backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
           appBar: AppBar(
@@ -195,27 +196,27 @@ class _AlertSettingState extends State<AlertSetting> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // "Set your Alert" and "My Alerts" text
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 8.0,
                                 vertical: 4.0,
                               ),
                               child: Text(
-                                'Set your Alert',
-                                style: TextStyle(
+                                loc.setyouralarm,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 8.0,
                                 vertical: 4.0,
                               ),
                               child: Text(
-                                'My Alerts',
-                                style: TextStyle(
+                                loc.myalarms,
+                                style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -253,9 +254,9 @@ class _AlertSettingState extends State<AlertSetting> {
                                       horizontal: 16.0,
                                     ),
 
-                                    child: const Text(
-                                      'Create Alert',
-                                      style: TextStyle(
+                                    child: Text(
+                                      loc.createalert,
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
                                       ),
@@ -268,7 +269,7 @@ class _AlertSettingState extends State<AlertSetting> {
                                   buildAlertFormRow(
                                     context: context,
                                     icon: Icons.person_outline,
-                                    text: 'Name',
+                                    text: loc.name,
                                     controller: _nameController,
                                     onTap: () {
                                       /* Handle tap */
@@ -278,7 +279,7 @@ class _AlertSettingState extends State<AlertSetting> {
                                   buildAlertFormRow(
                                     context: context,
                                     icon: Icons.bluetooth,
-                                    text: 'Bluetooth device',
+                                    text: loc.bluetoothdevice,
                                     onTap: () async {
                                       final device =
                                           await showDialog<
@@ -299,7 +300,7 @@ class _AlertSettingState extends State<AlertSetting> {
                                   buildAlertFormRow(
                                     context: context,
                                     icon: Icons.music_note,
-                                    text: 'Sound',
+                                    text: loc.sound,
                                     controller: soundController,
                                     onTap: () {
                                       showSoundPicker(
@@ -372,7 +373,7 @@ class _AlertSettingState extends State<AlertSetting> {
                           },
                         ),
                         buildMainButton(
-                          text: 'Main',
+                          text: loc.main,
                           onPressed: () {
                             controller.alertPage();
                           },
@@ -385,9 +386,6 @@ class _AlertSettingState extends State<AlertSetting> {
                             final String bluetoothDevice =
                                 _bluetoothDeviceController.text.trim();
                             final String sound = soundController.text.trim();
-                            print('Name: $name');
-                            print('Bluetooth: $bluetoothDevice');
-                            print('Sound: $sound');
 
                             if (name.isNotEmpty &&
                                 // bluetoothDevice.isNotEmpty &&

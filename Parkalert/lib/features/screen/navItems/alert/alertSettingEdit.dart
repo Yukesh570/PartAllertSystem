@@ -84,6 +84,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
         routeName: '/alertSettingEdit',
         child: Scaffold(
           resizeToAvoidBottomInset: false,
+          drawerEnableOpenDragGesture: false,
 
           backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
           appBar: AppBar(
@@ -153,27 +154,27 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // "Set your Alert" and "My Alerts" text
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 8.0,
                                 vertical: 4.0,
                               ),
                               child: Text(
-                                'Set your Alert',
-                                style: TextStyle(
+                                loc.setyouralarm,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: 8.0,
                                 vertical: 4.0,
                               ),
                               child: Text(
-                                'My Alerts',
-                                style: TextStyle(
+                                loc.myalarms,
+                                style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -211,9 +212,9 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                                       horizontal: 16.0,
                                     ),
 
-                                    child: const Text(
-                                      'Edit Alert',
-                                      style: TextStyle(
+                                    child: Text(
+                                      loc.editalarm,
+                                      style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
                                       ),
@@ -226,7 +227,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                                   buildAlertFormRow(
                                     context: context,
                                     icon: Icons.person_outline,
-                                    text: 'Name',
+                                    text: loc.name,
                                     controller: _nameController,
                                     onTap: () {
                                       /* Handle tap */
@@ -236,7 +237,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                                   buildAlertFormRow(
                                     context: context,
                                     icon: Icons.bluetooth,
-                                    text: 'Bluetooth device',
+                                    text: loc.bluetoothdevice,
                                     onTap: () async {
                                       final device =
                                           await showDialog<
@@ -257,7 +258,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                                   buildAlertFormRow(
                                     context: context,
                                     icon: Icons.music_note,
-                                    text: 'Sound',
+                                    text: loc.sound,
                                     controller: soundController,
                                     onTap: () {
                                       showSoundPicker(
@@ -304,7 +305,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                           },
                         ),
                         buildMainButton(
-                          text: 'Main',
+                          text: loc.main,
                           onPressed: () {
                             controller.alertPage();
                           },

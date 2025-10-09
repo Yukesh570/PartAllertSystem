@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 import org.json.JSONArray;
 import android.location.Location;
+import android.os.Looper;
 
 public class BluetoothReceiver extends BroadcastReceiver {
 
@@ -54,18 +55,36 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 }
 
                 Log.d("BluetoothReceiver", "GeofenceForegroundService started immediately");
+                    // Stop after 10 seconds
 
+                new android.os.Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    context.stopService(serviceIntent);
+                    Log.d("BluetoothReceiver", "GeofenceForegroundService stopped after 10s on " + action);
+                }, 10000L);
                 // Handle connection event
                 handleBluetoothEvent(context, device, true);
             }
         } 
         else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
             Log.d("BluetoothReceiver", "Disconnected: " + device.getName());
+            // Start foreground service
+                Intent serviceIntent = new Intent(context, GeofenceForegroundService.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(serviceIntent);
+                } else {
+                    context.startService(serviceIntent);
+                }
+
+                Log.d("BluetoothReceiver", "GeofenceForegroundService started immediately");
+                    // Stop after 10 seconds
+
+                new android.os.Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    context.stopService(serviceIntent);
+                    Log.d("BluetoothReceiver", "GeofenceForegroundService stopped after 10s on " + action);
+                }, 10000L);
             handleBluetoothEvent(context, device, false);
 
-            // Stop Geofence service
-            Intent serviceIntent = new Intent(context, GeofenceForegroundService.class);
-            context.stopService(serviceIntent);
+               
         }
     }
 
