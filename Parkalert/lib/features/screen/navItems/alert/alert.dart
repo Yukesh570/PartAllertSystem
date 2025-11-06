@@ -42,12 +42,6 @@ class _AlertState extends State<Alert> {
   void checkIfDataSaved() {
     final box = GetStorage();
     final userData = box.read('userData');
-
-    // if (userData != null) {
-    //   print("📦 Saved user data: $userData");
-    // } else {
-    //   print("⚠️ No user data found in storage.");
-    // }
   }
 
   void loadAndSetRingers() async {
@@ -72,7 +66,6 @@ class _AlertState extends State<Alert> {
           )
           .toList();
     });
-    // print("ringersList: $ringersListdemo");
   }
 
   void refreshRingers() async {
@@ -317,59 +310,6 @@ class _AlertState extends State<Alert> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end, // align to left
                       children: [
-                        //   buildCircularIconButton(
-                        //     context: context,
-                        //     icon: Icons.arrow_back,
-                        //     onPressed: () {
-                        //       final isDark =
-                        //           Theme.of(context).brightness == Brightness.dark;
-                        //       showDialog(
-                        //         context: context,
-                        //         builder: (context) => AlertDialog(
-                        //           backgroundColor: isDark
-                        //               ? Colors.grey[900]
-                        //               : Colors.white,
-
-                        //           title: const Text('Exit ParkAlert'),
-                        //           content: const Text(
-                        //             'Are you sure you want to exit the app?',
-                        //           ),
-                        //           actions: [
-                        //             TextButton(
-                        //               onPressed: () =>
-                        //                   Navigator.of(context).pop(false),
-                        //               child: const Text(
-                        //                 'Cancel',
-                        //                 style: TextStyle(
-                        //                   fontSize: 18, // 👈 Bigger text
-                        //                   fontWeight:
-                        //                       FontWeight.w600, // 👈 Semi-bold
-                        //                 ),
-                        //               ),
-                        //             ),
-                        //             TextButton(
-                        //               onPressed: () =>
-                        //                   Navigator.of(context).pop(true),
-                        //               child: const Text(
-                        //                 'Exit',
-                        //                 style: TextStyle(
-                        //                   fontSize: 18, // 👈 Bigger text
-                        //                   fontWeight:
-                        //                       FontWeight.w600, // 👈 Semi-bold
-                        //                 ),
-                        //               ),
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       ).then((shouldExit) {
-                        //         if (shouldExit == true) {
-                        //           SystemNavigator.pop(); // closes the app
-                        //         }
-                        //       });
-                        //     },
-                        //     // },
-                        //   ),
-                        // const SizedBox(width: 100),
                         buildCircularAddbButton(
                           context: context,
                           onPressed: () {

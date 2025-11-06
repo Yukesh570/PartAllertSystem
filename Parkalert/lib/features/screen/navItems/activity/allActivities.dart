@@ -38,14 +38,20 @@ class _ActivityHistoryState extends State<ActivityHistory> {
   final zoneController = Get.put(FreezoneController());
   List<Historydata> history = [];
   bool _loadingHistory = true;
-  bool _isAscending = true;
+  bool _isAscending = false;
   Future<void> loadSavedLocations() async {
     final prefs = await SharedPreferences.getInstance();
+    await prefs.reload();
+
     final jsonString = prefs.getString("currentLocation") ?? "[]";
 
     final List<dynamic> jsonList = json.decode(jsonString);
-    print("🔍 No zones found in SharedPreferences.${jsonList}");
-    final historyList = jsonList.asMap().entries.map((entry) {
+    final limitedList =
+        jsonList.length >
+            50 //get latest 50 data
+        ? jsonList.sublist(jsonList.length - 50)
+        : jsonList;
+    final historyList = limitedList.asMap().entries.map((entry) {
       final index = entry.key;
       final item = entry.value as Map<String, dynamic>;
 
@@ -55,28 +61,19 @@ class _ActivityHistoryState extends State<ActivityHistory> {
         "lng": item["lng"],
         "time": item["time"].toString(),
         "name": item["name"],
+        "status": item["status"],
       });
     }).toList();
 
     setState(() {
       history = historyList;
+      history.sort((a, b) {
+        final timeA = int.tryParse(a.time) ?? 0;
+        final timeB = int.tryParse(b.time) ?? 0;
+        return timeB.compareTo(timeA); // Descending (B before A)
+      });
       _loadingHistory = false;
     });
-
-    // for (var history in historyList) {
-    //   try {
-    //     await apiService.createHistory(
-    //       index: history.index,
-    //       lat: history.lat,
-    //       lng: history.lng,
-    //       time: history.time,
-    //       name: history.name,
-    //     );
-    //     print("✅ Sent history index: ${history.index}");
-    //   } catch (e) {
-    //     print("❌ Failed to send history index ${history.index}: $e");
-    //   }
-    // }
   }
 
   // function to sort by time
@@ -102,9 +99,6 @@ class _ActivityHistoryState extends State<ActivityHistory> {
 
   Widget build(BuildContext context) {
     final drawerCtrl = Get.find<DrawerControllerX>();
-    print(
-      "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq${history}",
-    );
 
     final dark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context);
@@ -344,7 +338,7 @@ class _ActivityHistoryState extends State<ActivityHistory> {
                         },
                         context: context,
                       ),
-                      addAlertButton(context: context, onPressed: () {}),
+                      // addAlertButton(context: context, onPressed: () {}),
                     ],
                   ),
                 ),

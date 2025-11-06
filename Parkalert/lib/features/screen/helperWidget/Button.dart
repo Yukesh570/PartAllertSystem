@@ -2,6 +2,7 @@ import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alertSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Widget buildMainButton({
   required BuildContext context,
@@ -47,6 +48,53 @@ Widget buildMainButton({
   );
 }
 
+Widget buildSaveButton({
+  required BuildContext context,
+  required String text,
+  VoidCallback? onPressed, // <-- make nullable
+  Widget? child,
+}) {
+  final dark = Theme.of(context).brightness == Brightness.dark;
+
+  return Container(
+    width: 200,
+    height: 60,
+    decoration: BoxDecoration(
+      color: AppColors.mainButtonColor,
+      borderRadius: BorderRadius.circular(30.0),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.2),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: const Offset(0, 3),
+        ),
+      ],
+    ),
+    child: FilledButton(
+      onPressed: onPressed,
+      style: FilledButton.styleFrom(
+        backgroundColor: AppColors.mainButtonColor,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        minimumSize: const Size(200, 60),
+        elevation: 0,
+      ),
+      child:
+          child ??
+          Text(
+            text,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+    ),
+  );
+}
+
 // Helper method for circular icon buttons
 Widget buildCircularIconButton({
   required BuildContext context,
@@ -81,8 +129,8 @@ Widget addAlertButton({
   required VoidCallback onPressed,
 }) {
   return Container(
-    width: 60,
-    height: 60,
+    width: 70,
+    height: 70,
     decoration: BoxDecoration(
       color: AppColors.mainButtonColor,
       shape: BoxShape.circle,
@@ -170,6 +218,7 @@ Widget buildConnectButton({
     child: ElevatedButton(
       onPressed: () async {
         HapticFeedback.vibrate();
+
         onPressed();
       },
       style: ElevatedButton.styleFrom(

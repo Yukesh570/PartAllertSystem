@@ -25,6 +25,7 @@ import org.json.JSONException;
 import org.json.JSONArray;
 import android.location.Location;
 import android.os.Looper;
+import android.media.AudioManager;
 
 public class BluetoothReceiver extends BroadcastReceiver {
 
@@ -35,9 +36,11 @@ public class BluetoothReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         Log.d("BluetoothReceiver", "Received action: " + action);
+        Log.d("BluetoothReceiver", "Received action========================================= ");
 
         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
         if (device == null || device.getName() == null) return;
+        Log.d("BluetoothReceiver", "Received action========================================= ");
 
         if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
             if (isTargetDevice(context, device)) {
@@ -45,6 +48,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     Log.e("BluetoothReceiver", "Permissions missing, cannot start service");
                     return;
                 }
+        Log.d("BluetoothReceiver", "Received action!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ");
 
                 // Start foreground service
                 Intent serviceIntent = new Intent(context, GeofenceForegroundService.class);
@@ -60,12 +64,17 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 new android.os.Handler(Looper.getMainLooper()).postDelayed(() -> {
                     context.stopService(serviceIntent);
                     Log.d("BluetoothReceiver", "GeofenceForegroundService stopped after 10s on " + action);
-                }, 10000L);
+                }, 7000L);
                 // Handle connection event
                 handleBluetoothEvent(context, device, true);
             }
         } 
         else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
+            if (isTargetDevice(context, device)) {
+                if (!hasRequiredPermissions(context)) {
+                    Log.e("BluetoothReceiver", "Permissions missing, cannot start service");
+                    return;
+                }
             Log.d("BluetoothReceiver", "Disconnected: " + device.getName());
             // Start foreground service
                 Intent serviceIntent = new Intent(context, GeofenceForegroundService.class);
@@ -83,7 +92,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     Log.d("BluetoothReceiver", "GeofenceForegroundService stopped after 10s on " + action);
                 }, 10000L);
             handleBluetoothEvent(context, device, false);
-
+            }
                
         }
     }
@@ -140,6 +149,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
         String targetBluetoothName = "";
         String targetSound = "";
         String targetName = "";
+        String targetVibration = "";
+        String targetSilent ="";
         Log.d("BluetoothReceiver", "jsonString" + jsonString );
         // Skip if nothing stored
         if (jsonString == null || jsonString.trim().isEmpty()) {
@@ -152,6 +163,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
             targetBluetoothName = jsonObject.optString("bluetooth", "");
             targetSound = jsonObject.optString("sound", "");
             targetName = jsonObject.optString("name", "");
+            targetVibration = jsonObject.optString("vibration","true");
+            targetSilent =jsonObject.optString("overRideSilence","true");
         } catch (JSONException e) {
             Log.e("BluetoothReceiver", "Failed to parse JSON: " + e.getMessage());
             return; // If JSON is invalid, don’t proceed
@@ -164,13 +177,14 @@ public class BluetoothReceiver extends BroadcastReceiver {
         
 
         if (device.getName().contains(targetBluetoothName)) {
-            if (!connected) {  //to save the location when disconnected
-                    getCurrentLocation(context, targetName);
-                }
+           
+                    getCurrentLocation(context, targetName,connected);
+                
             if (!isInsideGeofence) {
                 Log.d("BluetoothReceiver", "OUTSIDE geofence → sending notification");
+                Log.d("BluetoothReceiver", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " +targetSilent);
 
-                showNotification(context, device.getName(), connected, targetSound);
+                showNotification(context, device.getName(), connected, targetSound,targetVibration,targetSilent);
             } else {
                 Log.d("BluetoothReceiver", "Inside geofence → skipping notification");
             }
@@ -179,7 +193,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
         },2000); // 3 second delay to ensure GeofenceService has updated the value
     }
 
-    private void getCurrentLocation(Context context, String targetName) {
+    private void getCurrentLocation(Context context, String targetName, boolean connected) {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         if (!hasRequiredPermissions(context)) {
             Log.e("BluetoothReceiver", "❌ Location permission not granted");
@@ -189,14 +203,14 @@ public class BluetoothReceiver extends BroadcastReceiver {
         fusedLocationClient.getLastLocation()
                 .addOnSuccessListener(location -> {
                     if (location != null) {
-                        saveCurrentLocation(context, location, targetName);
+                        saveCurrentLocation(context, location, targetName,connected);
                     } else {
                         Log.d("BluetoothReceiver", "❌ No last known location available.");
                     }
                 });
     }
 
-    private void saveCurrentLocation(Context context, Location location, String targetName) {
+    private void saveCurrentLocation(Context context, Location location, String targetName, boolean connected) {
         try {
             SharedPreferences prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
             JSONObject locObj = new JSONObject();
@@ -204,6 +218,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
             locObj.put("lng", location.getLongitude());
             locObj.put("time", System.currentTimeMillis());
             locObj.put("name", targetName);
+            locObj.put("status", connected ? "Connected" : "Disconnected");
+
 
             String existingLocationsJson = prefs.getString("flutter.currentLocation", "[]");
             JSONArray locationsArray = new JSONArray(existingLocationsJson);
@@ -224,44 +240,67 @@ public class BluetoothReceiver extends BroadcastReceiver {
         }
     }
 
-    private void showNotification(Context context, String deviceName, boolean connected, String targetSound) {
+
+
+    private void showNotification(Context context, String deviceName, boolean connected, String targetSound,String targetVibration,String targetSilent) {
     NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
     Uri soundUri = null;
     if (targetSound != null && !targetSound.isEmpty()) {
         soundUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + targetSound);
     }
+    boolean vibrate = targetVibration == null || targetVibration.equalsIgnoreCase("true");
+    boolean silent = targetSilent == null || targetSilent.equalsIgnoreCase("true");
+    Log.d("BluetoothReceiver", "📌📌📌📌📌📌📌📌📌📌📌 " + silent);
+
+    String channelId = "bluetooth_channel_" + (targetSound != null ? targetSound : "default") + "_" + targetVibration + "_" + targetSilent;
 
     // Generate a unique channel per sound
-    String channelId;
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        channelId = "bluetooth_channel_" + (targetSound != null ? targetSound : "default");
+        notificationManager.deleteNotificationChannel(channelId);
         String channelName = "Bluetooth Events (" + (targetSound != null ? targetSound : "default") + ")";
 
         NotificationChannel channel = new NotificationChannel(
                 channelId,
                 channelName,
-                NotificationManager.IMPORTANCE_HIGH
+                silent ? NotificationManager.IMPORTANCE_HIGH : NotificationManager.IMPORTANCE_LOW
         );
+        channel.setBypassDnd(silent);
         channel.setDescription("Notifications for Bluetooth events");
         channel.enableLights(true);
         channel.setLightColor(Color.BLUE);
-        channel.enableVibration(true);
+        if (vibrate) {
+            channel.enableVibration(true);
+            channel.setVibrationPattern(new long[]{0, 500, 200, 500}); // pattern: vibrate 0.5s, pause 0.2s, vibrate 0.5s
+        } else {
+            channel.enableVibration(false);
+            channel.setVibrationPattern(null);
+        }
 
-        if (soundUri != null) {
+          if (soundUri != null) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build();
-            channel.setSound(soundUri, audioAttributes);
+            .setUsage(AudioAttributes.USAGE_ALARM) // Always alarm for override
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build();
+
+            // If overrideSilent == true, force Alarm usage (bypasses Silent mode)
+            if (silent) {
+                channel.setSound(soundUri, audioAttributes);
+                channel.setImportance(NotificationManager.IMPORTANCE_HIGH);
+                channel.setBypassDnd(true); // Already helps for DND
+            } else {
+                channel.setSound(soundUri, new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build());
+            }
+
         } else {
             channel.setSound(null, null);
         }
 
         notificationManager.createNotificationChannel(channel);
-    } else {
-        channelId = ""; // not used pre-Oreo
-    }
+    } 
 
     Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
     if (intent != null) {
@@ -295,7 +334,28 @@ public class BluetoothReceiver extends BroadcastReceiver {
         }
     }
 
-    notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+int currentMode = audioManager.getRingerMode();
+int originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+
+
+//override silence mode for 5 seconds
+if (silent && currentMode == AudioManager.RINGER_MODE_SILENT) {
+    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+    int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+    audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
 }
+
+// Send notification
+notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+
+// restore original mode after delay
+if(currentMode == AudioManager.RINGER_MODE_SILENT){
+    new android.os.Handler(Looper.getMainLooper()).postDelayed(() -> {
+    audioManager.setRingerMode(currentMode);
+    audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0);
+}, 4000);}
+}
+
 
 }

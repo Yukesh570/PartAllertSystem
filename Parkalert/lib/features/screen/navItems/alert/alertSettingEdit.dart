@@ -1,5 +1,6 @@
 import 'package:Parkalert/features/controllers/drawerController.dart';
 import 'package:Parkalert/features/controllers/pagger.dart';
+import 'package:Parkalert/utils/healper/permissiongate.dart';
 import 'package:Parkalert/utils/storage/bluetoothStorage/bluetoothStorage.dart';
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
 import 'package:Parkalert/features/controllers/alert/isON.dart';
@@ -9,7 +10,6 @@ import 'package:Parkalert/features/screen/helperWidget/bluetooth.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/alertFrom.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
-import 'package:Parkalert/features/screen/helperWidget/sound.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
 import 'package:Parkalert/features/screen/navItems/alert/ringers.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
@@ -27,6 +27,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -49,7 +50,11 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
   final TextEditingController _nameController = TextEditingController();
   final drawerCtrl = Get.find<DrawerControllerX>();
 
+  bool _inform = true;
+  bool overrideSilentMode = false;
+
   final TextEditingController soundController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -59,7 +64,16 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
       soundController.text = widget.ringerData!.sound;
     }
     NotificationService.initialize();
+    _inform = widget.ringerData?.vibration ?? true;
+    overrideSilentMode = widget.ringerData?.overRideSilence ?? false;
   }
+
+  // Future<void> _loadOverrideSilentMode() async {
+  //   final value = widget.ringerData?.overRideSilence ?? false;
+  //   setState(() {
+  //     overrideSilentMode = value;
+  //   });
+  // }
 
   @override
   void dispose() {
@@ -75,8 +89,8 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
       // This means localization isn't yet loaded or context is not in a localized widget tree
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    final MainController controller = Get.put(MainController());
 
+    final MainController controller = Get.put(MainController());
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
 
@@ -267,8 +281,60 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                                       );
                                     },
                                   ),
+                                  const SizedBox(height: 15.0),
 
-                                  const SizedBox(height: 30),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.vibration_rounded,
+                                        color: AppColors.iconColor,
+                                        size: 30,
+                                      ),
+                                      const SizedBox(width: 15.0),
+                                      Switch(
+                                        value: _inform,
+                                        onChanged: (value) =>
+                                            setState(() => _inform = value),
+                                        activeColor: Colors.white,
+                                        activeTrackColor: AppColors.iconColor,
+                                        inactiveThumbColor: Colors.white,
+                                        inactiveTrackColor:
+                                            Colors.grey.shade400,
+                                        trackOutlineColor:
+                                            WidgetStatePropertyAll(
+                                              Colors.transparent,
+                                            ),
+                                      ),
+                                      const SizedBox(width: 15.0),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.volume_up,
+                                        color: AppColors.iconColor,
+                                        size: 30,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text('Override Silent Mode'),
+                                      Switch(
+                                        value: overrideSilentMode,
+                                        onChanged: (value) => setState(() {
+                                          overrideSilentMode = value;
+                                        }),
+
+                                        activeColor: Colors.white,
+                                        activeTrackColor: AppColors.iconColor,
+                                        inactiveThumbColor: Colors.white,
+                                        inactiveTrackColor:
+                                            Colors.grey.shade400,
+                                        trackOutlineColor:
+                                            WidgetStatePropertyAll(
+                                              Colors.transparent,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
@@ -293,7 +359,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                           context: context,
 
                           icon: Icons.arrow_back,
-                          onPressed: () {
+                          onPressed: () async {
                             drawerCtrl.goBack(); // update drawer highlight
 
                             if (Navigator.of(context).canPop()) {
@@ -318,17 +384,25 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                             final String bluetoothDevice =
                                 _bluetoothDeviceController.text.trim();
                             final String sound = soundController.text.trim();
-
                             if (name.isNotEmpty &&
                                 // bluetoothDevice.isNotEmpty &&
                                 sound.isNotEmpty) {
                               await updateRingers(
                                 widget.ringerData!.index,
-                                widget.ringerData!.isOn,
+                                null,
                                 name,
                                 bluetoothDevice,
                                 sound,
                               );
+                              await vibrationOption(
+                                widget.ringerData!.index,
+                                _inform,
+                              );
+                              await overRideSilence(
+                                widget.ringerData!.index,
+                                overrideSilentMode,
+                              );
+
                               await activeBluetooth();
                               controller.alertPage();
                             }

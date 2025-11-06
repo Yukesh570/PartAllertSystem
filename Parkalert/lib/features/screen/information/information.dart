@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:math';
+
 import 'package:Parkalert/api/api.dart';
 import 'package:Parkalert/common/widgets/login_signUp/form_divider.dart';
 import 'package:Parkalert/common/widgets/login_signUp/socialButton.dart';
@@ -35,13 +38,15 @@ class Information extends StatefulWidget {
 
 class _InformationState extends State<Information> {
   final _formKey = GlobalKey<FormState>();
-  bool _isLoading = false; // 👈 added
+  bool _isLoading = false;
 
   String? selectedLang = 'en'; // No language selected initially
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final phoneController = TextEditingController();
+  final countryCodeController = TextEditingController();
+
   bool _agreePolicy = false;
   bool _inform = false;
   void _updateCheckboxState(bool agreePolicy, bool inform) {
@@ -52,14 +57,14 @@ class _InformationState extends State<Information> {
   }
 
   void changeLanguage(String langCode) {
-    print("Language changed to: $langCode");
+    // print("Language changed to: $langCode");
     setState(() {
       selectedLang = langCode;
     });
-    print("selectedLang: $selectedLang");
+    // print("selectedLang: $selectedLang");
     final box = GetStorage();
     box.write('languagecode', langCode);
-    Get.updateLocale(Locale(langCode)); // 💥 instantly updates all text
+    Get.updateLocale(Locale(langCode));
 
     widget.onLocaleChange(Locale(langCode.toLowerCase()));
   }
@@ -87,7 +92,7 @@ class _InformationState extends State<Information> {
     final Map<String, String> languages = {
       "EN": "en",
       "FR": "fr",
-      "ES": "es",
+      "DE": "de",
       "DU": "nl",
     };
     return Scaffold(
@@ -197,6 +202,7 @@ class _InformationState extends State<Information> {
                                 lastNameController: lastNameController,
                                 emailController: emailController,
                                 phoneController: phoneController,
+                                countryCodeController: countryCodeController,
                               ),
                               SizedBox(height: 12.0),
 
@@ -210,37 +216,86 @@ class _InformationState extends State<Information> {
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
-                                      setState(
-                                        () => _isLoading = true,
-                                      ); // 👈 start loading
-
+                                      setState(() => _isLoading = true);
                                       try {
                                         final box = GetStorage();
+                                        print(
+                                          "ffffffffffffffffffffffffffffffffffffffffffff${countryCodeController.text}",
+                                        );
+                                        final response = await apiService
+                                            .registerUser(
+                                              firstName:
+                                                  firstNameController.text,
+                                              lastName: lastNameController.text,
+                                              email: emailController.text,
+                                              phoneNumber: phoneController.text,
+                                              countryCode:
+                                                  countryCodeController.text,
+                                            );
+                                        // print("Status: ${response.statusCode}");
+                                        // print(
+                                        //   "Reason: ${response.reasonPhrase}",
+                                        // );
+                                        // print("Body: ${response.body}");
+                                        if (response.statusCode == 200 ||
+                                            response.statusCode == 201) {
+                                          box.write('userData', {
+                                            'firstName':
+                                                firstNameController.text,
+                                            'lastName': lastNameController.text,
+                                            'email': emailController.text,
+                                            'phone': phoneController.text,
+                                            'countryCode':
+                                                countryCodeController.text,
+                                          });
+                                          box.write('isRegistered', true);
+                                          controller.alertPage();
+                                        } else {
+                                          final errorData = jsonDecode(
+                                            response.body,
+                                          );
 
-                                        // ✅ Save flag that account is created
+                                          final errorMessage =
+                                              errorData['message'] ??
+                                              "Unknown error";
+                                          final code =
+                                              errorData['code'] ??
+                                              "Unknown code";
 
-                                        // final success = await apiService
-                                        //     .registerUser(
-                                        //       firstName:
-                                        //           firstNameController.text,
-                                        //       lastName: lastNameController.text,
-                                        //       email: emailController.text,
-                                        //       phoneNumber: phoneController.text,
-                                        //     );
-                                        // if (success['status'] == 'success') {
-                                        box.write('userData', {
-                                          'firstName': firstNameController.text,
-                                          'lastName': lastNameController.text,
-                                          'email': emailController.text,
-                                          'phone': phoneController.text,
-                                        });
-                                        box.write('isRegistered', true);
-                                        // }
+                                          final metadataList =
+                                              (errorData['metadata']?['duplicate_identifiers']
+                                                  as List<dynamic>?) ??
+                                              [];
 
-                                        // print("successssssssss: ${success}");
-                                        controller.alertPage();
+                                          if (metadataList.contains("email")) {
+                                            Get.snackbar(
+                                              loc.error,
+                                              "Email Already Exists",
+                                              backgroundColor: Colors.red,
+                                              colorText: Colors.white,
+                                            );
+                                          } else if (metadataList.contains(
+                                            "SMS",
+                                          )) {
+                                            Get.snackbar(
+                                              loc.error,
+                                              "Phone Number Already Exists",
+                                              backgroundColor: Colors.red,
+                                              colorText: Colors.white,
+                                            );
+                                          } else {
+                                            Get.snackbar(
+                                              loc.error,
+                                              errorMessage,
+                                              backgroundColor: Colors.red,
+                                              colorText: Colors.white,
+                                            );
+                                          }
+                                        }
                                       } catch (e) {
-                                        // ❌ Network or unexpected error
+                                        // print(
+                                        //   "=================================${e}",
+                                        // );
                                         Get.snackbar(
                                           loc.error,
                                           loc.nointernetconnection,

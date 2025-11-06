@@ -122,7 +122,7 @@ public void onCreate() {
 
     LocationRequest request = LocationRequest.create()
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setInterval(5000)
+            .setInterval(3000)
             .setSmallestDisplacement(1f);
     Log.d("GeofenceService", "Checking location permissions");
 
@@ -307,7 +307,8 @@ private Zone parseZoneFromJson(JSONObject obj) throws Exception {
                 .setSmallIcon(android.R.drawable.ic_dialog_map)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
+                .setPriority(NotificationCompat.PRIORITY_MIN)
+                .setSilent(true);
     }
 
     private void showEventNotification(String title, String body) {
@@ -328,11 +329,11 @@ private Zone parseZoneFromJson(JSONObject obj) throws Exception {
         NotificationChannel channel = new NotificationChannel(
                 CHANNEL_ID,
                 "Geofence Service",
-                NotificationManager.IMPORTANCE_HIGH // <-- was LOW
+                NotificationManager.IMPORTANCE_MIN 
         );
-        channel.enableLights(true);
-        channel.setLightColor(Color.BLUE);
-        channel.enableVibration(true);
+        channel.setSound(null, null);    
+        channel.enableVibration(false);       
+        channel.enableLights(false);         
 
         getSystemService(NotificationManager.class).createNotificationChannel(channel);
     }

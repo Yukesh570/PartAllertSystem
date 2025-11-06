@@ -52,7 +52,7 @@ class NotificationService {
     var payload,
     required FlutterLocalNotificationsPlugin fln,
   }) async {
-    print("Notification triggered");
+    // print("Notification triggered");
     AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
           'parkalert_channel2', // channel id

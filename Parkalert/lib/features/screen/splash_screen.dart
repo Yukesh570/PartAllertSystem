@@ -23,16 +23,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
     // wait 2-3 seconds before navigating
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
+      Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (_) => PermissionGate(
             isRegistered: _isRegistered,
-            onLocaleChange: (locale) {
-              // you can update locale if needed
-            },
+            onLocaleChange: (locale) {},
           ),
         ),
+        (route) => false,
       );
     });
   }

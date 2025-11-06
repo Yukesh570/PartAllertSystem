@@ -4,6 +4,7 @@ class Historydata {
   double lng;
   String time;
   String name;
+  String? status;
 
   Historydata({
     required this.index,
@@ -12,6 +13,7 @@ class Historydata {
     required this.lng,
     required this.time,
     required this.name,
+    this.status,
   });
 
   Map<String, dynamic> toJson() => {
@@ -21,6 +23,7 @@ class Historydata {
     'lng': lng,
     'time': time,
     'name': name,
+    'status': status ?? '',
   };
 
   factory Historydata.fromJson(Map<String, dynamic> json) => Historydata(
@@ -30,9 +33,10 @@ class Historydata {
     lng: (json['lng'] ?? 0).toDouble(),
     time: json['time'] ?? '',
     name: json['name'] ?? '',
+    status: json['status'] ?? '',
   );
   @override
   String toString() {
-    return "Historydata(index: $index, lat: $lat, lng: $lng, time: $time, name: $name)";
+    return "Historydata(index: $index, lat: $lat, lng: $lng, time: $time, name: $name,status: ${status ?? ''})";
   }
 }

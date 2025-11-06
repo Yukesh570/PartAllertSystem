@@ -12,13 +12,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get and => 'et';
 
   @override
-  String get skip => 'Passer';
+  String get skip => 'Ignorer';
 
   @override
   String get done => 'Terminé';
 
   @override
-  String get submit => 'Soumettre';
+  String get submit => 'Envoyer';
 
   @override
   String get appName => 'T Boutique';
@@ -36,13 +36,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get onBoardingTitle3 => 'Livraison à votre porte';
 
   @override
-  String get onBoardingSubTitle1 => 'Bienvenue dans un monde de choix illimités - votre produit parfait vous attend !';
+  String get onBoardingSubTitle1 => 'Bienvenue dans un monde de choix illimités – votre produit parfait vous attend !';
 
   @override
-  String get onBoardingSubTitle2 => 'Pour des transactions sans souci, choisissez votre méthode de paiement - votre confort est notre priorité !';
+  String get onBoardingSubTitle2 => 'Pour une transaction fluide, choisissez votre mode de paiement – votre confort est notre priorité !';
 
   @override
-  String get onBoardingSubTitle3 => 'De notre porte à la vôtre - Livraison rapide, sécurisée et sans contact !';
+  String get onBoardingSubTitle3 => 'De notre porte à la vôtre – livraison rapide, sûre et sans contact !';
 
   @override
   String get firstName => 'Prénom';
@@ -60,7 +60,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get newPassword => 'Nouveau mot de passe';
 
   @override
-  String get username => 'Nom d\'utilisateur';
+  String get username => 'Nom d’utilisateur';
 
   @override
   String get phoneNo => 'Numéro de téléphone';
@@ -69,13 +69,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get rememberMe => 'Se souvenir de moi';
 
   @override
-  String get termsandconditions => 'J\'accepte les Termes et Conditions';
+  String get termsandconditions => 'J’accepte les conditions générales';
 
   @override
-  String get inform => 'Je souhaite être informé(e) de ParkAlert';
+  String get inform => 'Je souhaite être informé à propos de ParkAlert';
 
   @override
-  String get language => 'Choisir la langue';
+  String get language => 'Sélectionner la langue';
 
   @override
   String get forgetPassword => 'Mot de passe oublié ?';
@@ -90,25 +90,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String get orSignInWith => 'ou se connecter avec';
 
   @override
-  String get orSignUpWith => 'ou s\'inscrire avec';
+  String get orSignUpWith => 'ou s’inscrire avec';
 
   @override
-  String get iAgreeTo => 'J\'accepte';
+  String get iAgreeTo => 'J’accepte';
 
   @override
   String get privacyPolicy => 'Politique de confidentialité';
 
   @override
-  String get termsOfUse => 'Conditions d\'utilisation';
+  String get termsOfUse => 'Conditions d’utilisation';
 
   @override
   String get verificationCode => 'Code de vérification';
 
   @override
-  String get resendEmail => 'Renvoyer l\'e-mail';
+  String get resendEmail => 'Renvoyer l’e-mail';
 
   @override
-  String get resendEmailIn => 'Renvoyer l\'e-mail dans';
+  String get resendEmailIn => 'Renvoyer l’e-mail dans';
 
   @override
   String get appTitle => 'Vos informations';
@@ -117,7 +117,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loginTitle => 'Vos informations';
 
   @override
-  String get loginSubTitle => 'Découvrez des choix illimités et un confort inégalé.';
+  String get loginSubTitle => 'Découvrez un choix illimité et une commodité inégalée.';
 
   @override
   String get signupTitle => 'Créons votre compte';
@@ -126,43 +126,43 @@ class AppLocalizationsFr extends AppLocalizations {
   String get forgetPasswordTitle => 'Mot de passe oublié';
 
   @override
-  String get forgetPasswordSubTitle => 'Pas d\'inquiétude, cela arrive. Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.';
+  String get forgetPasswordSubTitle => 'Pas d’inquiétude, cela arrive. Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.';
 
   @override
   String get changeYourPasswordTitle => 'E-mail de réinitialisation envoyé';
 
   @override
-  String get changeYourPasswordSubTitle => 'La sécurité de votre compte est notre priorité ! Nous vous avons envoyé un lien sécurisé pour changer votre mot de passe.';
+  String get changeYourPasswordSubTitle => 'La sécurité de votre compte est notre priorité ! Nous vous avons envoyé un lien sécurisé pour changer votre mot de passe et protéger votre compte.';
 
   @override
   String get confirmEmail => 'Vérifiez votre adresse e-mail !';
 
   @override
-  String get confirmEmailSubTitle => 'Félicitations ! Vérifiez votre e-mail pour commencer à faire vos achats et profiter d\'offres personnalisées.';
+  String get confirmEmailSubTitle => 'Félicitations ! Votre compte est prêt : vérifiez votre e-mail pour commencer vos achats et profiter d’offres exclusives.';
 
   @override
-  String get emailNotReceivedMessage => 'Vous n\'avez pas reçu l\'e-mail ? Vérifiez vos spams ou renvoyez-le.';
+  String get emailNotReceivedMessage => 'Vous n’avez pas reçu l’e-mail ? Vérifiez vos spams ou renvoyez-le.';
 
   @override
   String get yourAccountCreatedTitle => 'Votre compte a été créé avec succès !';
 
   @override
-  String get yourAccountCreatedSubTitle => 'Bienvenue ! Votre compte est prêt. Profitez d\'une expérience de shopping fluide en ligne !';
+  String get yourAccountCreatedSubTitle => 'Bienvenue dans votre destination shopping ultime : votre compte est prêt, profitez d’une expérience d’achat en ligne fluide et agréable !';
 
   @override
   String get popularProducts => 'Produits populaires';
 
   @override
-  String get homeAppbarTitle => 'Bonne journée pour faire du shopping';
+  String get homeAppbarTitle => 'Une belle journée pour faire du shopping';
 
   @override
   String get homeAppbarSubTitle => 'Taimoor Sikander';
 
   @override
-  String get parkingalarms => 'Parking Alarms';
+  String get parkingalarms => 'Alarmes de stationnement';
 
   @override
-  String get freezones => 'Zones libres';
+  String get freezones => 'Zones sans alarme';
 
   @override
   String get activity => 'Activité';
@@ -177,608 +177,608 @@ class AppLocalizationsFr extends AppLocalizations {
   String get frequentlyAskedQuestions => 'Questions fréquentes';
 
   @override
-  String get termsAndConditions => 'Termes et conditions';
+  String get termsAndConditions => 'Conditions générales';
 
   @override
   String get privacyPolicyMenu => 'Politique de confidentialité';
 
   @override
-  String get exitParkAlarm => 'Exit ParkAlarm';
+  String get exitParkAlarm => 'Quitter ParkAlarm';
 
   @override
-  String get createzonewhereparkalarmwillbequit => 'Create the zones where ParkAlarm will be quit';
+  String get createzonewhereparkalarmwillbequit => 'Créez les zones où ParkAlarm sera désactivé';
 
   @override
-  String get noringers => 'No Ringers';
+  String get noringers => 'Aucune sonnerie';
 
   @override
-  String get setupyourparkingalarms => 'Setup your ParkingAlarms';
+  String get setupyourparkingalarms => 'Configurez vos alarmes de stationnement';
 
   @override
-  String get myparkingalarms => 'My Parking Alarms';
+  String get myparkingalarms => 'Mes alarmes de stationnement';
 
   @override
-  String get setalertzone => 'Set No Alarm Zone';
+  String get setalertzone => 'Définir une zone sans alarme';
 
   @override
-  String get connect => 'Connect';
+  String get connect => 'Connecter';
 
   @override
-  String get disconnect => 'Disconnect';
+  String get disconnect => 'Déconnecter';
 
   @override
-  String get visitparkalarm => 'Visit ParkAlarm';
+  String get visitparkalarm => 'Visiter ParkAlarm';
 
   @override
-  String get exitparkalarm => 'Exit ParkAlarm';
+  String get exitparkalarm => 'Quitter ParkAlarm';
 
   @override
-  String get changelanguage => 'Change Language';
+  String get changelanguage => 'Changer de langue';
 
   @override
-  String get allActivitiesAndLocations => 'All Activities & Locations';
+  String get allActivitiesAndLocations => 'Toutes les activités et emplacements';
 
   @override
-  String get allactivities => 'All Activities';
+  String get allactivities => 'Toutes les activités';
 
   @override
-  String get alllocation => 'All location';
+  String get alllocation => 'Tous les emplacements';
 
   @override
-  String get setnoalertzones => 'Set no-alert zones';
+  String get setnoalertzones => 'Définir des zones sans alarme';
 
   @override
-  String get parkedhistory => 'Parked History';
+  String get parkedhistory => 'Historique de stationnement';
 
   @override
-  String get theuserjourney => 'The User Journey';
+  String get theuserjourney => 'Le parcours utilisateur';
 
   @override
-  String get theuserjourneyparagraph => 'When you first open the Parkalert app, you will be taken through a startup wizard to set up your account and your first alarm.';
+  String get theuserjourneyparagraph => 'Lorsque vous ouvrez l’application ParkAlert pour la première fois, un assistant de démarrage vous guide pour configurer votre compte et votre première alarme.';
 
   @override
-  String get permissionsAndRegistration => 'Permissions & Registration';
+  String get permissionsAndRegistration => 'Autorisations et inscription';
 
   @override
-  String get personaldata => 'Personal Data';
+  String get personaldata => 'Données personnelles';
 
   @override
-  String get personaldataparagraph => 'The app first requests necessary permissions. This includes location access to detect Bluetooth events and geofences. A special, persistent permission is required to allow all the time. to ensure the app works properly even when closed. ';
+  String get personaldataparagraph => 'L’application demande d’abord les autorisations nécessaires. Cela inclut l’accès à la localisation pour détecter les événements Bluetooth et les zones géographiques. Une autorisation spéciale et permanente est requise pour permettre un fonctionnement continu, même lorsque l’application est fermée.';
 
   @override
-  String get accountsetup => 'Account Setup';
+  String get accountsetup => 'Configuration du compte';
 
   @override
-  String get accontsetupparagraph => 'You will be directed to the registration page,where you will fill in your details to create your account. Registration is done directly in the app.';
+  String get accontsetupparagraph => 'Vous serez dirigé vers la page d’inscription, où vous remplirez vos informations pour créer votre compte. L’inscription se fait directement dans l’application.';
 
   @override
-  String get landingpage => 'Landing Page';
+  String get landingpage => 'Page d’accueil';
 
   @override
-  String get landingpageparagraph => 'After registration, the landing page is always the \"My Alerts\" page.';
+  String get landingpageparagraph => 'Après l’inscription, la page d’accueil par défaut est toujours la page « Mes alertes ».';
 
   @override
-  String get alarmsetup => 'Alarm Setup';
+  String get alarmsetup => 'Configuration de l’alarme';
 
   @override
-  String get createalert => 'Create Alert';
+  String get createalert => 'Créer une alarme';
 
   @override
-  String get createalertparagraph1 => 'On the \"My Alerts\" page, clicking the';
+  String get createalertparagraph1 => 'Sur la page « Mes alertes », un clic sur l’icône';
 
   @override
-  String get createalertparagraph2 => 'icon opens the \"Create Alert\" form';
+  String get createalertparagraph2 => 'ouvre le formulaire « Créer une alarme ».';
 
   @override
-  String get fillindetails => 'Fill in Details';
+  String get fillindetails => 'Remplir les détails';
 
   @override
-  String get fillindetailsparagraph => 'Here, you will give your alert a custom name (not related to a location),select a Bluetooth device (your car), and choose a notification sound.';
+  String get fillindetailsparagraph => 'Ici, vous pouvez donner un nom personnalisé à votre alarme (non lié à un lieu), sélectionner un appareil Bluetooth (votre voiture) et choisir un son de notification.';
 
   @override
-  String get activatealert => 'Activate Alert';
+  String get activatealert => 'Activer l’alarme';
 
   @override
-  String get activatealertparagraph => 'The newly created alert appears as a box on the \"My Alerts\" page.The alert is not active until you click the separate Connect button on its box.';
+  String get activatealertparagraph => 'La nouvelle alarme créée apparaît sous forme de boîte sur la page « Mes alertes ». L’alarme ne devient active que lorsque vous cliquez sur le bouton Connecter.';
 
   @override
-  String get coreoperationallogic => 'Core Operational Logic';
+  String get coreoperationallogic => 'Logique opérationnelle de base';
 
   @override
-  String get coreoperationallogicparagraph => 'The app\'s behavior is driven by the Bluetooth connection status and your location relative to a Freezone.';
+  String get coreoperationallogicparagraph => 'Le comportement de l’application est déterminé par l’état de la connexion Bluetooth et votre position par rapport à une zone sans alarme.';
 
   @override
-  String get bluetoothdisconnected => 'Bluetooth Disconnected';
+  String get bluetoothdisconnected => 'Bluetooth déconnecté';
 
   @override
-  String get bluetoothdisconnectedparagraph => 'User has left the car, Parkalert is activated.';
+  String get bluetoothdisconnectedparagraph => 'L’utilisateur a quitté la voiture, ParkAlert est activé.';
 
   @override
-  String get bluetoothconnected => 'Bluetooth Connected';
+  String get bluetoothconnected => 'Bluetooth connecté';
 
   @override
-  String get bluetoothconnectedparagraph => 'User has returned, Parkalert is deactivated.';
+  String get bluetoothconnectedparagraph => 'L’utilisateur est revenu, ParkAlert est désactivé.';
 
   @override
-  String get thenandnowoverview => 'Then and now, an overview of all activities';
+  String get thenandnowoverview => 'Hier et aujourd’hui, un aperçu de toutes les activités';
 
   @override
-  String get geofencing => 'Geofencing (Freezones)';
+  String get geofencing => 'Géorepérage (Zones libres)';
 
   @override
-  String get freezonesparagraph => 'This feature allows you to define \"no alert zones\" to prevent alerts in familiar locations.No time duration is needed for a Freezone.';
+  String get freezonesparagraph => 'Cette fonction vous permet de définir des « zones sans alerte » afin d’éviter les notifications dans les lieux familiers. Aucune durée n’est nécessaire pour une zone libre.';
 
   @override
-  String get creatingandactivatingfreezone => 'Creating and Activating a Freezone';
+  String get creatingandactivatingfreezone => 'Création et activation d’une zone libre';
 
   @override
-  String get creatingandactivating1 => 'From the sidebar menu, select \"Freezones\".';
+  String get creatingandactivating1 => 'Dans le menu latéral, sélectionnez « Zones libres ».';
 
   @override
-  String get creatingandactivating2Step1 => 'Click the';
+  String get creatingandactivating2Step1 => 'Cliquez sur le';
 
   @override
-  String get creatingandactivating2Step2 => '.A box will appear.';
+  String get creatingandactivating2Step2 => '. Une boîte apparaîtra.';
 
   @override
-  String get creatingandactivating3 => 'Click the location icon in the box to open a map.';
+  String get creatingandactivating3 => 'Cliquez sur l’icône de localisation dans la boîte pour ouvrir une carte.';
 
   @override
-  String get creatingandactivating4 => 'Click the location icon below the search bar to locate yourself.';
+  String get creatingandactivating4 => 'Cliquez sur l’icône de localisation sous la barre de recherche pour vous localiser.';
 
   @override
-  String get creatingandactivating5 => 'Click the pencil with a location icon to start drawing your zone.Click on the map to place blue location icons to create a custom shape.';
+  String get creatingandactivating5 => 'Cliquez sur le crayon avec une icône de localisation pour commencer à dessiner votre zone. Cliquez sur la carte pour placer des points bleus et créer une forme personnalisée.';
 
   @override
-  String get creatingandactivating6 => 'Once the shape is complete, click the ✓ (tick icon) to save it.';
+  String get creatingandactivating6 => 'Une fois la forme terminée, cliquez sur l’icône ✓ pour l’enregistrer.';
 
   @override
-  String get creatingandactivating7 => 'Go back to the \"Set Alert Zone\" screen and click the Connect button on the box to activate your Freezone.';
+  String get creatingandactivating7 => 'Revenez à l’écran « Définir une zone d’alerte » et cliquez sur le bouton Connecter pour activer votre zone libre.';
 
   @override
-  String get managingafreezone => 'Managing a Freezone';
+  String get managingafreezone => 'Gestion d’une zone libre';
 
   @override
-  String get managingafreezonepragraph => 'You can edit, rename, or delete your Freezones anytime from the Freezones screen.Only one zone can be activated at a time to avoid conflicts.';
+  String get managingafreezonepragraph => 'Vous pouvez modifier, renommer ou supprimer vos zones libres à tout moment depuis l’écran des zones libres. Une seule zone peut être activée à la fois afin d’éviter les conflits.';
 
   @override
-  String get managingafreezonefreezonepragraph => 'This feature allows you to define no alert zones to prevent alerts in familiar locations. No time duration is needed for a Freezone.';
+  String get managingafreezonefreezonepragraph => 'Cette fonction vous permet de définir des zones sans alerte pour éviter les notifications dans des lieux connus. Aucune durée n’est nécessaire pour une zone libre.';
 
   @override
-  String get activitiesandhistory => 'Activities and History';
+  String get activitiesandhistory => 'Activités et historique';
 
   @override
-  String get activities => 'Activities';
+  String get activities => 'Activités';
 
   @override
-  String get activitiesparagraphs => 'This section shows your comprehensive history of alarms and parking locations.The Activity menu has \'All Activities\' and \'All Location\' views, with a map of Bluetooth disconnection events.';
+  String get activitiesparagraphs => 'Cette section affiche votre historique complet des alarmes et des emplacements de stationnement. Le menu Activités comporte les vues « Toutes les activités » et « Tous les emplacements », avec une carte des événements de déconnexion Bluetooth.';
 
   @override
-  String get navigationmeu => 'Navigation Menu';
+  String get navigationmeu => 'Menu de navigation';
 
   @override
-  String get sidebarincludes => 'Sidebar Includes';
+  String get sidebarincludes => 'La barre latérale comprend';
 
   @override
-  String get generalinformation => 'General Information';
+  String get generalinformation => 'Informations générales';
 
   @override
-  String get generalinformationparagraph1 => 'ParkAlarm is a trade name of Muza Holding B.V., located in Barendrecht at Weerkant 27 First floor. We are registered with the Chamber of Commerce under number 24471820.';
+  String get generalinformationparagraph1 => 'ParkAlarm est une marque commerciale de Muza Holding B.V., située à Barendrecht, Weerkant 27, premier étage. Nous sommes enregistrés à la Chambre de commerce sous le numéro 24471820.';
 
   @override
-  String get generalinformationparagraph2 => 'This privacy policy describes how we handle your personal data when using our ParkAlarm app and services. We respect your privacy and act in accordance with the General Data Protection Regulation (GDPR).';
+  String get generalinformationparagraph2 => 'Cette politique de confidentialité décrit la manière dont nous traitons vos données personnelles lors de l’utilisation de notre application et de nos services ParkAlarm. Nous respectons votre vie privée et agissons conformément au Règlement général sur la protection des données (RGPD).';
 
   @override
-  String get whatdatadowecollect => 'What Data Do We Collect?';
+  String get whatdatadowecollect => 'Quelles données collectons-nous ?';
 
   @override
-  String get whatdatadowecollectparagraph => 'For the operation of ParkAlarm, we collect the following data:';
+  String get whatdatadowecollectparagraph => 'Pour le fonctionnement de ParkAlarm, nous collectons les données suivantes :';
 
   @override
-  String get locationdata => 'Location data:';
+  String get locationdata => 'Données de localisation :';
 
   @override
-  String get locationdatatext => 'To alert you about parking zones and restrictions';
+  String get locationdatatext => 'Pour vous alerter sur les zones et restrictions de stationnement';
 
   @override
-  String get devicedata => 'Device Data';
+  String get devicedata => 'Données de l’appareil';
 
   @override
-  String get devicedatatext => 'Device type, operating system, and app version for technical support';
+  String get devicedatatext => 'Type d’appareil, système d’exploitation et version de l’application pour le support technique';
 
   @override
-  String get usagedata => 'Usage data';
+  String get usagedata => 'Données d’utilisation';
 
   @override
-  String get usagedatatext => 'How you use the app to improve our service';
+  String get usagedatatext => 'Comment vous utilisez l’application afin d’améliorer notre service';
 
   @override
-  String get contactdetails => 'Contact Details';
+  String get contactdetails => 'Coordonnées';
 
   @override
-  String get whydoweprocessyourdata => 'Why Do We Process Your Data';
+  String get whydoweprocessyourdata => 'Pourquoi traitons-nous vos données';
 
   @override
-  String get whydoweprocessyourdataparagraph => 'We process your personal data for the following purposes:';
+  String get whydoweprocessyourdataparagraph => 'Nous traitons vos données personnelles pour les raisons suivantes :';
 
   @override
-  String get whydoweprocessyourdata1 => 'Providing parking alarm services';
+  String get whydoweprocessyourdata1 => 'Fournir les services d’alarme de stationnement';
 
   @override
-  String get whydoweprocessyourdata2 => 'Improving our app and service delivery';
+  String get whydoweprocessyourdata2 => 'Améliorer notre application et nos services';
 
   @override
-  String get whydoweprocessyourdata3 => 'Technical support and troubleshooting';
+  String get whydoweprocessyourdata3 => 'Support technique et dépannage';
 
   @override
-  String get whydoweprocessyourdata4 => 'Communication about our services';
+  String get whydoweprocessyourdata4 => 'Communication concernant nos services';
 
   @override
-  String get legalbasis => 'Legal Basis';
+  String get legalbasis => 'Base légale';
 
   @override
-  String get legalbasisparagraph => 'We process your personal data based on your consent and our legitimate interest to provide you with quality service delivery. For location data, we always ask for your explicit consent.';
+  String get legalbasisparagraph => 'Nous traitons vos données personnelles sur la base de votre consentement et de notre intérêt légitime à vous fournir un service de qualité. Pour les données de localisation, nous demandons toujours votre consentement explicite.';
 
   @override
-  String get sharingwiththirdparties => 'Sharing with Third Parties';
+  String get sharingwiththirdparties => 'Partage avec des tiers';
 
   @override
-  String get sharingwiththirdpartiesparagraph => 'We do not share your personal data with third parties, except when necessary for the operation of our service or when we are legally required to do so. Any third parties who have access to your data are contractually obligated to treat it confidentially.';
+  String get sharingwiththirdpartiesparagraph => 'Nous ne partageons pas vos données personnelles avec des tiers, sauf si cela est nécessaire au fonctionnement de notre service ou si la loi nous y oblige. Les tiers ayant accès à vos données sont contractuellement tenus à la confidentialité.';
 
   @override
-  String get datasecurity => 'Data Security';
+  String get datasecurity => 'Sécurité des données';
 
   @override
-  String get datasecurityparagraph => 'We take appropriate technical and organizational measures to protect your personal data against loss, misuse, unauthorized access, and unwanted disclosure. Your data is stored and transmitted encrypted.';
+  String get datasecurityparagraph => 'Nous prenons des mesures techniques et organisationnelles appropriées pour protéger vos données personnelles contre la perte, l’abus, l’accès non autorisé et la divulgation indésirable. Vos données sont stockées et transmises de manière chiffrée.';
 
   @override
-  String get retentionperiod => 'Retention Period';
+  String get retentionperiod => 'Durée de conservation';
 
   @override
-  String get retentionperiodparagraph => 'We do not keep your personal data longer than necessary for the purposes for which it was collected. Usage data is retained for a maximum of 2 years, unless you request deletion earlier.';
+  String get retentionperiodparagraph => 'Nous ne conservons pas vos données personnelles plus longtemps que nécessaire aux fins pour lesquelles elles ont été collectées. Les données d’utilisation sont conservées au maximum 2 ans, sauf si vous demandez leur suppression plus tôt.';
 
   @override
-  String get yourrights => 'Your Rights';
+  String get yourrights => 'Vos droits';
 
   @override
-  String get yourrightsparagraph => 'You have the following rights regarding your personal data:';
+  String get yourrightsparagraph => 'Vous disposez des droits suivants concernant vos données personnelles :';
 
   @override
-  String get yourrights1 => 'Right to access your data';
+  String get yourrights1 => 'Droit d’accès à vos données';
 
   @override
-  String get yourrights2 => 'Right to rectification (correction of incorrect data)';
+  String get yourrights2 => 'Droit de rectification (correction des données inexactes)';
 
   @override
-  String get yourrights3 => 'Right to erasure (\'right to be forgotten\')';
+  String get yourrights3 => 'Droit à l’effacement (« droit à l’oubli »)';
 
   @override
-  String get yourrights4 => 'Right to restriction of processing';
+  String get yourrights4 => 'Droit à la limitation du traitement';
 
   @override
-  String get yourrights5 => 'Right to data portability';
+  String get yourrights5 => 'Droit à la portabilité des données';
 
   @override
-  String get yourrights6 => 'Right to object to processing';
+  String get yourrights6 => 'Droit d’opposition au traitement';
 
   @override
-  String get yourrights7 => 'Right to withdraw consent';
+  String get yourrights7 => 'Droit de retirer votre consentement';
 
   @override
-  String get contactandcomplaints => 'Contact and Complaints';
+  String get contactandcomplaints => 'Contact et réclamations';
 
   @override
-  String get contactandcomplaintsparagraph => 'For questions about this privacy policy or exercising your rights, you can contact us through the contact details in our app. You also have the right to file a complaint with the relevant data protection authority.';
+  String get contactandcomplaintsparagraph => 'Pour toute question relative à cette politique de confidentialité ou à l’exercice de vos droits, vous pouvez nous contacter via les coordonnées figurant dans notre application. Vous avez également le droit de déposer une plainte auprès de l’autorité de protection des données compétente.';
 
   @override
-  String get changes => 'Changes';
+  String get changes => 'Modifications';
 
   @override
-  String get changesparagraph => 'We reserve the right to modify these terms. Important changes will be announced through the app or website. Continued use after changes means you agree to the new terms.';
+  String get changesparagraph => 'Nous nous réservons le droit de modifier ces conditions. Les changements importants seront annoncés via l’application ou le site web. En continuant à utiliser nos services, vous acceptez les nouvelles conditions.';
 
   @override
-  String get contactdetails1 => 'Muza Holding B.V.';
+  String get contactdetails1 => 'Fremen B.V.';
 
   @override
-  String get contactdetails2 => 'Weerkant 27 First floor';
+  String get contactdetails2 => 'Weerkant 27, premier étage';
 
   @override
   String get contactdetails3 => 'Barendrecht';
 
   @override
-  String get contactdetails4 => 'Chamber of Commerce number: 24471820';
+  String get contactdetails4 => 'Numéro de la Chambre de commerce : 24471820';
 
   @override
-  String get contactdetails5 => 'Trade name: ParkAlarm';
+  String get contactdetails5 => 'Nom commercial : ParkAlarm';
 
   @override
-  String get lastupdated => 'Last updated: September 22, 2025';
+  String get lastupdated => 'Dernière mise à jour : 22 septembre 2025';
 
   @override
-  String get generalprovisions => 'General Provisions';
+  String get generalprovisions => 'Dispositions générales';
 
   @override
-  String get generalprovisionsparagraph1 => 'These terms of service apply to the use of the ParkAlarm app and services, offered by Muza Holding B.V., located in Barendrecht at Weerkant 27 First floor, registered with the Chamber of Commerce under number 24471820.';
+  String get generalprovisionsparagraph1 => 'Les présentes conditions d’utilisation s’appliquent à l’application et aux services ParkAlarm, proposés par Muza Holding B.V., située à Barendrecht, Weerkant 27, premier étage, enregistrée à la Chambre de commerce sous le numéro 24471820.';
 
   @override
-  String get generalprovisionsparagraph2 => 'By using our app and services, you agree to these terms. Please read them carefully before using our services.';
+  String get generalprovisionsparagraph2 => 'En utilisant notre application et nos services, vous acceptez ces conditions. Veuillez les lire attentivement avant d’utiliser nos services.';
 
   @override
-  String get servicedescription => 'Service Description';
+  String get servicedescription => 'Description du service';
 
   @override
-  String get servicedescriptionparagraph => 'ParkAlarm is a mobile application that helps users manage parking times and receive notifications about parking zones and restrictions. Our services include:';
+  String get servicedescriptionparagraph => 'ParkAlarm est une application mobile qui aide les utilisateurs à gérer les temps de stationnement et à recevoir des notifications sur les zones et restrictions de stationnement. Nos services comprennent :';
 
   @override
-  String get servicedescription1 => 'Location-based parking alarms';
+  String get servicedescription1 => 'Alertes de stationnement basées sur la localisation';
 
   @override
-  String get servicedescription2 => 'Notifications about parking zones and times';
+  String get servicedescription2 => 'Notifications sur les zones et horaires de stationnement';
 
   @override
-  String get servicedescription3 => 'Information about parking rules and costs';
+  String get servicedescription3 => 'Informations sur les règles et les coûts de stationnement';
 
   @override
-  String get servicedescription4 => 'User support and app updates';
+  String get servicedescription4 => 'Assistance utilisateur et mises à jour de l’application';
 
   @override
-  String get useoftheapp => 'Use of the App';
+  String get useoftheapp => 'Utilisation de l’application';
 
   @override
-  String get useoftheappparagrapgh => 'You may use the ParkAlarm app for personal, non-commercial purposes. It is not permitted to:';
+  String get useoftheappparagrapgh => 'Vous pouvez utiliser l’application ParkAlarm à des fins personnelles et non commerciales. Il est interdit de :';
 
   @override
-  String get useoftheapp1 => 'Use the app for illegal purposes';
+  String get useoftheapp1 => 'Utiliser l’application à des fins illégales';
 
   @override
-  String get useoftheapp2 => 'Disrupt the app\'s operation or attempt to hack it';
+  String get useoftheapp2 => 'Perturber le fonctionnement de l’application ou tenter de la pirater';
 
   @override
-  String get useoftheapp3 => 'Provide false information';
+  String get useoftheapp3 => 'Fournir de fausses informations';
 
   @override
-  String get useoftheapp4 => 'Infringe on intellectual property rights';
+  String get useoftheapp4 => 'Porter atteinte aux droits de propriété intellectuelle';
 
   @override
-  String get useoftheapp5 => 'Use the app in a way that could harm others';
+  String get useoftheapp5 => 'Utiliser l’application d’une manière pouvant nuire à autrui';
 
   @override
-  String get useraccount => 'User Account';
+  String get useraccount => 'Compte utilisateur';
 
   @override
-  String get useraccountparagraph => 'For some features, it may be necessary to create an account. You are responsible for:';
+  String get useraccountparagraph => 'Pour certaines fonctionnalités, il peut être nécessaire de créer un compte. Vous êtes responsable de :';
 
   @override
-  String get useraccount1 => 'Providing accurate and complete information';
+  String get useraccount1 => 'Fournir des informations exactes et complètes';
 
   @override
-  String get useraccount2 => 'Securing your account credentials';
+  String get useraccount2 => 'Sécuriser vos identifiants de connexion';
 
   @override
-  String get useraccount3 => 'All activities that occur through your account';
+  String get useraccount3 => 'Toutes les activités effectuées via votre compte';
 
   @override
-  String get useraccount4 => 'Immediately reporting unauthorized use';
+  String get useraccount4 => 'Signaler immédiatement toute utilisation non autorisée';
 
   @override
-  String get availabilityandmaintenance => 'Availability and Maintenance';
+  String get availabilityandmaintenance => 'Disponibilité et maintenance';
 
   @override
-  String get availabilityandmaintenanceparagraph => 'We strive to keep our services available 24/7, but cannot guarantee that the app will always work without interruption. We reserve the right to:';
+  String get availabilityandmaintenanceparagraph => 'Nous nous efforçons de rendre nos services disponibles 24h/24 et 7j/7, mais nous ne pouvons garantir un fonctionnement ininterrompu. Nous nous réservons le droit de :';
 
   @override
-  String get availabilityandmaintenance1 => 'Perform maintenance and updates';
+  String get availabilityandmaintenance1 => 'Effectuer des opérations de maintenance et des mises à jour';
 
   @override
-  String get availabilityandmaintenance2 => 'Temporarily interrupt the service';
+  String get availabilityandmaintenance2 => 'Interrompre temporairement le service';
 
   @override
-  String get availabilityandmaintenance3 => 'Modify or remove features';
+  String get availabilityandmaintenance3 => 'Modifier ou supprimer certaines fonctionnalités';
 
   @override
-  String get availabilityandmaintenance4 => 'Terminate the service with reasonable notice';
+  String get availabilityandmaintenance4 => 'Mettre fin au service avec un préavis raisonnable';
 
   @override
-  String get intellectualproperty => 'Intellectual Property';
+  String get intellectualproperty => 'Propriété intellectuelle';
 
   @override
-  String get intellectualpropertyparagraph => 'All rights to the ParkAlarm app, including but not limited to software, design, texts, logos, and other materials, belong to Muza Holding B.V. or our licensors. You receive a limited, non-exclusive license to use the app in accordance with these terms.';
+  String get intellectualpropertyparagraph => 'Tous les droits relatifs à l’application ParkAlarm, y compris mais sans s’y limiter le logiciel, le design, les textes, logos et autres éléments, appartiennent à Muza Holding B.V. ou à ses concédants. Vous recevez une licence limitée et non exclusive pour utiliser l’application conformément à ces conditions.';
 
   @override
-  String get privacyanddataprotection => 'Privacy and Data Protection';
+  String get privacyanddataprotection => 'Vie privée et protection des données';
 
   @override
-  String get privacyanddataprotectionparagraph => 'Your privacy is important to us. The use of your personal data is governed by ourPrivacy Policy, which forms part of these terms.';
+  String get privacyanddataprotectionparagraph => 'Votre vie privée est importante pour nous. L’utilisation de vos données personnelles est régie par notre politique de confidentialité, qui fait partie intégrante de ces conditions.';
 
   @override
-  String get liability => 'Liability';
+  String get liability => 'Responsabilité';
 
   @override
-  String get liabilityparagraph1 => 'ParkAlarm is a tool that assists you in managing parking times. We are not liable for:';
+  String get liabilityparagraph1 => 'ParkAlarm est un outil destiné à vous aider à gérer vos temps de stationnement. Nous ne sommes pas responsables de :';
 
   @override
-  String get liability1 => 'Indirect or consequential damages';
+  String get liability1 => 'Dommages indirects ou consécutifs';
 
   @override
-  String get liabilityparagraph2 => 'You remain responsible at all times for complying with parking rules and times.';
+  String get liabilityparagraph2 => 'Vous restez toujours responsable du respect des règles et horaires de stationnement.';
 
   @override
-  String get termination => 'Termination';
+  String get termination => 'Résiliation';
 
   @override
-  String get terminationparagraph => 'You can terminate your use of ParkAlarm at any time by deleting the app. We may terminate your access in case of violation of these terms. After termination, certain provisions remain in effect, including intellectual property rights and liability limitations.';
+  String get terminationparagraph => 'Vous pouvez à tout moment cesser d’utiliser ParkAlarm en supprimant l’application. Nous pouvons suspendre votre accès en cas de violation de ces conditions. Après résiliation, certaines dispositions restent en vigueur, notamment celles relatives à la propriété intellectuelle et aux limitations de responsabilité.';
 
   @override
-  String get applicablelawanddisputes => 'Applicable Law and Disputes';
+  String get applicablelawanddisputes => 'Droit applicable et litiges';
 
   @override
-  String get applicablelawanddisputesparagraph => 'These terms are governed by Dutch law. Disputes are preferably resolved through mutual consultation. If this is not possible, the competent Dutch courts have exclusive jurisdiction.';
+  String get applicablelawanddisputesparagraph => 'Ces conditions sont régies par le droit néerlandais. Les litiges seront de préférence résolus à l’amiable. À défaut, les tribunaux néerlandais compétents auront compétence exclusive.';
 
   @override
   String get contact => 'Contact';
 
   @override
-  String get contactparagraph => 'For questions about these terms or our services, you can contact us through the contact details in our app.';
+  String get contactparagraph => 'Pour toute question concernant ces conditions ou nos services, vous pouvez nous contacter via les coordonnées figurant dans notre application.';
 
   @override
   String get contact1 => 'Muza Holding B.V.';
 
   @override
-  String get contact2 => 'Weerkant 27 First floor';
+  String get contact2 => 'Weerkant 27, premier étage';
 
   @override
   String get contact3 => 'Barendrecht';
 
   @override
-  String get contact4 => 'Chamber of Commerce number: 24471820';
+  String get contact4 => 'Numéro de la Chambre de commerce : 24471820';
 
   @override
-  String get contact5 => 'Trade name: ParkAlarm';
+  String get contact5 => 'Nom commercial : ParkAlarm';
 
   @override
-  String get finalprovisions => 'Final Provisions';
+  String get finalprovisions => 'Dispositions finales';
 
   @override
-  String get finalprovisionsparagraph => 'Should one or more provisions of these terms be invalid, the remaining provisions remain fully effective. Invalid provisions are deemed to be replaced by valid provisions that align as closely as possible with the intention of the original provisions.';
+  String get finalprovisionsparagraph => 'Si une ou plusieurs dispositions de ces conditions sont invalides, les autres resteront pleinement en vigueur. Les dispositions invalides seront remplacées par des dispositions valides correspondant autant que possible à l’intention initiale.';
 
   @override
-  String get locationpermission => 'Location Permission Needed';
+  String get locationpermission => 'Autorisation de localisation requise';
 
   @override
-  String get locationpermissionparagraph => 'This app requires location access to detect Bluetooth events and geofences. Please allow access to continue.';
+  String get locationpermissionparagraph => 'Cette application nécessite l’accès à la localisation pour détecter les événements Bluetooth et les géorepérages. Veuillez autoriser l’accès pour continuer.';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Annuler';
 
   @override
-  String get okay => 'Okay';
+  String get okay => 'OK';
 
   @override
-  String get allowlocation => 'Allow \'All the time\' Location';
+  String get allowlocation => 'Autoriser la localisation « Tout le temps »';
 
   @override
-  String get allowlocationparagraph => 'To detect Bluetooth events and geofences even when the app is closed, please enable \'Allow all the time\' in Settings.';
+  String get allowlocationparagraph => 'Pour détecter les événements Bluetooth et les géorepérages même lorsque l’application est fermée, activez « Autoriser tout le temps » dans les paramètres.';
 
   @override
-  String get opensettings => 'Open Settings';
+  String get opensettings => 'Ouvrir les paramètres';
 
   @override
-  String get exitapp => 'Exit App';
+  String get exitapp => 'Quitter l’application';
 
   @override
-  String get exitappparagraph => 'Are you sure you want to exit ParkAlert?';
+  String get exitappparagraph => 'Êtes-vous sûr de vouloir quitter ParkAlert ?';
 
   @override
-  String get exit => 'Exit';
+  String get exit => 'Quitter';
 
   @override
-  String get error => 'Error';
+  String get error => 'Erreur';
 
   @override
-  String get pleasefillinalltherequiredfields => 'Please fill in all the required fields.';
+  String get pleasefillinalltherequiredfields => 'Veuillez remplir tous les champs obligatoires.';
 
   @override
-  String get isrequired => 'is required';
+  String get isrequired => 'est requis';
 
   @override
-  String get enteravalidphonenumber => 'Enter a valid phone number';
+  String get enteravalidphonenumber => 'Entrez un numéro de téléphone valide';
 
   @override
-  String get enteravalidemail => 'Enter a valid email';
+  String get enteravalidemail => 'Entrez une adresse e-mail valide';
 
   @override
-  String get nointernetconnection => 'No Internet Connection';
+  String get nointernetconnection => 'Pas de connexion Internet';
 
   @override
-  String get history => 'History';
+  String get history => 'Historique';
 
   @override
-  String get search => 'Search';
+  String get search => 'Rechercher';
 
   @override
   String get description => 'Description';
 
   @override
-  String get main => 'Main';
+  String get main => 'Principal';
 
   @override
-  String get addatleast3pointstoformapolygon => 'Add at least 3 points to form a polygon';
+  String get addatleast3pointstoformapolygon => 'Ajoutez au moins 3 points pour former un polygone';
 
   @override
-  String get activityhistory => 'Activity History';
+  String get activityhistory => 'Historique des activités';
 
   @override
-  String get ascending => 'Ascending';
+  String get ascending => 'Croissant';
 
   @override
-  String get descending => 'Descending';
+  String get descending => 'Décroissant';
 
   @override
-  String get nohistoryfound => 'No History Found';
+  String get nohistoryfound => 'Aucun historique trouvé';
 
   @override
-  String get setyouralarm => 'Set your Alarm';
+  String get setyouralarm => 'Définissez votre alarme';
 
   @override
-  String get myalarms => 'My Alarms';
+  String get myalarms => 'Mes alarmes';
 
   @override
-  String get editalarm => 'Edit Alarm';
+  String get editalarm => 'Modifier l’alarme';
 
   @override
-  String get name => 'Name';
+  String get name => 'Nom';
 
   @override
-  String get bluetoothdevice => 'Bluetooth device';
+  String get bluetoothdevice => 'Appareil Bluetooth';
 
   @override
-  String get sound => 'Sound';
+  String get sound => 'Son';
 
   @override
-  String get deleteringer => 'Delete Ringer';
+  String get deleteringer => 'Supprimer la sonnerie';
 
   @override
-  String get areyousureyouwanttodeletethisringer => 'Are you sure you want to delete this ringer?';
+  String get areyousureyouwanttodeletethisringer => 'Êtes-vous sûr de vouloir supprimer cette sonnerie ?';
 
   @override
-  String get delete => 'Delete';
+  String get delete => 'Supprimer';
 
   @override
-  String get yes => 'Yes';
+  String get yes => 'Oui';
 
   @override
-  String get nozonebox => 'NoZoneBox';
+  String get nozonebox => 'BoîteSansZone';
 
   @override
-  String get editzone => 'Edit Zone';
+  String get editzone => 'Modifier la zone';
 
   @override
-  String get initialtime => 'Initial Time (HH:mm)';
+  String get initialtime => 'Heure de début (HH:mm)';
 
   @override
-  String get zonename => 'Zone Name';
+  String get zonename => 'Nom de la zone';
 
   @override
-  String get stoptime => 'Stop Time (HH:mm)';
+  String get stoptime => 'Heure de fin (HH:mm)';
 
   @override
-  String get zoneupdatedsuccessfully => 'Zone updated successfully';
+  String get zoneupdatedsuccessfully => 'Zone mise à jour avec succès';
 
   @override
-  String get deletezone => 'Delete zone';
+  String get deletezone => 'Supprimer la zone';
 
   @override
-  String get areyousureyouwanttodeletethiszone => 'Are you sure you want to delete this zone?';
+  String get areyousureyouwanttodeletethiszone => 'Êtes-vous sûr de vouloir supprimer cette zone ?';
 
   @override
-  String get informationSaved => 'Information Saved';
+  String get informationSaved => 'Informations enregistrées';
 
   @override
-  String get yourInformationHasBeenUpdated => 'Your Information Has Been Updated';
+  String get yourInformationHasBeenUpdated => 'Vos informations ont été mises à jour';
 
   @override
-  String get noInformationAvailable => 'No Information Available';
+  String get noInformationAvailable => 'Aucune information disponible';
 
   @override
-  String get save => 'Save';
+  String get save => 'Enregistrer';
 }

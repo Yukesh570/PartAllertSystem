@@ -38,9 +38,12 @@ dependencies:
   logger: ^2.6.0
   #icons
   iconsax_flutter: ^1.0.1
+  country_code_picker: ^3.4.1
+  country_list_pick: ^1.0.1
+  country_picker: ^2.0.20
 
-  #flutter splash screen
   flutter_native_splash: ^2.4.6
+  custom_info_window: ^1.0.1
 
   cupertino_icons: ^1.0.8
   smooth_page_indicator: ^1.2.1

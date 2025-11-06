@@ -5,7 +5,7 @@ class DrawerControllerX extends GetxController {
   final List<String> history = [];
 
   void changeRoute(String route) {
-    print("1111111111111111111111111111111111111111111111111111111${route}");
+    // print("1111111111111111111111111111111111111111111111111111111${route}");
     if (route == "/alerts") {
       // Clear history and make alert the root
       history.clear();
@@ -16,20 +16,20 @@ class DrawerControllerX extends GetxController {
       }
     }
     currentRoute.value = route;
-    print("===================currentRoute changed to: $route");
-    print("===================history: $history"); // Debug history
+    // print("===================currentRoute changed to: $route");
+    // print("===================history: $history"); // Debug history
   }
 
   void goBack() {
     if (history.length > 1) {
       history.removeLast(); // remove current route
       currentRoute.value = history.last; // set to previous route
-      print("===================currentRoute back to: ${currentRoute.value}");
-      print("===================history: $history"); // Debug history
-    } else {
-      // at root page, no previous route
-      print("===================Already at root page: ${history.last}");
+      // print("===================currentRoute back to: ${currentRoute.value}");
+      // print("===================history: $history"); // Debug history
     }
+    // else {
+    //   print("===================Already at root page: ${history.last}");
+    // }
   }
 
   String get previousRoute =>

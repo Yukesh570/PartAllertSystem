@@ -8,16 +8,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<RingerData> activeBluetooth() async {
   final List<RingerData> savedRingers = await loadRingers();
 
-  for (var ringer in savedRingers) {
-    print("Index: ${ringer.index}");
-    print("Date: ${ringer.date}");
-    print("Time: ${ringer.time}");
-    print("Is On: ${ringer.isOn}");
-    print("Name: ${ringer.name}");
-    print("Bluetooth: ${ringer.bluetooth}");
-    print("Sound: ${ringer.sound}");
-    print("----------");
-  }
+  // for (var ringer in savedRingers) {
+  //   print("Index: ${ringer.index}");
+  //   print("Date: ${ringer.date}");
+  //   print("Time: ${ringer.time}");
+  //   print("Is On: ${ringer.isOn}");
+  //   print("Name: ${ringer.name}");
+  //   print("Bluetooth: ${ringer.bluetooth}");
+  //   print("Sound: ${ringer.sound}");
+  //   print("----------");
+  // }
 
   final RingerData activeRinger = savedRingers.firstWhere(
     (ringer) => ringer.isOn,
@@ -29,14 +29,17 @@ Future<RingerData> activeBluetooth() async {
       name: '',
       bluetooth: '',
       sound: '',
+      vibration: true,
+      overRideSilence: false,
     ),
   );
   Map<String, String> data = {
     'bluetooth': activeRinger.bluetooth,
     'sound': activeRinger.sound,
     'name': activeRinger.name,
+    'vibration': activeRinger.vibration.toString(),
+    'overRideSilence': activeRinger.overRideSilence.toString(),
   };
-  print("YUUUUUKKKKKESHHHHH${data}");
 
   final prefs = await SharedPreferences.getInstance();
   // print("activeBluetoothasasasa: +++++++========${activeRinger.bluetooth}");
@@ -50,16 +53,10 @@ Future<RingerData> activeBluetooth() async {
 
 Future<Map<String, String>> loadActiveBluetooth() async {
   final prefs = await SharedPreferences.getInstance();
-  print('swetttttttttttttaaaaaaaaaaaaa');
 
   final String? jsonString = prefs.getString('activeBluetooth');
-  print('swetttttttttttttaaaaaaaaaaaaa');
-
   if (jsonString == null) return {'bluetooth': '', 'sound': '', 'name': ''};
-  print('swetttttttttttttaaaaaaaaaaaaa');
-
   final Map<String, dynamic> data = jsonDecode(jsonString);
-  print('swetttttttttttttaaaaaaaaaaaaa');
 
   return {
     'bluetooth': data['bluetooth']?.toString() ?? '',

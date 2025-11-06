@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:Parkalert/api/apiservice.dart';
+import 'package:Parkalert/common/widgets/login_signUp/form_divider.dart';
 import 'package:Parkalert/features/controllers/alert/isON.dart';
 import 'package:Parkalert/features/controllers/drawerController.dart';
 import 'package:Parkalert/features/controllers/navItems/freeZone_controller.dart';
@@ -51,11 +55,11 @@ class _FreezoneState extends State<Freezone> {
     //   final zones = prefs.getStringList('zones');
 
     //   if (zones == null || zones.isEmpty) {
-    //     print("🔍 No zones found in SharedPreferences.");
+    //     print("No zones found in SharedPreferences.");
     //     return;
     //   }
 
-    //   print("🔐 Saved Zones:");
+    //   print("Saved Zones:");
     //   for (var i = 0; i < zones.length; i++) {
     //     print("Zone $i → ${zones[i]}");
     //   }
@@ -232,9 +236,9 @@ class _FreezoneState extends State<Freezone> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
+                  padding: const EdgeInsets.only(bottom: 20.0, right: 20.0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       buildCircularIconButton(
                         context: context,
@@ -245,21 +249,54 @@ class _FreezoneState extends State<Freezone> {
                             Navigator.of(context).pop();
                         },
                       ),
-                      buildMainButton(
-                        text: loc.main,
-                        onPressed: () {
-                          controller.alertPage();
-                        },
-                        context: context,
-                      ),
+                      SizedBox(width: 200),
+                      // buildCircularIconButton(
+                      //   context: context,
+                      //   icon: Icons.arrow_back,
+                      //   onPressed: () async {
+                      //     final prefs = await SharedPreferences.getInstance();
+
+                      //     // await backupHistory();
+
+                      //     final List<String>? zoneStringList = prefs
+                      //         .getStringList("zones");
+                      //     List<String> updatedJsonList = zoneStringList!
+                      //         .map((jsonStr) => jsonStr)
+                      //         .toList();
+
+                      //     for (var jsonStr in updatedJsonList) {
+                      //       final zone = ZoneData.fromJson(jsonDecode(jsonStr));
+                      //       print(
+                      //         "➡️ index: ${zone.index}, name: ${zone.name}, isOn: ${zone.isOn}, isSaved: ${zone.isSaved}, "
+                      //         "initialTime: ${zone.initialTime}, stopTime: ${zone.stopTime}, points: ${zone.points.length}",
+                      //       );
+                      //     }
+                      //     ;
+                      //   },
+                      // ),
                       addAlertButton(
                         context: context,
                         onPressed: () async {
+                          // final prefs = await SharedPreferences.getInstance();
+                          // final jsonString =
+                          //     prefs.getString('backupcurrentLocation') ?? "[]";
+                          // print("jsonString → $jsonString");
+                          // final List<String>? zoneStringList = prefs
+                          //     .getStringList("zones");
+                          // final jsonZoneList = zoneStringList != null
+                          //     ? zoneStringList
+                          //           .map((e) => json.decode(e))
+                          //           .toList()
+                          //     : [];
+                          // print(
+                          //   "jsonZoneString jsonZoneString → $jsonZoneList",
+                          // );
+
                           await _addZone(
                             name:
                                 "${loc.freezones} ${zoneController.zones.length + 1}",
-                            initialTime: "--:--",
-                            stopTime: "--:--",
+                            initialTime: "0:00",
+                            stopTime: "24:00",
                             isOn: false,
                           );
                         },

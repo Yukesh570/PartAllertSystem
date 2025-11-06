@@ -75,49 +75,82 @@
 //     return;
 //   }
 
-//   print("✅ All permissions granted");
+//   print("All permissions granted");
 // }
+import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future<void> requestLocationPermissions(BuildContext context) async {
   // Request foreground first
-  var loc = await Permission.location.request();
-  if (!loc.isGranted) {
-    debugPrint("❌ Foreground location denied");
+
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+
+  final loc = AppLocalizations.of(context);
+  if (loc == null) {
+    // If localization is not available, we cannot proceed with localized strings.
+    debugPrint(
+      "Localization context is null. Cannot display localized dialog.",
+    );
+    return;
+  }
+  var loca = await Permission.location.request();
+  if (!loca.isGranted) {
+    debugPrint("Foreground location denied");
     return;
   }
 
   // Request background
   var bg = await Permission.locationAlways.request();
   if (!bg.isGranted) {
-    debugPrint("⚠️ Background location denied");
+    debugPrint("Background location denied");
 
     // Show explanation dialog
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Allow 'All the time' Location"),
-        content: const Text(
-          "To detect Bluetooth events and geofences even when the app is closed, "
-          "please enable 'Allow all the time' in Settings.",
+        backgroundColor: isDark ? Colors.grey[900] : Colors.white,
+
+        title: Text(
+          loc.allowlocation,
+          style: TextStyle(color: isDark ? Colors.white : Colors.black),
+        ),
+        content: Text(
+          loc.allowlocationparagraph,
+          style: TextStyle(color: isDark ? Colors.white : Colors.black),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text("Cancel"),
+            child: Text(
+              loc.cancel,
+              style: TextStyle(
+                color: isDark ? Colors.white : Colors.black,
+
+                fontSize: 18, // 👈 Bigger text
+                fontWeight: FontWeight.w600, // 👈 Semi-bold
+              ),
+            ),
           ),
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
               openAppSettings(); // send user to settings
             },
-            child: const Text("Open Settings"),
+            child: Text(
+              loc.opensettings,
+              style: TextStyle(
+                color: isDark ? Colors.blue[300] : Colors.blue,
+
+                fontSize: 18, // 👈 Bigger text
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
         ],
       ),
     );
   } else {
-    debugPrint("✅ Background location granted");
+    debugPrint("Background location granted");
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -131,7 +133,7 @@ class _PermissionGateState extends State<PermissionGate>
     // Step 2: Request foreground location
     var locStatus = await Permission.location.request();
     if (!locStatus.isGranted) {
-      debugPrint("❌ Foreground location denied");
+      debugPrint("Foreground location denied");
       _checkingPermissions = false;
       return;
     }
@@ -139,7 +141,7 @@ class _PermissionGateState extends State<PermissionGate>
     // Step 3: Request background location
     var bgStatus = await Permission.locationAlways.request();
     if (!bgStatus.isGranted) {
-      debugPrint("⚠️ Background location denied");
+      debugPrint("Background location denied");
 
       if (!mounted) {
         _checkingPermissions = false;
@@ -150,28 +152,49 @@ class _PermissionGateState extends State<PermissionGate>
         context: context,
         barrierDismissible: false,
         builder: (ctx) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+
           final loc = AppLocalizations.of(ctx); // ✅ add this line
           if (loc == null) {
             return const Center(child: CircularProgressIndicator());
           }
           return AlertDialog(
-            title: Text(loc.allowlocation),
-            content: Text(loc.allowlocationparagraph),
+            backgroundColor: isDark ? Colors.grey[900] : Colors.white,
+
+            title: Text(
+              loc.allowlocation,
+              style: TextStyle(color: isDark ? Colors.white : Colors.black),
+            ),
+            content: Text(
+              loc.allowlocationparagraph,
+              style: TextStyle(color: isDark ? Colors.white : Colors.black),
+            ),
             actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(ctx);
-                  _checkingPermissions = false;
-                },
-                child: Text(loc.cancel),
-              ),
+              // TextButton(
+              //   onPressed: () {
+              //     Navigator.pop(ctx);
+              //     _checkingPermissions = false;
+              //   },
+              //   child: Text(
+              //     loc.cancel,
+              //     style: TextStyle(color: isDark ? Colors.white : Colors.black),
+              //   ),
+              // ),
               TextButton(
                 onPressed: () {
                   Navigator.pop(ctx);
                   openAppSettings();
                   _checkingPermissions = false;
                 },
-                child: Text(loc.opensettings),
+                child: Text(
+                  loc.opensettings,
+                  style: TextStyle(
+                    color: isDark ? Colors.blue[300] : Colors.blue,
+
+                    fontSize: 18, // 👈 Bigger text
+                    fontWeight: FontWeight.w600, // 👈 Semi-bold
+                  ),
+                ),
               ),
             ],
           );
@@ -204,18 +227,23 @@ class _PermissionGateState extends State<PermissionGate>
 
         // ⚪ Foreground content (either loader or next screen)
         if (!_ready)
-          const Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Center(child: CircularProgressIndicator()),
-          )
+          const Center(child: CircularProgressIndicator())
         else
           Scaffold(
-            backgroundColor: Colors.transparent,
             body: widget.isRegistered
                 ? const Alert()
                 : Information(onLocaleChange: widget.onLocaleChange),
           ),
       ],
     );
+  }
+}
+
+Future<void> requestDoNotDisturbPermission() async {
+  if (Platform.isAndroid) {
+    final status = await Permission.accessNotificationPolicy.status;
+    if (!status.isGranted) {
+      await Permission.accessNotificationPolicy.request();
+    }
   }
 }

@@ -45,16 +45,70 @@ Future<List<RingerData>> loadRingers() async {
   }).toList();
 }
 
+Future<void> overRideSilence(int index, bool overridesilence) async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String>? existingJsonList = prefs.getStringList('ringers');
+  List<RingerData> allRingers = existingJsonList!
+      .map((jsonStr) => RingerData.fromJson(jsonDecode(jsonStr)))
+      .toList();
+
+  int indexToUpdate = allRingers.indexWhere((r) => r.index == index);
+
+  if (indexToUpdate != -1) {
+    allRingers[indexToUpdate].overRideSilence = overridesilence;
+  } else {
+    print("Ringer with index ${index} not found");
+  }
+  List<String> updatedJsonList = allRingers
+      .map((r) => jsonEncode(r.toJson()))
+      .toList();
+
+  // void printAllSharedPreferences() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   final keys = prefs.getKeys();
+
+  //   if (keys.isEmpty) {
+  //     print("SharedPreferences is asdasdasdasdasdas.");
+  //     return;
+  //   }
+
+  //   print("SharedPreferences asdasdasdasdasdasda:");
+  //   for (String key in keys) {
+  //     final value = prefs.get(key);
+  //     print("kale: $key → Value: $value");
+  //   }
+  // }
+
+  // printAllSharedPreferences();
+  await prefs.setStringList("ringers", updatedJsonList);
+}
+
+Future<void> vibrationOption(int index, bool vibration) async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String>? existingJsonList = prefs.getStringList('ringers');
+  List<RingerData> allRingers = existingJsonList!
+      .map((jsonStr) => RingerData.fromJson(jsonDecode(jsonStr)))
+      .toList();
+
+  int indexToUpdate = allRingers.indexWhere((r) => r.index == index);
+
+  if (indexToUpdate != -1) {
+    allRingers[indexToUpdate].vibration = vibration;
+  }
+  List<String> updatedJsonList = allRingers
+      .map((r) => jsonEncode(r.toJson()))
+      .toList();
+
+  await prefs.setStringList("ringers", updatedJsonList);
+}
+
 Future<void> updateRingers(
   int index,
-  bool isOn,
+  bool? isOn,
   String? name,
   String? bluetooth,
   String? sound,
 ) async {
-  print(
-    "Updating ringer at index================================================================= $index: isOn=$isOn, name=$name, bluetooth=$bluetooth, sound=$sound",
-  );
   final prefs = await SharedPreferences.getInstance();
   List<String>? existingJsonList = prefs.getStringList('ringers');
 
@@ -62,51 +116,29 @@ Future<void> updateRingers(
       .map((jsonStr) => RingerData.fromJson(jsonDecode(jsonStr)))
       .toList();
 
-  print("All ringers: ${allRingers.length}");
-
   int indexToUpdate = allRingers.indexWhere((r) => r.index == index);
-
-  print("Index to update: $indexToUpdate");
-
   if (indexToUpdate != -1) {
     if (name == null && bluetooth == null && sound == null) {
-      allRingers[indexToUpdate].isOn = isOn;
-    } else {
-      allRingers[indexToUpdate].isOn = isOn;
+      allRingers[indexToUpdate].isOn = isOn!;
+    } else if (isOn == null) {
+      // allRingers[indexToUpdate].isOn = isOn!;
       allRingers[indexToUpdate].name = name!;
       allRingers[indexToUpdate].bluetooth = bluetooth!;
       allRingers[indexToUpdate].sound = sound!;
     }
-  } else {
-    print("Ringer with index ${index} not found");
   }
 
   List<String> updatedJsonList = allRingers
       .map((r) => jsonEncode(r.toJson()))
       .toList();
-  void printAllSharedPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    final keys = prefs.getKeys();
 
-    if (keys.isEmpty) {
-      print("🔍 SharedPreferences is empty.");
-      return;
-    }
-
-    print("🔐 SharedPreferences Contents:");
-    for (String key in keys) {
-      final value = prefs.get(key);
-      print("kale: $key → Value: $value");
-    }
-  }
-
-  printAllSharedPreferences();
   await prefs.setStringList("ringers", updatedJsonList);
 }
 
 Future<void> deleteRinger(int index) async {
   final prefs = await SharedPreferences.getInstance();
   List<String>? existingJsonList = prefs.getStringList('ringers');
+  await prefs.remove('activeBluetooth');
 
   if (existingJsonList == null) return;
 

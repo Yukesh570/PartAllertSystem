@@ -54,7 +54,6 @@ Future<void> updateZones(
 ) async {
   final prefs = await SharedPreferences.getInstance();
   List<String>? existingJsonList = prefs.getStringList('zones');
-
   List<ZoneData> allZones = existingJsonList!
       .map((jsonStr) => ZoneData.fromJson(jsonDecode(jsonStr)))
       .toList();
@@ -66,39 +65,19 @@ Future<void> updateZones(
       allZones[indexToUpdate].isOn = isOn;
     } else if (points != null) {
       allZones[indexToUpdate].points = points;
-    } else if (initialTime != null) {
-      allZones[indexToUpdate].initialTime = initialTime;
-    } else if (stopTime != null) {
-      allZones[indexToUpdate].stopTime = stopTime;
     } else if (points != null && name != null) {
       allZones[indexToUpdate].points = points;
       allZones[indexToUpdate].name = name;
-      print("Index to update: $indexToUpdate");
-    } else if (name != null) {
-      print("kkkkkkkakaaaaaalllllllllllleeeeeeeeeeee");
-      allZones[indexToUpdate].name = name;
+    } else {
+      allZones[indexToUpdate].name = name!;
+      allZones[indexToUpdate].initialTime = initialTime!;
+      allZones[indexToUpdate].stopTime = stopTime!;
     }
   }
   List<String> updatedJsonList = allZones
       .map((r) => jsonEncode(r.toJson()))
       .toList();
-  void printAllSharedPreferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    final keys = prefs.getKeys();
 
-    if (keys.isEmpty) {
-      print("🔍 SharedPreferences is empty.");
-      return;
-    }
-
-    print("🔐 SharedPreferences Contents:");
-    for (String key in keys) {
-      final value = prefs.get(key);
-      print("kale=======: $key → Value: $value");
-    }
-  }
-
-  printAllSharedPreferences();
   await prefs.setStringList("zones", updatedJsonList);
 }
 

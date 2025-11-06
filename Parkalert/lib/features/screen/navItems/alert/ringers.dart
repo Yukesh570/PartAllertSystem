@@ -55,7 +55,12 @@ class _RingersState extends State<Ringers> {
     final Color color = colorOptions[ringerData.index % colorOptions.length];
     final Color color2 = colorOptions2[ringerData.index % colorOptions2.length];
     final Color textColor = colorText[ringerData.index % colorText.length];
+    Future<void> reload() async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.reload();
+    }
 
+    // Try to get the loc
     return GestureDetector(
       onTap: () {
         if (_showDelete) {
@@ -104,6 +109,7 @@ class _RingersState extends State<Ringers> {
                         );
                       }
                       bool isOn = isOnController.isOnList[ringerData.index];
+
                       return Container(
                         width: 25,
                         height: 25,
@@ -272,8 +278,11 @@ class _RingersState extends State<Ringers> {
                     backgroundColor: color2,
                     textColor: dark ? Colors.white : textColor,
 
-                    onPressed: () =>
-                        isOnController.toggleSwitch(context, ringerData),
+                    onPressed: () => {
+                      reload(),
+
+                      isOnController.toggleSwitch(context, ringerData),
+                    },
                   );
                 }),
               ],

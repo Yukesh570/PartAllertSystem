@@ -153,6 +153,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  country_code_picker:
+    dependency: "direct main"
+    description:
+      name: country_code_picker
+      sha256: f0411f4833b6f98e8b7215f4fa3813bcc88e50f13925f70a170dbd36e3e447f5
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.1"
+  country_list_pick:
+    dependency: "direct main"
+    description:
+      name: country_list_pick
+      sha256: "379da3b8d194d4bd5a07472128c3ce5b4d205a0a15e217236aed1c393959a8b6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1+6"
+  country_picker:
+    dependency: "direct main"
+    description:
+      name: country_picker
+      sha256: "9b14c04f9a35e99f6de6bcbc453a556bb98345aecb481c7a0e843c94c2bee1f8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.27"
   crypto:
     dependency: transitive
     description:
@@ -177,6 +201,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
+  custom_info_window:
+    dependency: "direct main"
+    description:
+      name: custom_info_window
+      sha256: b7fce9017cb4b8a4319fa7f8080e4fdabfc65996df61c65cd2079dbaf93f56f5
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   dart_earcut:
     dependency: transitive
     description:
@@ -201,6 +233,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.11"
+  diacritic:
+    dependency: transitive
+    description:
+      name: diacritic
+      sha256: "12981945ec38931748836cd76f2b38773118d0baef3c68404bdfde9566147876"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.6"
   fake_async:
     dependency: transitive
     description:

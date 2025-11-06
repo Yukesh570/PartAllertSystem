@@ -82,7 +82,6 @@ class _RingersState extends State<Ringers> {
           });
         } else {
           // Normal tap → open edit page
-          print('Container tapped!');
           controller.alertSettingeEditingPage(widget.ringerData);
         }
       },
@@ -301,7 +300,6 @@ class _RingersState extends State<Ringers> {
                   }
 
                   bool isOn = isOnController.isOnList[ringerData.index];
-                  print("Obx is ============================rebuilding");
 
                   return buildConnectButton(
                     context: context,

@@ -17,7 +17,7 @@ class navButton extends StatelessWidget {
     required String isSelected,
     required String routeName,
   }) {
-    print("fsdfsdfsdfsdf${isSelected}");
+    // print("fsdfsdfsdfsdf${isSelected}");
     return TextStyle(
       fontSize: 18,
       color: isSelected == routeName

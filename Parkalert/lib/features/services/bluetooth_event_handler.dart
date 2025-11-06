@@ -10,9 +10,6 @@ class BluetoothEventHandler {
       FlutterLocalNotificationsPlugin();
 
   static void initialize() {
-    print(
-      "==================================================================================================G123/* 1 */2312312===========================",
-    );
     platform.setMethodCallHandler((MethodCall call) async {
       print(
         "Call:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::",

@@ -77,8 +77,7 @@ class ZoneBoxState extends State<ZoneBox> {
 
     List<Color> colorText = [AppColors.text1, AppColors.text2, AppColors.text3];
     final Color Textcolor = colorText[widget.zoneData.index % colorText.length];
-    print("nnnnaaammmeee===${widget.zoneData.name}");
-    print("nnnnaaammmeee===${_nameController.text}");
+
     // List<Color> colorLoc = [AppColors.text1, AppColors.alert1, AppColors.text3];
     // final Color LocColor = colorText[zoneData.index % colorText.length];
 
@@ -97,73 +96,60 @@ class ZoneBoxState extends State<ZoneBox> {
         ),
 
         child: Center(
-          child: TextField(
-            controller: controller,
-            onSubmitted: (value) {
-              updateZones(widget.zoneData.index, null, null, null, value, null);
-              setState(() {
-                widget.zoneData.initialTime = value;
-              });
-            },
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-              color: Textcolor,
-            ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              isDense: true,
-              contentPadding: EdgeInsets.zero,
-              focusedBorder: InputBorder.none, // remove focus border
-              enabledBorder: InputBorder.none, // remove enabled border
-              hintText: "HH:mm",
-            ),
-          ),
-        ),
-      );
-    }
-
-    Widget _timeBox_(TextEditingController controller, Color textColor) {
-      return Container(
-        width: 80,
-        height: 40,
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: color2, // or any background color
-          border: Border.all(
-            color: Colors.grey, // border color
-            width: 1, // border width
-          ),
-          borderRadius: BorderRadius.circular(15),
-        ),
-
-        child: Center(
-          child: TextField(
-            controller: controller,
-            onSubmitted: (value) {
-              updateZones(widget.zoneData.index, null, null, null, null, value);
-              setState(() {
-                widget.zoneData.stopTime = value;
-              });
-            },
+          child: Text(
+            controller.text,
 
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
               color: Textcolor,
             ),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              isDense: true,
-              contentPadding: EdgeInsets.zero,
-              focusedBorder: InputBorder.none, // remove focus border
-              enabledBorder: InputBorder.none, // remove enabled border
-              hintText: "HH:mm",
-            ),
           ),
         ),
       );
     }
+
+    // Widget _timeBox_(TextEditingController controller, Color textColor) {
+    //   return Container(
+    //     width: 80,
+    //     height: 40,
+    //     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    //     decoration: BoxDecoration(
+    //       color: color2, // or any background color
+    //       border: Border.all(
+    //         color: Colors.grey, // border color
+    //         width: 1, // border width
+    //       ),
+    //       borderRadius: BorderRadius.circular(15),
+    //     ),
+
+    //     child: Center(
+    //       child: TextField(
+    //         controller: controller,
+    //         onSubmitted: (value) {
+    //           updateZones(widget.zoneData.index, null, null, null, null, value);
+    //           setState(() {
+    //             widget.zoneData.stopTime = value;
+    //           });
+    //         },
+
+    //         style: TextStyle(
+    //           fontSize: 17,
+    //           fontWeight: FontWeight.bold,
+    //           color: Textcolor,
+    //         ),
+    //         decoration: const InputDecoration(
+    //           border: InputBorder.none,
+    //           isDense: true,
+    //           contentPadding: EdgeInsets.zero,
+    //           focusedBorder: InputBorder.none, // remove focus border
+    //           enabledBorder: InputBorder.none, // remove enabled border
+    //           hintText: "HH:mm",
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
 
     Future<void> _showEditDialog(BuildContext context) async {
       final nameController = TextEditingController(text: widget.zoneData.name);
@@ -241,14 +227,14 @@ class ZoneBoxState extends State<ZoneBox> {
                     null,
                     null,
                     nameController.text,
-                    null,
-                    null,
+                    initialTimeController.text,
+                    stopTimeController.text,
                   );
 
                   setState(() {
                     widget.zoneData.name = nameController.text;
-                    // widget.zoneData.initialTime = initialTimeController.text;
-                    // widget.zoneData.stopTime = stopTimeController.text;
+                    widget.zoneData.initialTime = initialTimeController.text;
+                    widget.zoneData.stopTime = stopTimeController.text;
                     // _initialTimeController.text = initialTimeController.text;
                     // _stopTimeController.text = stopTimeController.text;
                   });
@@ -368,7 +354,7 @@ class ZoneBoxState extends State<ZoneBox> {
                               .name, // 👈 replaces _nameController.text
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 25,
                             fontWeight: FontWeight.bold,
                             color: color2,
                           ),
@@ -401,27 +387,26 @@ class ZoneBoxState extends State<ZoneBox> {
                     ),
                   ],
                 ),
-                // const SizedBox(height: 8),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     _timeBox(_initialTimeController, colordark),
-                //     const SizedBox(width: 15),
 
-                //     Text(
-                //       "TOT",
-                //       style: TextStyle(
-                //         fontSize: 15,
-                //         fontWeight: FontWeight.bold,
-                //         color: color2,
-                //       ),
-                //     ),
-                //     const SizedBox(width: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _timeBox(_initialTimeController, colordark),
+                    const SizedBox(width: 15),
+                    Text(
+                      "TILL",
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: color2,
+                      ),
+                    ),
+                    const SizedBox(width: 15),
+                    _timeBox(_stopTimeController, colordark),
+                  ],
+                ),
 
-                //     _timeBox_(_stopTimeController, colordark),
-                //   ],
-                // ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Obx(() {
                   // if (isOnController.isLoading.value) {
                   //   // Show loading or placeholder while loading

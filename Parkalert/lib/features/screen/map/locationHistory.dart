@@ -6,7 +6,6 @@ import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/features/controllers/pagger.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
-import 'package:Parkalert/features/screen/map/currentLocation.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
 import 'package:Parkalert/utils/storage/data/historyData.dart';
@@ -47,16 +46,19 @@ class _LocationHistoryState extends State<LocationHistory> {
   final List<Marker> _placeMarker = [];
   final List<Marker> _geoFench = [];
   final List<Marker> _geo = [];
-  final List<Marker> _currentLoc = [];
+  List<Marker> _currentLoc = [];
 
   // late GeofenceService _geofenceService;
   StreamSubscription<Position>? _locationSubscription;
 
   Set<Marker> _markers = {};
-
+  String? _selectedMarkerId;
   // final List<Marker> _currrentLocationMarker = [];
   BitmapDescriptor? currentLocationIcon;
+  BitmapDescriptor? currentLocationIconSelected;
+
   BitmapDescriptor? geofenceIcon;
+  BitmapDescriptor? selectedIcon;
 
   var uuid = Uuid();
   String tokenForSession = '43305';
@@ -129,7 +131,7 @@ class _LocationHistoryState extends State<LocationHistory> {
       setState(() {
         _drawingPoints.add(point);
       });
-      print('Added point: $point');
+      // print('Added point: $point');
     }
   }
 
@@ -148,40 +150,100 @@ class _LocationHistoryState extends State<LocationHistory> {
   @override
   void initState() {
     super.initState();
-    // _geofenceService = GeofenceService(); // 👈 initialize here (or with params if required)
-
     loadCustomIcon();
     fenceIcon();
     searchController.addListener(_onSearchChanged);
     loadSavedLocation();
 
-    // loadPolygons();
+    // Delay dialog until first frame is built
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (widget.historydata != null) {
+        // Move camera first
+        final controller = await _controller.future;
+        await controller.animateCamera(
+          CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: LatLng(widget.historydata!.lat, widget.historydata!.lng),
+              zoom: 17,
+            ),
+          ),
+        );
+
+        // Show the bottom sheet after camera move
+        _showLocationDetailsDialog(
+          widget.historydata!.name,
+          int.tryParse(widget.historydata!.time ?? '0') ?? 0,
+          widget.historydata!.status!,
+          context,
+        ).then((_) {
+          // This runs after the dialog is closed
+          setState(() {
+            // Reset the tapped marker back to normal icon
+            _currentLoc = _currentLoc.map((marker) {
+              if (marker.markerId.value ==
+                  'savedLocation_${widget.historydata!.time}') {
+                return marker.copyWith(
+                  iconParam:
+                      currentLocationIcon ?? BitmapDescriptor.defaultMarker,
+                );
+              } else {
+                return marker;
+              }
+            }).toList();
+            _selectedMarkerId = null;
+          });
+        });
+      }
+    });
   }
 
   Future<void> loadCustomIcon() async {
     try {
-      print('Starting to load custom icon...');
+      // print('Starting to load custom icon...');
       BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(size: Size(48, 48)),
         'assets/logos/loca.png',
       );
-      print('Custom marker icon loaded successfully');
+      BitmapDescriptor selecticon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(size: Size(60, 60)),
+        'assets/logos/fence.png',
+      );
+      // print('Custom marker icon loaded successfully');
       setState(() {
         currentLocationIcon = icon;
+        currentLocationIconSelected = selecticon;
       });
     } catch (e) {
       print('Failed to load custom marker icon: $e');
     }
   }
 
+  Future<void> selectedCustomIcon() async {
+    try {
+      // print('Starting to load custom icon...');
+      BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(size: Size(60, 60)),
+        'assets/logos/loca.png',
+      );
+
+      // print('Custom marker icon loaded successfully');
+      setState(() {
+        currentLocationIcon = icon;
+      });
+    } catch (e) {
+      // print('Failed to load custom marker icon: $e');
+    }
+  }
+
   Future<void> fenceIcon() async {
     try {
-      print('Starting to load custom icon...');
+      // print('Starting to load custom icon...');
       BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(size: Size(48, 48)),
         'assets/logos/fence.png',
       );
-      print('Custom marker icon loaded successfully');
+
+      // print('Custom marker icon loaded successfully');
       setState(() {
         geofenceIcon = icon;
       });
@@ -273,6 +335,77 @@ class _LocationHistoryState extends State<LocationHistory> {
     }
   }
 
+  Future<void> _showLocationDetailsDialog(
+    String name,
+    int time,
+    String status,
+    BuildContext context,
+  ) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+
+    return showModalBottomSheet(
+      context: context,
+      barrierColor: Colors.transparent,
+      backgroundColor: dark ? Colors.grey[850] : Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: status == "Connected"
+                          ? Colors.green[100]
+                          : Colors.orange[100],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      status,
+                      style: TextStyle(
+                        color: status == "Connected"
+                            ? Colors.green[800]
+                            : Colors.orange[800],
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "🕒 Time: ${DateFormat('yyyy-MM-dd HH:mm').format(DateTime.fromMillisecondsSinceEpoch(time))}",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: dark ? Colors.white : Colors.black,
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> loadSavedLocation() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -280,30 +413,71 @@ class _LocationHistoryState extends State<LocationHistory> {
 
       // Try to get the location data
       final String? locationJson = prefs.getString('currentLocation');
-      print("🔍Current location JSON: $locationJson");
 
       if (locationJson != null && locationJson.isNotEmpty) {
         try {
           final List<dynamic> dataList = jsonDecode(locationJson);
-          for (var data in dataList) {
+          final limitedList =
+              dataList.length > //get latest 50 data
+                  50
+              ? dataList.sublist(dataList.length - 50)
+              : dataList;
+          for (var data in limitedList) {
             final double lat = data['lat'];
             final double lng = data['lng'];
             final int time = data['time'];
 
             final String name = data['name'];
-            print("📌📌📌📌📌📌📌📌📌 $name");
+            final String status = data['status'];
+
             setState(() {
               _currentLoc.add(
                 Marker(
                   markerId: MarkerId('savedLocation_$time'),
                   position: LatLng(lat, lng),
                   icon: currentLocationIcon ?? BitmapDescriptor.defaultMarker,
-                  infoWindow: InfoWindow(
-                    title: name,
-                    snippet: DateFormat(
-                      'yyyy-MM-dd HH:mm',
-                    ).format(DateTime.fromMillisecondsSinceEpoch(time)),
-                  ),
+                  onTap: () {
+                    setState(() {
+                      // Highlight the tapped marker
+                      _currentLoc = _currentLoc.map((marker) {
+                        if (marker.markerId.value == 'savedLocation_$time') {
+                          return marker.copyWith(
+                            iconParam:
+                                currentLocationIconSelected ??
+                                BitmapDescriptor.defaultMarker,
+                          );
+                        } else {
+                          return marker;
+                        }
+                      }).toList();
+                      _selectedMarkerId = 'savedLocation_$time';
+                    });
+
+                    // Show the bottom sheet dialog
+                    _showLocationDetailsDialog(
+                      name,
+                      time,
+                      status,
+                      context,
+                    ).then((_) {
+                      // This runs after the dialog is closed
+                      setState(() {
+                        // Reset the tapped marker back to normal icon
+                        _currentLoc = _currentLoc.map((marker) {
+                          if (marker.markerId.value == 'savedLocation_$time') {
+                            return marker.copyWith(
+                              iconParam:
+                                  currentLocationIcon ??
+                                  BitmapDescriptor.defaultMarker,
+                            );
+                          } else {
+                            return marker;
+                          }
+                        }).toList();
+                        _selectedMarkerId = null;
+                      });
+                    });
+                  },
                 ),
               );
             });
@@ -317,19 +491,19 @@ class _LocationHistoryState extends State<LocationHistory> {
               CameraUpdate.newLatLngZoom(LatLng(lat, lng), 17),
             );
 
-            print("📌 Loaded saved location marker at $lat, $lng");
+            // print("Loaded saved location marker at $lat, $lng");
           }
         } catch (e) {
-          print("❌ Failed to parse saved location: $e");
+          print("Failed to parse saved location: $e");
         }
       } else {
-        print("⚠️ No saved location found in SharedPreferences");
+        print("No saved location found in SharedPreferences");
 
         // Alternative: Check if it's stored with the flutter prefix
         final String? flutterLocationJson = prefs.getString(
           'flutter.currentLocation',
         );
-        print("🔍Flutter current location JSON: $flutterLocationJson");
+        // print("Flutter current location JSON: $flutterLocationJson");
       }
     } catch (e) {
       print("❌ Error accessing SharedPreferences: $e");
@@ -338,7 +512,7 @@ class _LocationHistoryState extends State<LocationHistory> {
 
   LatLngBounds getPolygonBounds(List<LatLng> points) {
     double? minLat, maxLat, minLng, maxLng;
-    print("points: ${points}");
+    // print("points: ${points}");
     for (var point in points) {
       if (minLat == null || point.latitude < minLat) minLat = point.latitude;
       if (maxLat == null || point.latitude > maxLat) maxLat = point.latitude;
@@ -459,9 +633,28 @@ class _LocationHistoryState extends State<LocationHistory> {
                                       markers: allMarkers,
                                       onMapCreated: (controller) async {
                                         _controller.complete(controller);
-
                                         if (widget.historydata != null) {
-                                          // Delay ensures map is fully rendered before moving camera
+                                          setState(() {
+                                            // Highlight the tapped marker
+                                            _currentLoc = _currentLoc.map((
+                                              marker,
+                                            ) {
+                                              if (marker.markerId.value ==
+                                                  'savedLocation_${widget.historydata!.time}') {
+                                                return marker.copyWith(
+                                                  iconParam:
+                                                      currentLocationIconSelected ??
+                                                      BitmapDescriptor
+                                                          .defaultMarker,
+                                                );
+                                              } else {
+                                                return marker;
+                                              }
+                                            }).toList();
+                                            _selectedMarkerId =
+                                                'savedLocation_${widget.historydata!.time}';
+                                          });
+
                                           WidgetsBinding.instance
                                               .addPostFrameCallback((_) async {
                                                 final mapController =

@@ -24,7 +24,7 @@ class _ChangelanguageState extends State<Changelanguage> {
   final List<Map<String, String>> languages = const [
     {'name': 'English (US)', 'code': 'en', 'flag': '🇺🇸'},
     {'name': 'French', 'code': 'fr', 'flag': '🇫🇷'},
-    {'name': 'Spanish', 'code': 'es', 'flag': '🇪🇸'},
+    {'name': 'German', 'code': 'de', 'flag': '🇩🇪'},
     {'name': 'Dutch', 'code': 'nl', 'flag': '🇳🇱'},
   ];
   late String selectedLanguageCode;
@@ -32,7 +32,6 @@ class _ChangelanguageState extends State<Changelanguage> {
   @override
   void initState() {
     super.initState();
-    print("asdfasdfasdfasdfasdfasd====${GetStorage().read("languagecode")}");
 
     selectedLanguageCode = GetStorage().read("languagecode") ?? "en";
   }

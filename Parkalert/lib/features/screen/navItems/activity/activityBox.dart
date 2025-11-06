@@ -67,8 +67,7 @@ class ActivityBoxState extends State<ActivityBox> {
     List<Color> colorText = [AppColors.text1, AppColors.text2, AppColors.text3];
     final Color Textcolor =
         colorText[widget.historydata.index % colorText.length];
-    print("nnnnaaammmeee===${widget.historydata.name}");
-    print("nnnnaaammmeee===${_nameController.text}");
+
     // List<Color> colorLoc = [AppColors.text1, AppColors.alert1, AppColors.text3];
     // final Color LocColor = colorText[historydata.index % colorText.length];
 
@@ -139,13 +138,36 @@ class ActivityBoxState extends State<ActivityBox> {
               fontWeight: FontWeight.bold,
               color: Textcolor,
             ),
-            // decoration: const InputDecoration(
-            //   border: InputBorder.none,
-            //   isDense: true,
-            //   contentPadding: EdgeInsets.zero,
-            //   focusedBorder: InputBorder.none, // remove focus border
-            //   enabledBorder: InputBorder.none, // remove enabled border
-            //   hintText: "HH:mm",
+
+            // ),
+          ),
+        ),
+      );
+    }
+
+    Widget statusBox(String status, Color textColor) {
+      final sat = status != null ? status : "hi";
+      return Container(
+        width: 235,
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color2, // or any background color
+          border: Border.all(
+            color: Colors.grey, // border color
+            width: 1, // border width
+          ),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Center(
+          child: Text(
+            sat,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Textcolor,
+            ),
+
             // ),
           ),
         ),
@@ -262,16 +284,24 @@ class ActivityBoxState extends State<ActivityBox> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
                   children: [
-                    _timeBox(widget.historydata.time, colordark),
-                    const SizedBox(width: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _timeBox(widget.historydata.time, colordark),
+                        const SizedBox(width: 15),
 
-                    _timeBox_(widget.historydata.time, colordark),
+                        _timeBox_(widget.historydata.time, colordark),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+
+                    statusBox(widget.historydata.status ?? '', colordark),
                   ],
                 ),
-                const SizedBox(height: 15),
+
+                const SizedBox(height: 8),
 
                 // Obx(() {
                 //   if (isOnController.isLoading.value) {

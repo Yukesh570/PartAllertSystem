@@ -5,7 +5,6 @@ import 'package:Parkalert/features/controllers/drawerController.dart';
 import 'package:Parkalert/features/controllers/pagger.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
-import 'package:Parkalert/features/screen/map/currentLocation.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
 import 'package:Parkalert/utils/storage/data/ZoneData.dart';
@@ -72,7 +71,6 @@ class _MappageState extends State<Mappage> {
 
     setState(() {
       _polygons = zones.map((zone) {
-        print("Zone ${zone.index} has ${zone.points.length} points");
         return Polygon(
           polygonId: PolygonId('zone_${zone.index}'),
           points: zone.points
@@ -84,7 +82,6 @@ class _MappageState extends State<Mappage> {
         );
       }).toSet();
     });
-    print("_polygons${_polygons}");
   }
 
   Future<void> loadMarkersromZones() async {
@@ -199,7 +196,6 @@ class _MappageState extends State<Mappage> {
       setState(() {
         _drawingPoints.add(point);
       });
-      print('Added point: $point');
     }
   }
 
@@ -226,7 +222,7 @@ class _MappageState extends State<Mappage> {
   @override
   void initState() {
     super.initState();
-    loadCustomIcon();
+    // loadCustomIcon();
     fenceIcon();
     goToPolygon(widget.zoneData).then((cameraMoved) {
       // 2. If the camera was NOT moved (meaning zoneData.points was empty),
@@ -271,30 +267,28 @@ class _MappageState extends State<Mappage> {
   //   });
   // }
 
-  Future<void> loadCustomIcon() async {
-    try {
-      print('Starting to load custom icon...');
-      BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(size: Size(48, 48)),
-        'assets/logos/currentLocation.png',
-      );
-      print('Custom marker icon loaded successfully');
-      setState(() {
-        currentLocationIcon = icon;
-      });
-    } catch (e) {
-      print('Failed to load custom marker icon: $e');
-    }
-  }
+  // Future<void> loadCustomIcon() async {
+  //   try {
+  //     print('Starting to load custom icon...');
+  //     BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
+  //       const ImageConfiguration(size: Size(48, 48)),
+  //       'assets/logos/currentLocation.png',
+  //     );
+  //     print('Custom marker icon loaded successfully');
+  //     setState(() {
+  //       currentLocationIcon = icon;
+  //     });
+  //   } catch (e) {
+  //     print('Failed to load custom marker icon: $e');
+  //   }
+  // }
 
   Future<void> fenceIcon() async {
     try {
-      print('Starting to load custom icon...');
       BitmapDescriptor icon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(size: Size(48, 48)),
         'assets/logos/fence.png',
       );
-      print('Custom marker icon loaded successfully');
       setState(() {
         geofenceIcon = icon;
       });
@@ -404,7 +398,6 @@ class _MappageState extends State<Mappage> {
     final convertedPoints = convertToLatLong2(
       _drawingPoints,
     ); // latlong2 LatLng
-    print("-=-=-=-=-=-sweta=-=-=-=-=-=-=-=-${convertedPoints}");
     await updateZones(
       widget.zoneData.index,
       null,
@@ -421,7 +414,6 @@ class _MappageState extends State<Mappage> {
       strokeColor: Colors.blue,
       strokeWidth: 3,
     );
-    print("======polygon: ${polygon.points}");
     final bounds = getPolygonBounds(_drawingPoints);
     final LatLng center = LatLng(
       (bounds.northeast.latitude + bounds.southwest.latitude) / 2,
@@ -450,7 +442,6 @@ class _MappageState extends State<Mappage> {
 
   LatLngBounds getPolygonBounds(List<LatLng> points) {
     double? minLat, maxLat, minLng, maxLng;
-    print("points: ${points}");
     for (var point in points) {
       if (minLat == null || point.latitude < minLat) minLat = point.latitude;
       if (maxLat == null || point.latitude > maxLat) maxLat = point.latitude;
@@ -482,7 +473,6 @@ class _MappageState extends State<Mappage> {
     CameraUpdate cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50);
     controller.animateCamera(cameraUpdate);
     setState(() {
-      print("name${zoneData.name}");
       _geoFench.add(
         Marker(
           markerId: MarkerId(zoneData.name),

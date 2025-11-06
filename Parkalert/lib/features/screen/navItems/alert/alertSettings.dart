@@ -48,6 +48,7 @@ class _AlertSettingState extends State<AlertSetting> {
   final TextEditingController _nameController = TextEditingController();
 
   final TextEditingController soundController = TextEditingController();
+  bool _inform = true;
 
   @override
   void dispose() {
@@ -70,7 +71,6 @@ class _AlertSettingState extends State<AlertSetting> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     final MainController controller = Get.put(MainController());
-    IsOnController isOnController = Get.put(IsOnController());
     DateTime now = DateTime.now();
     final drawerCtrl = Get.find<DrawerControllerX>();
 
@@ -86,6 +86,7 @@ class _AlertSettingState extends State<AlertSetting> {
       required String date,
       required String time,
       required bool isOn,
+      required bool vibration,
     }) async {
       final List<RingerData> savedRingers = await loadRingers();
 
@@ -99,6 +100,7 @@ class _AlertSettingState extends State<AlertSetting> {
         name: name,
         bluetooth: bluetooth,
         sound: sound,
+        vibration: vibration,
       );
       ringersDataList.add(newRingerData);
 
@@ -309,34 +311,37 @@ class _AlertSettingState extends State<AlertSetting> {
                                       );
                                     },
                                   ),
+                                  const SizedBox(height: 15.0),
 
-                                  const SizedBox(height: 30),
-                                  // Pushes buttons to the bottom
-                                  // Connect and Disconnect buttons
-                                  // buildConnectButton(
-                                  //   context: context,
-                                  //   text: 'Connect',
-                                  //   backgroundColor: AppColors.buttonBackground,
-                                  //   textColor: AppColors.lightTextColor,
-                                  //   onPressed: () {
-                                  //     print("object");
-                                  //     NotificationService.showBigTextNotification(
-                                  //       title: "ParkAlert",
-                                  //       body: "You are out of parking zone",
-                                  //       fln: flutterLocalNotificationsPlugin,
-                                  //     );
-                                  //   },
-                                  // ),
-                                  // const SizedBox(height: 5.0),
-                                  // buildConnectButton(
-                                  //   context: context,
-                                  //   text: 'Disconnect',
-                                  //   backgroundColor: AppColors.buttonBackground,
-                                  //   textColor: AppColors.lightTextColor,
-                                  //   onPressed: () {
-                                  //     /* Handle disconnect */
-                                  //   },
-                                  // ),
+                                  Row(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.vibration_rounded,
+                                            color: AppColors.iconColor,
+                                            size: 30,
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(width: 15.0),
+                                      Switch(
+                                        value: _inform,
+                                        onChanged: (value) async {
+                                          setState(() => _inform = value);
+                                        },
+                                        activeColor: Colors.white,
+                                        activeTrackColor: AppColors.iconColor,
+                                        inactiveThumbColor: Colors.white,
+                                        inactiveTrackColor:
+                                            Colors.grey.shade400,
+                                        trackOutlineColor:
+                                            WidgetStatePropertyAll(
+                                              Colors.transparent,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
@@ -387,9 +392,7 @@ class _AlertSettingState extends State<AlertSetting> {
                                 _bluetoothDeviceController.text.trim();
                             final String sound = soundController.text.trim();
 
-                            if (name.isNotEmpty &&
-                                // bluetoothDevice.isNotEmpty &&
-                                sound.isNotEmpty) {
+                            if (name.isNotEmpty) {
                               await _addRingers(
                                 name: name,
                                 bluetooth: bluetoothDevice,
@@ -397,6 +400,7 @@ class _AlertSettingState extends State<AlertSetting> {
                                 date: currentDate,
                                 time: currentTime, // or get from UI
                                 isOn: false,
+                                vibration: _inform,
                               );
                               controller.alertPage();
                             }
