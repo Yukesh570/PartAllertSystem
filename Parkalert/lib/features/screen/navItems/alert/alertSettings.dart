@@ -49,6 +49,7 @@ class _AlertSettingState extends State<AlertSetting> {
 
   final TextEditingController soundController = TextEditingController();
   bool _inform = true;
+  bool _silent = false;
 
   @override
   void dispose() {
@@ -87,6 +88,7 @@ class _AlertSettingState extends State<AlertSetting> {
       required String time,
       required bool isOn,
       required bool vibration,
+      required bool overRideSilence,
     }) async {
       final List<RingerData> savedRingers = await loadRingers();
 
@@ -101,6 +103,7 @@ class _AlertSettingState extends State<AlertSetting> {
         bluetooth: bluetooth,
         sound: sound,
         vibration: vibration,
+        overRideSilence: overRideSilence,
       );
       ringersDataList.add(newRingerData);
 
@@ -276,6 +279,7 @@ class _AlertSettingState extends State<AlertSetting> {
                                     onTap: () {
                                       /* Handle tap */
                                     },
+                                    readOnly: false,
                                   ),
                                   const SizedBox(height: 15.0),
                                   buildAlertFormRow(
@@ -330,6 +334,38 @@ class _AlertSettingState extends State<AlertSetting> {
                                         onChanged: (value) async {
                                           setState(() => _inform = value);
                                         },
+                                        activeColor: Colors.white,
+                                        activeTrackColor: AppColors.iconColor,
+                                        inactiveThumbColor: Colors.white,
+                                        inactiveTrackColor:
+                                            Colors.grey.shade400,
+                                        trackOutlineColor:
+                                            WidgetStatePropertyAll(
+                                              Colors.transparent,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.volume_up,
+                                        color: AppColors.iconColor,
+                                        size: 30,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        loc.overrideSilentMode,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Switch(
+                                        value: _silent,
+                                        onChanged: (value) => setState(() {
+                                          _silent = value;
+                                        }),
+
                                         activeColor: Colors.white,
                                         activeTrackColor: AppColors.iconColor,
                                         inactiveThumbColor: Colors.white,
@@ -401,6 +437,7 @@ class _AlertSettingState extends State<AlertSetting> {
                                 time: currentTime, // or get from UI
                                 isOn: false,
                                 vibration: _inform,
+                                overRideSilence: _silent,
                               );
                               controller.alertPage();
                             }

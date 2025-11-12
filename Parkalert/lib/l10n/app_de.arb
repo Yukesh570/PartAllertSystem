@@ -257,6 +257,13 @@
   "informationSaved": "Informationen gespeichert",
   "yourInformationHasBeenUpdated": "Ihre Informationen wurden aktualisiert",
   "noInformationAvailable": "Keine Informationen verfügbar",
-  "save": "Speichern"
+  "save": "Speichern",
+  "overrideSilentMode":"Lautlosmodus überschreiben",
+  "emailAlreadyExists": "E-Mail-Adresse existiert bereits",
+  "phoneAlreadyExists": "Telefonnummer existiert bereits",
+  "warning": "Warnung",
+  "youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount": "Sie müssen der Datenschutzrichtlinie und der Einverständniserklärung zustimmen, bevor Sie ein Konto erstellen.",
+  "zoneSaved": "Zone gespeichert"
+
 }
 

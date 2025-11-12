@@ -219,9 +219,38 @@ class _InformationState extends State<Information> {
                                       setState(() => _isLoading = true);
                                       try {
                                         final box = GetStorage();
-                                        print(
-                                          "ffffffffffffffffffffffffffffffffffffffffffff${countryCodeController.text}",
-                                        );
+
+                                        if (!_agreePolicy || !_inform) {
+                                          Get.snackbar(
+                                            loc.warning,
+                                            loc.youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount,
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                            duration: const Duration(
+                                              seconds: 2,
+                                            ), // ⏱ shorten visible time
+                                            animationDuration: const Duration(
+                                              milliseconds: 200,
+                                            ), // ⚡ faster animation
+                                            snackStyle: SnackStyle
+                                                .FLOATING, // 🍃 makes it float above content
+                                            margin: const EdgeInsets.all(12),
+                                            borderRadius: 8,
+                                            forwardAnimationCurve: Curves
+                                                .easeOutBack, // 🪄 smoother pop effect
+                                            reverseAnimationCurve: Curves
+                                                .easeInBack, // 🪄 smoother exit
+                                          );
+
+                                          // Get.snackbar(
+                                          //   'Warning',
+                                          //   'You must agree to Privacy Policy & Inform consent before creating account.',
+                                          //   backgroundColor: Colors.orange,
+                                          //   colorText: Colors.white,
+                                          // );
+                                          return;
+                                        }
                                         final response = await apiService
                                             .registerUser(
                                               firstName:
@@ -238,7 +267,8 @@ class _InformationState extends State<Information> {
                                         // );
                                         // print("Body: ${response.body}");
                                         if (response.statusCode == 200 ||
-                                            response.statusCode == 201) {
+                                            response.statusCode == 201 ||
+                                            response.statusCode == 204) {
                                           box.write('userData', {
                                             'firstName':
                                                 firstNameController.text,
@@ -270,25 +300,70 @@ class _InformationState extends State<Information> {
                                           if (metadataList.contains("email")) {
                                             Get.snackbar(
                                               loc.error,
-                                              "Email Already Exists",
+                                              loc.emailAlreadyExists,
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
                                               backgroundColor: Colors.red,
                                               colorText: Colors.white,
+                                              duration: const Duration(
+                                                seconds: 2,
+                                              ),
+                                              animationDuration: const Duration(
+                                                milliseconds: 200,
+                                              ),
+                                              snackStyle: SnackStyle.FLOATING,
+                                              margin: const EdgeInsets.all(12),
+                                              borderRadius: 8,
+                                              forwardAnimationCurve:
+                                                  Curves.easeOutBack,
+                                              reverseAnimationCurve:
+                                                  Curves.easeInBack,
                                             );
                                           } else if (metadataList.contains(
                                             "SMS",
                                           )) {
                                             Get.snackbar(
                                               loc.error,
-                                              "Phone Number Already Exists",
+                                              loc.phoneAlreadyExists,
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
                                               backgroundColor: Colors.red,
                                               colorText: Colors.white,
+                                              duration: const Duration(
+                                                seconds: 2,
+                                              ),
+                                              animationDuration: const Duration(
+                                                milliseconds: 200,
+                                              ),
+                                              snackStyle: SnackStyle.FLOATING,
+                                              margin: const EdgeInsets.all(12),
+                                              borderRadius: 8,
+                                              forwardAnimationCurve:
+                                                  Curves.easeOutBack,
+                                              reverseAnimationCurve:
+                                                  Curves.easeInBack,
                                             );
                                           } else {
                                             Get.snackbar(
                                               loc.error,
                                               errorMessage,
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
                                               backgroundColor: Colors.red,
                                               colorText: Colors.white,
+                                              duration: const Duration(
+                                                seconds: 2,
+                                              ),
+                                              animationDuration: const Duration(
+                                                milliseconds: 200,
+                                              ),
+                                              snackStyle: SnackStyle.FLOATING,
+                                              margin: const EdgeInsets.all(12),
+                                              borderRadius: 8,
+                                              forwardAnimationCurve:
+                                                  Curves.easeOutBack,
+                                              reverseAnimationCurve:
+                                                  Curves.easeInBack,
                                             );
                                           }
                                         }

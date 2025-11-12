@@ -314,5 +314,11 @@
   "informationSaved":"Information Saved",
   "yourInformationHasBeenUpdated":"Your Information Has Been Updated",
   "noInformationAvailable":"No Information Available",
-  "save":"Save"
+  "save":"Save",
+  "overrideSilentMode":"Override Silent Mode",
+  "emailAlreadyExists":"Email already exists",
+  "phoneAlreadyExists":"Phone number already exists",
+  "warning":"Warning",
+  "youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount":"You must agree to Privacy Policy and Inform consent before creating account.",
+  "zoneSaved":"Zone Saved"
 }

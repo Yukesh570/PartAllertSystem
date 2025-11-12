@@ -781,4 +781,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get save => 'Save';
+
+  @override
+  String get overrideSilentMode => 'Override Silent Mode';
+
+  @override
+  String get emailAlreadyExists => 'Email already exists';
+
+  @override
+  String get phoneAlreadyExists => 'Phone number already exists';
+
+  @override
+  String get warning => 'Warning';
+
+  @override
+  String get youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount => 'You must agree to Privacy Policy and Inform consent before creating account.';
+
+  @override
+  String get zoneSaved => 'Zone Saved';
 }

@@ -246,6 +246,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                                     onTap: () {
                                       /* Handle tap */
                                     },
+                                    readOnly: false,
                                   ),
                                   const SizedBox(height: 15.0),
                                   buildAlertFormRow(
@@ -316,7 +317,12 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                                         size: 30,
                                       ),
                                       const SizedBox(width: 10),
-                                      Text('Override Silent Mode'),
+                                      Text(
+                                        loc.overrideSilentMode,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
                                       Switch(
                                         value: overrideSilentMode,
                                         onChanged: (value) => setState(() {

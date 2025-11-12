@@ -781,4 +781,22 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get save => 'Enregistrer';
+
+  @override
+  String get overrideSilentMode => 'Ignorer le mode silencieux';
+
+  @override
+  String get emailAlreadyExists => 'L\'adresse e-mail existe déjà';
+
+  @override
+  String get phoneAlreadyExists => 'Le numéro de téléphone existe déjà';
+
+  @override
+  String get warning => 'Avertissement';
+
+  @override
+  String get youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount => 'Vous devez accepter la politique de confidentialité et le consentement éclairé avant de créer un compte.';
+
+  @override
+  String get zoneSaved => 'Zone enregistrée';
 }

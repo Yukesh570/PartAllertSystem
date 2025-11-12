@@ -49,8 +49,7 @@ class ZoneBoxState extends State<ZoneBox> {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context);
     if (loc == null) {
-      // This means localization isn't yet loaded or context is not in a localized widget tree
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const SizedBox.shrink(); // or keep previous UI visible
     }
     final isOnController = Get.put(FreezoneController(), permanent: true);
     List<Color> colorOptions = [
@@ -151,7 +150,7 @@ class ZoneBoxState extends State<ZoneBox> {
     //   );
     // }
 
-    Future<void> _showEditDialog(BuildContext context) async {
+    Future<void> _showEditDialog(BuildContext parentContext) async {
       final nameController = TextEditingController(text: widget.zoneData.name);
       final initialTimeController = TextEditingController(
         text: widget.zoneData.initialTime,
@@ -161,7 +160,7 @@ class ZoneBoxState extends State<ZoneBox> {
       );
 
       final result = await showDialog<bool>(
-        context: context,
+        context: parentContext,
         builder: (context) {
           final dark = Theme.of(context).brightness == Brightness.dark;
           return AlertDialog(
@@ -249,11 +248,26 @@ class ZoneBoxState extends State<ZoneBox> {
       );
 
       if (result == true) {
-        CustomSnackBar.show(
-          context,
-          message: loc.zoneupdatedsuccessfully,
-          backgroundColor: Colors.green[600]!,
+        Get.snackbar(
+          loc.zoneSaved,
+          loc.zoneupdatedsuccessfully,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 2),
+          animationDuration: const Duration(milliseconds: 200),
+          snackStyle: SnackStyle.FLOATING,
+          margin: const EdgeInsets.all(12),
+          borderRadius: 8,
+          forwardAnimationCurve: Curves.easeOutBack,
+          reverseAnimationCurve: Curves.easeInBack,
         );
+
+        // CustomSnackBar.show(
+        //   parentContext,
+        //   message: loc.zoneupdatedsuccessfully,
+        //   backgroundColor: Colors.green[600]!,
+        // );
       }
     }
 
@@ -348,15 +362,18 @@ class ZoneBoxState extends State<ZoneBox> {
                       child: SizedBox(
                         height: 34, // tighter height
                         width: 160, // fixed width instead of expanding
-                        child: Text(
-                          widget
-                              .zoneData
-                              .name, // 👈 replaces _nameController.text
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: color2,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            widget
+                                .zoneData
+                                .name, // 👈 replaces _nameController.text
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: color2,
+                            ),
                           ),
                         ),
                       ),

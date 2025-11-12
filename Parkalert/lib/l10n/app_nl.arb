@@ -257,6 +257,13 @@
   "informationSaved": "Informatie opgeslagen",
   "yourInformationHasBeenUpdated": "Je informatie is bijgewerkt",
   "noInformationAvailable": "Geen informatie beschikbaar",
-  "save": "Opslaan"
+  "save": "Opslaan",
+  "overrideSilentMode":"Stiltemodus negeren",
+  "emailAlreadyExists": "E-mailadres bestaat al",
+  "phoneAlreadyExists": "Telefoonnummer bestaat al",
+  "warning": "Waarschuwing",
+  "youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount": "U moet akkoord gaan met het privacybeleid en de toestemmingsverklaring voordat u een account aanmaakt.",
+  "zoneSaved": "Zone opgeslagen"
+
 }
 

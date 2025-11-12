@@ -781,4 +781,22 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get save => 'Speichern';
+
+  @override
+  String get overrideSilentMode => 'Lautlosmodus überschreiben';
+
+  @override
+  String get emailAlreadyExists => 'E-Mail-Adresse existiert bereits';
+
+  @override
+  String get phoneAlreadyExists => 'Telefonnummer existiert bereits';
+
+  @override
+  String get warning => 'Warnung';
+
+  @override
+  String get youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount => 'Sie müssen der Datenschutzrichtlinie und der Einverständniserklärung zustimmen, bevor Sie ein Konto erstellen.';
+
+  @override
+  String get zoneSaved => 'Zone gespeichert';
 }

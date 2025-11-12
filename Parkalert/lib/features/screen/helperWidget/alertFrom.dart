@@ -8,6 +8,7 @@ Widget buildAlertFormRow({
   required String text,
   required VoidCallback? onTap,
   TextEditingController? controller,
+  bool readOnly = true,
 }) {
   final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -18,7 +19,7 @@ Widget buildAlertFormRow({
       Expanded(
         child: TextField(
           controller: controller,
-          readOnly: text == 'Name' ? false : true,
+          readOnly: readOnly,
           onTap: onTap,
 
           decoration: InputDecoration(

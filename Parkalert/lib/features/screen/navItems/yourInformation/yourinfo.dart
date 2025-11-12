@@ -92,6 +92,7 @@ class _YourinfoState extends State<Yourinfo> {
     TextEditingController controller,
     bool dark, {
     TextInputType keyboardType = TextInputType.text,
+    bool readOnly = false,
   }) {
     const double baseFontSize = 17.0;
 
@@ -124,10 +125,12 @@ class _YourinfoState extends State<Yourinfo> {
                 ? TextFormField(
                     controller: controller,
                     keyboardType: keyboardType,
+                    readOnly: readOnly,
+
                     cursorColor: dark ? Colors.blueAccent : Colors.blue,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
+                      contentPadding: EdgeInsets.only(left: 6),
                     ),
                     style: TextStyle(
                       fontSize: baseFontSize,
@@ -276,7 +279,9 @@ class _YourinfoState extends State<Yourinfo> {
         print("Response status: ${response.statusCode}");
         print("Response body: ${response.body}");
 
-        if (response.statusCode == 200 || response.statusCode == 201) {
+        if (response.statusCode == 200 ||
+            response.statusCode == 201 ||
+            response.statusCode == 204) {
           print("User data saved successfully.");
           final box = GetStorage();
           box.write('userData', newUserData);
@@ -286,20 +291,15 @@ class _YourinfoState extends State<Yourinfo> {
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.green,
             colorText: Colors.white,
+            duration: const Duration(seconds: 2),
+            animationDuration: const Duration(milliseconds: 200),
+            snackStyle: SnackStyle.FLOATING,
+            margin: const EdgeInsets.all(12),
+            borderRadius: 8,
+            forwardAnimationCurve: Curves.easeOutBack,
+            reverseAnimationCurve: Curves.easeInBack,
           );
-          controller.alertPage();
-        } else if (response.statusCode == 204) {
-          // Handle 204 No Content separately
-          print("User data updated successfully (No Content returned).");
-          final box = GetStorage();
-          box.write('userData', newUserData);
-          Get.snackbar(
-            loc.informationSaved,
-            loc.yourInformationHasBeenUpdated,
-            snackPosition: SnackPosition.BOTTOM,
-            backgroundColor: Colors.green,
-            colorText: Colors.white,
-          );
+
           controller.alertPage();
         } else {
           final errorData = jsonDecode(response.body);
@@ -315,19 +315,49 @@ class _YourinfoState extends State<Yourinfo> {
           if (metadataList.contains("email")) {
             Get.snackbar(
               loc.error,
-              "Email Already Exists",
+              loc.emailAlreadyExists,
+              snackPosition: SnackPosition.BOTTOM,
               backgroundColor: Colors.red,
               colorText: Colors.white,
+              duration: const Duration(seconds: 2),
+              animationDuration: const Duration(milliseconds: 200),
+              snackStyle: SnackStyle.FLOATING,
+              margin: const EdgeInsets.all(12),
+              borderRadius: 8,
+              forwardAnimationCurve: Curves.easeOutBack,
+              reverseAnimationCurve: Curves.easeInBack,
             );
           } else if (metadataList.contains("SMS")) {
             Get.snackbar(
               loc.error,
-              "Phone Number Already Exists",
+              loc.phoneAlreadyExists,
+              snackPosition: SnackPosition.BOTTOM,
               backgroundColor: Colors.red,
               colorText: Colors.white,
+              duration: const Duration(seconds: 2),
+              animationDuration: const Duration(milliseconds: 200),
+              snackStyle: SnackStyle.FLOATING,
+              margin: const EdgeInsets.all(12),
+              borderRadius: 8,
+              forwardAnimationCurve: Curves.easeOutBack,
+              reverseAnimationCurve: Curves.easeInBack,
             );
           } else {
             print("Error saving user data: $errorMessage");
+            Get.snackbar(
+              loc.error,
+              errorMessage,
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              duration: const Duration(seconds: 2),
+              animationDuration: const Duration(milliseconds: 200),
+              snackStyle: SnackStyle.FLOATING,
+              margin: const EdgeInsets.all(12),
+              borderRadius: 8,
+              forwardAnimationCurve: Curves.easeOutBack,
+              reverseAnimationCurve: Curves.easeInBack,
+            );
             Get.snackbar(
               loc.error,
               errorMessage,
@@ -466,12 +496,14 @@ class _YourinfoState extends State<Yourinfo> {
                                 loc.firstName,
                                 _firstNameController,
                                 dark,
+                                readOnly: false,
                               ),
                               const SizedBox(height: 6),
                               _buildInfoCard(
                                 loc.lastName,
                                 _lastNameController,
                                 dark,
+                                readOnly: false,
                               ),
                               const SizedBox(height: 6),
 
@@ -480,6 +512,7 @@ class _YourinfoState extends State<Yourinfo> {
                                 _emailController,
                                 dark,
                                 keyboardType: TextInputType.emailAddress,
+                                readOnly: true,
                               ),
                               const SizedBox(height: 6),
 

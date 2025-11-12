@@ -8,6 +8,8 @@ import 'package:latlong2/latlong.dart';
 class ApiService {
   final String baseUrl = dotenv.env['BACKEND_API'] ?? '';
   final String brevoUrl = dotenv.env['BREVO_API'] ?? '';
+  final String brevoListApi = dotenv.env['BREVO_LIST_API'] ?? '';
+
   final String apiKey = dotenv.env['BREVO_API_KEY'] ?? '';
   // Future registerUser({
   //   required String firstName,
@@ -94,7 +96,7 @@ class ApiService {
     required String phoneNumber,
     String? countryCode,
   }) async {
-    final code = countryCode ?? "+31";
+    final code = countryCode;
     print("2134123123123123=====${code}${phoneNumber}");
 
     final url = Uri.parse(brevoUrl);
@@ -113,6 +115,8 @@ class ApiService {
               "LASTNAME": lastName,
               "SMS": "$code$phoneNumber",
             },
+            "listIds": [23],
+            "updateEnabled": true,
           }),
         )
         .timeout(
@@ -121,6 +125,8 @@ class ApiService {
             throw Exception("Request timed out. Please check your internet.");
           },
         );
+    print("Response status: ${response.statusCode}");
+    print("Response body: ${response.body}");
     return response;
   }
 

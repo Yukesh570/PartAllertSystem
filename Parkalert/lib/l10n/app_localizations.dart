@@ -1646,6 +1646,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get save;
+
+  /// No description provided for @overrideSilentMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Override Silent Mode'**
+  String get overrideSilentMode;
+
+  /// No description provided for @emailAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'Email already exists'**
+  String get emailAlreadyExists;
+
+  /// No description provided for @phoneAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number already exists'**
+  String get phoneAlreadyExists;
+
+  /// No description provided for @warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get warning;
+
+  /// No description provided for @youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'You must agree to Privacy Policy and Inform consent before creating account.'**
+  String get youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount;
+
+  /// No description provided for @zoneSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Zone Saved'**
+  String get zoneSaved;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

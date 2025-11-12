@@ -781,4 +781,22 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get save => 'Opslaan';
+
+  @override
+  String get overrideSilentMode => 'Stiltemodus negeren';
+
+  @override
+  String get emailAlreadyExists => 'E-mailadres bestaat al';
+
+  @override
+  String get phoneAlreadyExists => 'Telefoonnummer bestaat al';
+
+  @override
+  String get warning => 'Waarschuwing';
+
+  @override
+  String get youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount => 'U moet akkoord gaan met het privacybeleid en de toestemmingsverklaring voordat u een account aanmaakt.';
+
+  @override
+  String get zoneSaved => 'Zone opgeslagen';
 }
