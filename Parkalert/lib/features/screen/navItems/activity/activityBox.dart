@@ -3,6 +3,7 @@ import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
 import 'package:Parkalert/features/screen/map/locationHistory.dart';
+import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/utils/storage/data/historyData.dart';
 import 'package:Parkalert/utils/storage/zoneStorage/zoneStorage.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,11 @@ class ActivityBoxState extends State<ActivityBox> {
 
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-
+    final loc = AppLocalizations.of(context);
+    if (loc == null) {
+      // This means localization isn't yet loaded or context is not in a localized widget tree
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
     final isOnController = Get.put(FreezoneController(), permanent: true);
     List<Color> colorOptions = [
       AppColors.alert1,
@@ -146,7 +151,7 @@ class ActivityBoxState extends State<ActivityBox> {
     }
 
     Widget statusBox(String status, Color textColor) {
-      final sat = status != null ? status : "hi";
+      final sat = status;
       return Container(
         width: 235,
         height: 40,
@@ -161,7 +166,7 @@ class ActivityBoxState extends State<ActivityBox> {
         ),
         child: Center(
           child: Text(
-            sat,
+            sat == "Connected" ? loc.connected : loc.disconnected,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,

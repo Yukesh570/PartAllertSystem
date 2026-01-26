@@ -263,7 +263,9 @@
   "phoneAlreadyExists": "Telefoonnummer bestaat al",
   "warning": "Waarschuwing",
   "youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount": "U moet akkoord gaan met het privacybeleid en de toestemmingsverklaring voordat u een account aanmaakt.",
-  "zoneSaved": "Zone opgeslagen"
+  "zoneSaved": "Zone opgeslagen",
+  "connected":"INSTAPPEN",
+  "disconnected":"UITSTAPPEN"
 
 }
 

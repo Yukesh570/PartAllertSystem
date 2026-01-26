@@ -36,11 +36,9 @@ public class BluetoothReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         Log.d("BluetoothReceiver", "Received action: " + action);
-        Log.d("BluetoothReceiver", "Received action========================================= ");
 
         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
         if (device == null || device.getName() == null) return;
-        Log.d("BluetoothReceiver", "Received action========================================= ");
 
         if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
             if (isTargetDevice(context, device)) {
@@ -48,7 +46,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     Log.e("BluetoothReceiver", "Permissions missing, cannot start service");
                     return;
                 }
-        Log.d("BluetoothReceiver", "Received action!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ");
 
                 // Start foreground service
                 Intent serviceIntent = new Intent(context, GeofenceForegroundService.class);
@@ -58,7 +55,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     context.startService(serviceIntent);
                 }
 
-                Log.d("BluetoothReceiver", "GeofenceForegroundService started immediately");
                     // Stop after 10 seconds
 
                 new android.os.Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -84,12 +80,10 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     context.startService(serviceIntent);
                 }
 
-                Log.d("BluetoothReceiver", "GeofenceForegroundService started immediately");
                     // Stop after 10 seconds
 
                 new android.os.Handler(Looper.getMainLooper()).postDelayed(() -> {
                     context.stopService(serviceIntent);
-                    Log.d("BluetoothReceiver", "GeofenceForegroundService stopped after 10s on " + action);
                 }, 10000L);
             handleBluetoothEvent(context, device, false);
             }
@@ -131,7 +125,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     == PackageManager.PERMISSION_GRANTED;
         }
 
-        Log.d("BluetoothReceiver", "Permissions - Foreground: " + foregroundService + ", Location: " + location + ", Background: " + background);
         return foregroundService && location && background;
     }
 
@@ -144,14 +137,12 @@ public class BluetoothReceiver extends BroadcastReceiver {
         String jsonString = prefs.getString("flutter.activeBluetooth", "");
         boolean isInsideGeofence = prefs.getBoolean("flutter.insideGeofence", false);
 
-            Log.d("BluetoothReceiver", "isInsideGeofence: " + isInsideGeofence);
 
         String targetBluetoothName = "";
         String targetSound = "";
         String targetName = "";
         String targetVibration = "";
-        String targetSilent ="";
-        Log.d("BluetoothReceiver", "jsonString" + jsonString );
+        String targetOverSilent ="";
         // Skip if nothing stored
         if (jsonString == null || jsonString.trim().isEmpty()) {
             Log.d("BluetoothReceiver", "⚠ Skipping notification - no activeBluetooth data found");
@@ -164,7 +155,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
             targetSound = jsonObject.optString("sound", "");
             targetName = jsonObject.optString("name", "");
             targetVibration = jsonObject.optString("vibration","true");
-            targetSilent =jsonObject.optString("overRideSilence","true");
+            targetOverSilent =jsonObject.optString("overRideSilence","true");
         } catch (JSONException e) {
             Log.e("BluetoothReceiver", "Failed to parse JSON: " + e.getMessage());
             return; // If JSON is invalid, don’t proceed
@@ -181,10 +172,8 @@ public class BluetoothReceiver extends BroadcastReceiver {
                     getCurrentLocation(context, targetName,connected);
                 
             if (!isInsideGeofence) {
-                Log.d("BluetoothReceiver", "OUTSIDE geofence → sending notification");
-                Log.d("BluetoothReceiver", "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " +targetSilent);
 
-                showNotification(context, device.getName(), connected, targetSound,targetVibration,targetSilent);
+                showNotification(context, device.getName(),targetName, connected, targetSound,targetVibration,targetOverSilent);
             } else {
                 Log.d("BluetoothReceiver", "Inside geofence → skipping notification");
             }
@@ -232,7 +221,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
             prefs.edit().putString("flutter.currentLocation", locationsArray.toString()).apply();
             prefs.edit().putString("flutter.backupcurrentLocation", locationsArray.toString()).apply();
 
-            Log.d("BluetoothReceiver", "📌 Saved current location: " + locObj.toString());
 
 
         } catch (JSONException e) {
@@ -242,65 +230,63 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
 
 
-    private void showNotification(Context context, String deviceName, boolean connected, String targetSound,String targetVibration,String targetSilent) {
-    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    private void showNotification(Context context, String deviceName,String targetName, boolean connected,
+                              String targetSound, String targetVibration, String targetOverSilent) {
+
+    NotificationManager notificationManager =
+            (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
     Uri soundUri = null;
     if (targetSound != null && !targetSound.isEmpty()) {
         soundUri = Uri.parse("android.resource://" + context.getPackageName() + "/raw/" + targetSound);
     }
     boolean vibrate = targetVibration == null || targetVibration.equalsIgnoreCase("true");
-    boolean silent = targetSilent == null || targetSilent.equalsIgnoreCase("true");
-    Log.d("BluetoothReceiver", "📌📌📌📌📌📌📌📌📌📌📌 " + silent);
+    boolean overRideSilence = targetOverSilent == null || targetOverSilent.equalsIgnoreCase("true");
 
-    String channelId = "bluetooth_channel_" + (targetSound != null ? targetSound : "default") + "_" + targetVibration + "_" + targetSilent;
+    String channelId = "bluetooth_channel_" + (targetSound != null ? targetSound : "default") + "_" + targetVibration + "_" + targetOverSilent;
 
-    // Generate a unique channel per sound
+    // Create notification channel if necessary
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        notificationManager.deleteNotificationChannel(channelId);
-        String channelName = "Bluetooth Events (" + (targetSound != null ? targetSound : "default") + ")";
+        notificationManager.deleteNotificationChannel(channelId); // 👈 Add this
 
-        NotificationChannel channel = new NotificationChannel(
-                channelId,
-                channelName,
-                silent ? NotificationManager.IMPORTANCE_HIGH : NotificationManager.IMPORTANCE_LOW
-        );
-        channel.setBypassDnd(silent);
-        channel.setDescription("Notifications for Bluetooth events");
-        channel.enableLights(true);
-        channel.setLightColor(Color.BLUE);
-        if (vibrate) {
-            channel.enableVibration(true);
-            channel.setVibrationPattern(new long[]{0, 500, 200, 500}); // pattern: vibrate 0.5s, pause 0.2s, vibrate 0.5s
-        } else {
-            channel.enableVibration(false);
-            channel.setVibrationPattern(null);
-        }
+        NotificationChannel channel = notificationManager.getNotificationChannel(channelId);
+        if (channel == null) {
+            channel = new NotificationChannel(
+                    channelId,
+                    "Bluetooth Events",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Notifications for Bluetooth events");
+            channel.enableLights(true);
+            channel.setLightColor(Color.BLUE);
 
-          if (soundUri != null) {
-            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_ALARM) // Always alarm for override
-            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-            .build();
+            if (vibrate) {
+                channel.enableVibration(true);
+                channel.setVibrationPattern(new long[]{0, 500, 200, 500});
+            }
+            else{
+                channel.enableVibration(false);
+                channel.setVibrationPattern(null);
+            }
 
-            // If overrideSilent == true, force Alarm usage (bypasses Silent mode)
-            if (silent) {
+            if (soundUri != null) {
+                AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                        .build();
+                if (overRideSilence && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 channel.setSound(soundUri, audioAttributes);
                 channel.setImportance(NotificationManager.IMPORTANCE_HIGH);
                 channel.setBypassDnd(true); // Already helps for DND
             } else {
-                channel.setSound(soundUri, new AudioAttributes.Builder()
-                        .setUsage(AudioAttributes.USAGE_NOTIFICATION)
-                        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                        .build());
+                channel.setSound(soundUri, audioAttributes);
+                channel.setImportance(NotificationManager.IMPORTANCE_HIGH);
+            }
             }
 
-        } else {
-            channel.setSound(null, null);
+            notificationManager.createNotificationChannel(channel);
         }
-
-        notificationManager.createNotificationChannel(channel);
-    } 
+    }
 
     Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
     if (intent != null) {
@@ -314,8 +300,10 @@ public class BluetoothReceiver extends BroadcastReceiver {
             PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
     );
 
-    String title = connected ? "Exiting The Parking" : "ParkAlert is Activated";
+    // String title = connected ? "Exiting The Parking" : "ParkAlert is Activated";
+    String title = connected ? targetName + ": Exiting The Parking" : targetName + ": ParkAlert is Activated";
     String text = deviceName + (connected ? " connected!" : " disconnected!");
+    // String text = targetName +" (" + deviceName + ")"+(connected ? "connected!" : "disconnected!");
 
     NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
             .setSmallIcon(context.getApplicationInfo().icon)
@@ -325,7 +313,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
             .setAutoCancel(true)
             .setContentIntent(pendingIntent);
 
-    // Pre-Oreo: set sound directly
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
         if (soundUri != null) {
             builder.setSound(soundUri);
@@ -337,20 +324,29 @@ public class BluetoothReceiver extends BroadcastReceiver {
 AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 int currentMode = audioManager.getRingerMode();
 int originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM);
+NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
 
 //override silence mode for 5 seconds
-if (silent && currentMode == AudioManager.RINGER_MODE_SILENT) {
-    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-    int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
-    audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0);
+if (overRideSilence && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    if (!nm.isNotificationPolicyAccessGranted()) {
+        // Open settings screen so the user can grant access
+        Intent settingsIntent = new Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(settingsIntent);
+        return; // Avoid crash
+    } else if (currentMode == AudioManager.RINGER_MODE_SILENT|| currentMode == AudioManager.RINGER_MODE_VIBRATE) {
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+        int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_NOTIFICATION);
+        audioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, maxVolume, 0);
+    }
 }
 
 // Send notification
 notificationManager.notify((int) System.currentTimeMillis(), builder.build());
 
 // restore original mode after delay
-if(currentMode == AudioManager.RINGER_MODE_SILENT){
+if(currentMode == AudioManager.RINGER_MODE_SILENT || currentMode == AudioManager.RINGER_MODE_VIBRATE){
     new android.os.Handler(Looper.getMainLooper()).postDelayed(() -> {
     audioManager.setRingerMode(currentMode);
     audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0);

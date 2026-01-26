@@ -320,5 +320,7 @@
   "phoneAlreadyExists":"Phone number already exists",
   "warning":"Warning",
   "youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount":"You must agree to Privacy Policy and Inform consent before creating account.",
-  "zoneSaved":"Zone Saved"
+  "zoneSaved":"Zone Saved",
+  "connected":"Connected",
+  "disconnected":"Disconnected"
 }

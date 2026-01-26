@@ -215,42 +215,33 @@ class _InformationState extends State<Information> {
                                 width: double.infinity,
                                 child: ElevatedButton(
                                   onPressed: () async {
+                                    // 1. Hide keyboard
+                                    FocusScope.of(context).unfocus();
+
                                     if (_formKey.currentState!.validate()) {
                                       setState(() => _isLoading = true);
                                       try {
                                         final box = GetStorage();
 
+                                        // Check Policy
                                         if (!_agreePolicy || !_inform) {
-                                          Get.snackbar(
-                                            loc.warning,
-                                            loc.youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount,
-                                            snackPosition: SnackPosition.BOTTOM,
-                                            backgroundColor: Colors.red,
-                                            colorText: Colors.white,
-                                            duration: const Duration(
-                                              seconds: 2,
-                                            ), // ⏱ shorten visible time
-                                            animationDuration: const Duration(
-                                              milliseconds: 200,
-                                            ), // ⚡ faster animation
-                                            snackStyle: SnackStyle
-                                                .FLOATING, // 🍃 makes it float above content
-                                            margin: const EdgeInsets.all(12),
-                                            borderRadius: 8,
-                                            forwardAnimationCurve: Curves
-                                                .easeOutBack, // 🪄 smoother pop effect
-                                            reverseAnimationCurve: Curves
-                                                .easeInBack, // 🪄 smoother exit
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                loc.youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount,
+                                              ),
+                                              backgroundColor: Colors.red,
+                                            ),
                                           );
-
-                                          // Get.snackbar(
-                                          //   'Warning',
-                                          //   'You must agree to Privacy Policy & Inform consent before creating account.',
-                                          //   backgroundColor: Colors.orange,
-                                          //   colorText: Colors.white,
-                                          // );
-                                          return;
+                                          return; // Stop here
                                         }
+
+                                        print(
+                                          "DEBUG: Sending Register Request...",
+                                        ); // Debug Print
+
                                         final response = await apiService
                                             .registerUser(
                                               firstName:
@@ -261,14 +252,18 @@ class _InformationState extends State<Information> {
                                               countryCode:
                                                   countryCodeController.text,
                                             );
-                                        // print("Status: ${response.statusCode}");
-                                        // print(
-                                        //   "Reason: ${response.reasonPhrase}",
-                                        // );
-                                        // print("Body: ${response.body}");
+
+                                        print(
+                                          "DEBUG: Received Status Code: ${response.statusCode}",
+                                        );
+                                        print(
+                                          "DEBUG: Received Body: ${response.body}",
+                                        );
+
                                         if (response.statusCode == 200 ||
                                             response.statusCode == 201 ||
                                             response.statusCode == 204) {
+                                          // Success Logic
                                           box.write('userData', {
                                             'firstName':
                                                 firstNameController.text,
@@ -281,113 +276,106 @@ class _InformationState extends State<Information> {
                                           box.write('isRegistered', true);
                                           controller.alertPage();
                                         } else {
+                                          // Error Logic
+                                          print(
+                                            "DEBUG: Handling Error Logic...",
+                                          );
                                           final errorData = jsonDecode(
                                             response.body,
                                           );
 
-                                          final errorMessage =
+                                          // Safe Parse Metadata
+                                          List<String> metadataList = [];
+                                          if (errorData['metadata'] != null &&
+                                              errorData['metadata']['duplicate_identifiers'] !=
+                                                  null) {
+                                            metadataList = List<String>.from(
+                                              errorData['metadata']['duplicate_identifiers'],
+                                            );
+                                          }
+
+                                          print(
+                                            "DEBUG: Duplicates Found: $metadataList",
+                                          );
+
+                                          String errorMsg =
                                               errorData['message'] ??
-                                              "Unknown error";
-                                          final code =
-                                              errorData['code'] ??
-                                              "Unknown code";
+                                              "Unknown Error";
 
-                                          final metadataList =
-                                              (errorData['metadata']?['duplicate_identifiers']
-                                                  as List<dynamic>?) ??
-                                              [];
-
+                                          // Determine specific error message
                                           if (metadataList.contains("email")) {
-                                            Get.snackbar(
-                                              loc.error,
-                                              loc.emailAlreadyExists,
-                                              snackPosition:
-                                                  SnackPosition.BOTTOM,
-                                              backgroundColor: Colors.red,
-                                              colorText: Colors.white,
-                                              duration: const Duration(
-                                                seconds: 2,
-                                              ),
-                                              animationDuration: const Duration(
-                                                milliseconds: 200,
-                                              ),
-                                              snackStyle: SnackStyle.FLOATING,
-                                              margin: const EdgeInsets.all(12),
-                                              borderRadius: 8,
-                                              forwardAnimationCurve:
-                                                  Curves.easeOutBack,
-                                              reverseAnimationCurve:
-                                                  Curves.easeInBack,
+                                            errorMsg = loc.emailAlreadyExists;
+                                            print(
+                                              "DEBUG: Detected Email Duplicate",
                                             );
                                           } else if (metadataList.contains(
                                             "SMS",
                                           )) {
-                                            Get.snackbar(
-                                              loc.error,
-                                              loc.phoneAlreadyExists,
-                                              snackPosition:
-                                                  SnackPosition.BOTTOM,
-                                              backgroundColor: Colors.red,
-                                              colorText: Colors.white,
-                                              duration: const Duration(
-                                                seconds: 2,
-                                              ),
-                                              animationDuration: const Duration(
-                                                milliseconds: 200,
-                                              ),
-                                              snackStyle: SnackStyle.FLOATING,
-                                              margin: const EdgeInsets.all(12),
-                                              borderRadius: 8,
-                                              forwardAnimationCurve:
-                                                  Curves.easeOutBack,
-                                              reverseAnimationCurve:
-                                                  Curves.easeInBack,
+                                            errorMsg = loc.phoneAlreadyExists;
+                                            print(
+                                              "DEBUG: Detected SMS Duplicate",
                                             );
-                                          } else {
-                                            Get.snackbar(
-                                              loc.error,
-                                              errorMessage,
-                                              snackPosition:
-                                                  SnackPosition.BOTTOM,
-                                              backgroundColor: Colors.red,
-                                              colorText: Colors.white,
-                                              duration: const Duration(
-                                                seconds: 2,
+                                          }
+
+                                          // Show Native SnackBar (More Reliable than Get.snackbar)
+                                          if (mounted) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  errorMsg,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                backgroundColor: Colors.red,
+                                                behavior: SnackBarBehavior
+                                                    .floating, // floats above bottom
+                                                margin: EdgeInsets.only(
+                                                  bottom:
+                                                      MediaQuery.of(
+                                                        context,
+                                                      ).viewInsets.bottom +
+                                                      10,
+                                                  left: 10,
+                                                  right: 10,
+                                                ),
                                               ),
-                                              animationDuration: const Duration(
-                                                milliseconds: 200,
-                                              ),
-                                              snackStyle: SnackStyle.FLOATING,
-                                              margin: const EdgeInsets.all(12),
-                                              borderRadius: 8,
-                                              forwardAnimationCurve:
-                                                  Curves.easeOutBack,
-                                              reverseAnimationCurve:
-                                                  Curves.easeInBack,
                                             );
                                           }
                                         }
                                       } catch (e) {
-                                        // print(
-                                        //   "=================================${e}",
-                                        // );
-                                        Get.snackbar(
-                                          loc.error,
-                                          loc.nointernetconnection,
-                                          backgroundColor: Colors.red,
-                                          colorText: Colors.white,
-                                        );
+                                        print("DEBUG: CRASHED WITH ERROR: $e");
+                                        if (mounted) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                loc.nointernetconnection,
+                                              ), // or use e.toString() for debug
+                                              backgroundColor: Colors.red,
+                                            ),
+                                          );
+                                        }
                                       } finally {
-                                        setState(
-                                          () => _isLoading = false,
-                                        ); // stop loading
+                                        if (mounted) {
+                                          setState(() => _isLoading = false);
+                                        }
                                       }
                                     } else {
-                                      Get.snackbar(
-                                        loc.error,
-                                        loc.pleasefillinalltherequiredfields,
-                                        backgroundColor: Colors.red,
-                                        colorText: Colors.white,
+                                      // Form Validation Failed
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            loc.pleasefillinalltherequiredfields,
+                                          ),
+                                          backgroundColor: Colors.red,
+                                        ),
                                       );
                                     }
                                   },

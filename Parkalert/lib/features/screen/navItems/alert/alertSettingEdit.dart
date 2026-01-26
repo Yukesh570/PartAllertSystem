@@ -89,7 +89,9 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
       // This means localization isn't yet loaded or context is not in a localized widget tree
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-
+    if (overrideSilentMode) {
+      checkAndRequestDndPermission(context);
+    }
     final MainController controller = Get.put(MainController());
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
@@ -407,6 +409,7 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
                               await overRideSilence(
                                 widget.ringerData!.index,
                                 overrideSilentMode,
+                                context,
                               );
 
                               await activeBluetooth();

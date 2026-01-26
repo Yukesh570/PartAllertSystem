@@ -64,16 +64,13 @@ public void onCreate() {
 
     createEventChannel();
     createNotificationChannel();
-    Log.d("GeofenceService", "✅✅ GeofenceForegroundService started");
 
     // Check permissions
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        Log.e("GeofenceService", "FOREGROUND_SERVICE_LOCATION not granted, stopping service");
         stopSelf();
         return;
     }
-    Log.d("GeofenceService", "✅✅✅ GeofenceForegroundService started");
 
     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -81,7 +78,6 @@ public void onCreate() {
         stopSelf();
         return;
     }
-        Log.d("GeofenceService", "✅✅✅✅ GeofenceForegroundService started");
 
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
@@ -90,11 +86,9 @@ public void onCreate() {
         stopSelf();
         return;
     }
-        Log.d("GeofenceService", "✅✅✅✅✅ GeofenceForegroundService started");
 
 
     startForeground(1001, buildNotification("Geofence monitoring active").build());
-    Log.d("GeofenceService", "✅✅✅✅✅✅ GeofenceForegroundService started");
 
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -124,7 +118,6 @@ public void onCreate() {
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
             .setInterval(3000)
             .setSmallestDisplacement(1f);
-    Log.d("GeofenceService", "Checking location permissions");
 
     fusedLocationClient.requestLocationUpdates(request, locationCallback, getMainLooper());
 }
@@ -134,21 +127,17 @@ public void onCreate() {
     boolean insideAnyZone = false;
     String activeZoneName = null;
 
-    Log.d("GeofenceService", "Checking location: " + location.getLatitude() + ", " + location.getLongitude());
-    Log.d("GeofenceService", "Total zones loaded: " + zones.size());
 
     for (Zone zone : zones) {
         Log.d("GeofenceService", "Checking zone: " + zone.name + ", isOn: " + zone.isOn + ", points: " + (zone.points != null ? zone.points.size() : 0));
 
         // Skip if zone is off
         if (!zone.isOn) {
-            Log.d("GeofenceService", "Skipping zone '" + zone.name + "' - isOn=false");
             continue;
         }
 
         // Skip if zone has no points or too few points for a polygon
         if (zone.points == null || zone.points.size() < 3) {
-            Log.d("GeofenceService", "Skipping zone '" + zone.name + "' - invalid points");
             continue;
         }
 
@@ -156,26 +145,21 @@ public void onCreate() {
         boolean insidePolygon = isPointInPolygon(location.getLatitude(), location.getLongitude(), zone.points);
         boolean nearEdge = isNearPolygonEdge(location.getLatitude(), location.getLongitude(), zone.points, EDGE_BUFFER_METERS);
         
-        Log.d("GeofenceService", "Zone '" + zone.name + "' - inside: " + insidePolygon + ", near edge: " + nearEdge);
 
         if (insidePolygon || nearEdge) {
             insideAnyZone = true;
             activeZoneName = zone.name;
-            Log.d("GeofenceService", "INSIDE ZONE: " + zone.name);
             break;
         }
     }
 
-    Log.d("GeofenceService", "Final result - insideAnyZone: " + insideAnyZone + ", isInsideZone: " + isInsideZone);
 
     if (insideAnyZone && !isInsideZone) {
-        Log.d("GeofenceService", "Entered ALERT zone: " + (activeZoneName != null ? activeZoneName : "zone"));
         // showEventNotification("Entered Zone", activeZoneName != null ? activeZoneName : "zone");
         if (channel != null) {
             channel.invokeMethod("enteredZone", activeZoneName != null ? activeZoneName : "zone");
         }
     } else if (!insideAnyZone && isInsideZone) {
-        Log.d("GeofenceService", "Exited ALERT zone");
         // showEventNotification("Exited ALERT Zone", "geofenced area");
         if (channel != null) {
             channel.invokeMethod("exitedZone", "geofenced area");
@@ -183,7 +167,6 @@ public void onCreate() {
     }
 
     isInsideZone = insideAnyZone;
-    Log.d("GeofenceService", "================ - insideAnyZone: " + insideAnyZone + ", isInsideZone: " + isInsideZone);
 
     // Save state to SharedPreferences
     getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
@@ -204,13 +187,11 @@ public void onCreate() {
         }
         
         if (zonesData != null) {
-            Log.d("GeofenceService", "Raw zones data: " + zonesData);
             
             // Check if it's a Flutter list prefix
             if (zonesData.startsWith("VGhpcyBpcyB0aGUgcHJlZml4IGZvciBhIGxpc3Qu!")) {
                 // This is a Flutter list - remove the prefix and parse as JSON array
                 String jsonArrayString = zonesData.substring("VGhpcyBpcyB0aGUgcHJlZml4IGZvciBhIGxpc3Qu!".length());
-                Log.d("GeofenceService", "JSON array string: " + jsonArrayString);
                 
                 try {
                     JSONArray jsonArray = new JSONArray(jsonArrayString);
@@ -219,7 +200,6 @@ public void onCreate() {
                         JSONObject obj = new JSONObject(zoneJsonString);
                         zones.add(parseZoneFromJson(obj));
                     }
-                    Log.d("GeofenceService", "Loaded " + zones.size() + " zones from Flutter list");
                 } catch (Exception e) {
                     Log.e("GeofenceService", "Failed to parse Flutter list JSON: " + e.getMessage());
                 }
@@ -231,7 +211,6 @@ public void onCreate() {
                         JSONObject obj = jsonArray.getJSONObject(i);
                         zones.add(parseZoneFromJson(obj));
                     }
-                    Log.d("GeofenceService", "Loaded " + zones.size() + " zones from regular JSON array");
                 } catch (Exception e) {
                     Log.e("GeofenceService", "Failed to parse regular JSON array: " + e.getMessage());
                 }

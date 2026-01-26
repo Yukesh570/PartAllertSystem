@@ -799,4 +799,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get zoneSaved => 'Zone enregistrée';
+
+  @override
+  String get connected => 'Connecté';
+
+  @override
+  String get disconnected => 'Déconnecté';
 }

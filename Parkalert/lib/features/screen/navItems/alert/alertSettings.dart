@@ -71,6 +71,9 @@ class _AlertSettingState extends State<AlertSetting> {
       // This means localization isn't yet loaded or context is not in a localized widget tree
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+    if (_silent) {
+      checkAndRequestDndPermission(context);
+    }
     final MainController controller = Get.put(MainController());
     DateTime now = DateTime.now();
     final drawerCtrl = Get.find<DrawerControllerX>();

@@ -263,7 +263,9 @@
   "phoneAlreadyExists": "Le numéro de téléphone existe déjà",
   "warning": "Avertissement",
   "youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount": "Vous devez accepter la politique de confidentialité et le consentement éclairé avant de créer un compte.",
-  "zoneSaved": "Zone enregistrée"
+  "zoneSaved": "Zone enregistrée",
+  "connected":"Connecté",
+  "disconnected":"Déconnecté"
 
 
 }

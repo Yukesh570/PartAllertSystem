@@ -109,8 +109,10 @@ class ApiService {
             "api-key": apiKey,
           },
           body: jsonEncode({
-            "email": email,
             "attributes": {
+              "email":
+                  email, //if you want to remove duplicate error put email in attribute but if you want to remove duplicate error put email outsode attribute
+
               "FIRSTNAME": firstName,
               "LASTNAME": lastName,
               "SMS": "$code$phoneNumber",

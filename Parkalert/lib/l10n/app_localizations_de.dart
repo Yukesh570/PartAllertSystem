@@ -799,4 +799,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get zoneSaved => 'Zone gespeichert';
+
+  @override
+  String get connected => 'Verbunden';
+
+  @override
+  String get disconnected => 'Getrennt';
 }

@@ -1,9 +1,13 @@
 import 'dart:convert';
 import 'package:Parkalert/features/controllers/alert/isON.dart';
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:Parkalert/utils/storage/data/RingerData.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 //saves the ringers
 Future<bool> saveRingers(List<RingerData> ringers) async {
@@ -45,7 +49,11 @@ Future<List<RingerData>> loadRingers() async {
   }).toList();
 }
 
-Future<void> overRideSilence(int index, bool overridesilence) async {
+Future<void> overRideSilence(
+  int index,
+  bool overridesilence,
+  BuildContext context,
+) async {
   final prefs = await SharedPreferences.getInstance();
   List<String>? existingJsonList = prefs.getStringList('ringers');
   List<RingerData> allRingers = existingJsonList!
@@ -63,24 +71,35 @@ Future<void> overRideSilence(int index, bool overridesilence) async {
       .map((r) => jsonEncode(r.toJson()))
       .toList();
 
-  // void printAllSharedPreferences() async {
-  //   final prefs = await SharedPreferences.getInstance();
-  //   final keys = prefs.getKeys();
-
-  //   if (keys.isEmpty) {
-  //     print("SharedPreferences is asdasdasdasdasdas.");
-  //     return;
-  //   }
-
-  //   print("SharedPreferences asdasdasdasdasdasda:");
-  //   for (String key in keys) {
-  //     final value = prefs.get(key);
-  //     print("kale: $key → Value: $value");
-  //   }
-  // }
-
-  // printAllSharedPreferences();
   await prefs.setStringList("ringers", updatedJsonList);
+  if (overridesilence) {
+    await checkAndRequestDndPermission(context);
+  }
+}
+
+Future<void> checkAndRequestDndPermission(BuildContext context) async {
+  // Only needed for Android M (API 23) and above
+  if (Theme.of(context).platform == TargetPlatform.android) {
+    try {
+      // Check current permission state
+      final status = await Permission.accessNotificationPolicy.status;
+
+      if (!status.isGranted) {
+        // Launch Android settings to grant DND access
+        final intent = AndroidIntent(
+          action: 'android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS',
+          flags: <int>[Flag.FLAG_ACTIVITY_NEW_TASK],
+        );
+        await intent.launch();
+
+        debugPrint("⚙️ Asking user to grant DND permission...");
+      } else {
+        debugPrint("✅ DND permission already granted");
+      }
+    } catch (e) {
+      debugPrint("❌ Error requesting DND permission: $e");
+    }
+  }
 }
 
 Future<void> vibrationOption(int index, bool vibration) async {
