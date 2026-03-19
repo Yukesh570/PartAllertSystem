@@ -93,7 +93,7 @@ class _InformationState extends State<Information> {
       "EN": "en",
       "FR": "fr",
       "DE": "de",
-      "DU": "nl",
+      "NL": "nl",
     };
     return Scaffold(
       resizeToAvoidBottomInset: true,

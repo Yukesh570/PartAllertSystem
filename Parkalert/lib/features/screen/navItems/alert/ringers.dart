@@ -257,32 +257,28 @@ class _RingersState extends State<Ringers> {
                   ],
                 ),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
+
                 // Connect Button
                 Obx(() {
                   if (isOnController.isLoading.value)
                     return CircularProgressIndicator();
-                  if (ringerData.index >= isOnController.isOnList.length) {
-                    return buildConnectButton(
-                      context: context,
-                      text: loc.connect,
-                      backgroundColor: color2,
-                      textColor: dark ? Colors.white : textColor,
-                      onPressed: () {},
-                    );
-                  }
-                  bool isOn = isOnController.isOnList[ringerData.index];
-                  return buildConnectButton(
+                  // if (ringerData.index >= isOnController.isOnList.length) {
+                  //   return buildConnectButton(
+                  //     context: context,
+                  //     text: loc.connect,
+                  //     backgroundColor: color2,
+                  //     textColor: dark ? Colors.white : textColor,
+                  //     onPressed: () {},
+                  //   );
+                  // }
+                  return buildConnectNotBotton(
                     context: context,
-                    text: isOn ? loc.disconnect : loc.connect,
+                    text: ringerData.triggerType == "Connect"
+                        ? loc.connect
+                        : loc.disconnect,
                     backgroundColor: color2,
                     textColor: dark ? Colors.white : textColor,
-
-                    onPressed: () => {
-                      reload(),
-
-                      isOnController.toggleSwitch(context, ringerData),
-                    },
                   );
                 }),
               ],

@@ -50,6 +50,7 @@ class _AlertSettingState extends State<AlertSetting> {
   final TextEditingController soundController = TextEditingController();
   bool _inform = true;
   bool _silent = false;
+  bool _isConnectSelected = true;
 
   @override
   void dispose() {
@@ -92,6 +93,7 @@ class _AlertSettingState extends State<AlertSetting> {
       required bool isOn,
       required bool vibration,
       required bool overRideSilence,
+      required String triggerType,
     }) async {
       final List<RingerData> savedRingers = await loadRingers();
 
@@ -107,6 +109,7 @@ class _AlertSettingState extends State<AlertSetting> {
         sound: sound,
         vibration: vibration,
         overRideSilence: overRideSilence,
+        triggerType: triggerType,
       );
       ringersDataList.add(newRingerData);
 
@@ -381,6 +384,118 @@ class _AlertSettingState extends State<AlertSetting> {
                                       ),
                                     ],
                                   ),
+                                  const SizedBox(height: 50.0),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: dark
+                                          ? Colors.grey[850]
+                                          : Colors
+                                                .grey[200], // Background of the unselected area
+                                      borderRadius: BorderRadius.circular(20.0),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.05),
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        // CONNECT BUTTON
+                                        GestureDetector(
+                                          onTap: () => setState(
+                                            () => _isConnectSelected = true,
+                                          ),
+                                          child: Container(
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 12,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              // If selected, show the highlight color
+                                              color: _isConnectSelected
+                                                  ? (dark
+                                                        ? Colors.blueGrey[800]
+                                                        : const Color(
+                                                            0xFFDDE3F9,
+                                                          ))
+                                                  : Colors.transparent,
+                                              borderRadius:
+                                                  const BorderRadius.vertical(
+                                                    top: Radius.circular(20.0),
+                                                  ),
+                                            ),
+                                            child: Text(
+                                              "Connect",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: _isConnectSelected
+                                                    ? (dark
+                                                          ? Colors.white
+                                                          : const Color(
+                                                              0xFF4A5C7D,
+                                                            ))
+                                                    : Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        // DIVIDER LINE
+                                        Divider(
+                                          height: 1,
+                                          color: dark
+                                              ? Colors.grey[700]
+                                              : Colors.grey[300],
+                                        ),
+                                        // DISCONNECT BUTTON
+                                        GestureDetector(
+                                          onTap: () => setState(
+                                            () => _isConnectSelected = false,
+                                          ),
+                                          child: Container(
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 12,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              // If selected, show the highlight color
+                                              color: !_isConnectSelected
+                                                  ? (dark
+                                                        ? Colors.blueGrey[800]
+                                                        : const Color(
+                                                            0xFFDDE3F9,
+                                                          ))
+                                                  : Colors.transparent,
+                                              borderRadius:
+                                                  const BorderRadius.vertical(
+                                                    bottom: Radius.circular(
+                                                      20.0,
+                                                    ),
+                                                  ),
+                                            ),
+                                            child: Text(
+                                              "Disconnect",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: !_isConnectSelected
+                                                    ? (dark
+                                                          ? Colors.white
+                                                          : const Color(
+                                                              0xFF4A5C7D,
+                                                            ))
+                                                    : Colors.grey,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -441,6 +556,9 @@ class _AlertSettingState extends State<AlertSetting> {
                                 isOn: false,
                                 vibration: _inform,
                                 overRideSilence: _silent,
+                                triggerType: _isConnectSelected
+                                    ? "Connect"
+                                    : "Disconnect",
                               );
                               controller.alertPage();
                             }

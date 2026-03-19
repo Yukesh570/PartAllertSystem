@@ -77,6 +77,31 @@ Future<void> overRideSilence(
   }
 }
 
+Future<void> triggerTypeOption(
+  int index,
+  String triggerType,
+  BuildContext context,
+) async {
+  final prefs = await SharedPreferences.getInstance();
+  List<String>? existingJsonList = prefs.getStringList('ringers');
+  List<RingerData> allRingers = existingJsonList!
+      .map((jsonStr) => RingerData.fromJson(jsonDecode(jsonStr)))
+      .toList();
+
+  int indexToUpdate = allRingers.indexWhere((r) => r.index == index);
+
+  if (indexToUpdate != -1) {
+    allRingers[indexToUpdate].triggerType = triggerType;
+  } else {
+    print("Ringer with index ${index} not found");
+  }
+  List<String> updatedJsonList = allRingers
+      .map((r) => jsonEncode(r.toJson()))
+      .toList();
+
+  await prefs.setStringList("ringers", updatedJsonList);
+}
+
 Future<void> checkAndRequestDndPermission(BuildContext context) async {
   // Only needed for Android M (API 23) and above
   if (Theme.of(context).platform == TargetPlatform.android) {

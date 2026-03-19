@@ -233,3 +233,28 @@ Widget buildConnectButton({
     ),
   );
 }
+
+Widget buildConnectNotBotton({
+  required BuildContext context,
+  required String text,
+  required Color backgroundColor,
+  required Color textColor,
+}) {
+  final dark = Theme.of(context).brightness == Brightness.dark;
+
+  return SizedBox(
+    width: double.infinity,
+    child: ElevatedButton(
+      onPressed: () async {},
+      style: ElevatedButton.styleFrom(
+        backgroundColor: dark ? AppColors.alert3Dark : backgroundColor,
+        foregroundColor: textColor,
+        padding: const EdgeInsets.symmetric(vertical: 15.0),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+      ),
+    ),
+  );
+}

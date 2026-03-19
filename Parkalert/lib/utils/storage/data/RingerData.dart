@@ -8,6 +8,7 @@ class RingerData {
   String sound;
   bool vibration;
   bool overRideSilence;
+  String triggerType;
 
   RingerData({
     required this.index,
@@ -19,6 +20,7 @@ class RingerData {
     required this.sound,
     this.vibration = true,
     this.overRideSilence = false,
+    required this.triggerType,
   });
 
   Map<String, dynamic> toJson() => {
@@ -31,6 +33,7 @@ class RingerData {
     'sound': sound,
     'vibration': vibration,
     'overRideSilence': overRideSilence,
+    'triggerType': triggerType,
   };
   factory RingerData.fromJson(Map<String, dynamic> json) => RingerData(
     index: json['index'] ?? 0,
@@ -42,6 +45,7 @@ class RingerData {
     sound: json['sound'] ?? '',
     vibration: json['vibration'] ?? true,
     overRideSilence: json['overRideSilence'] ?? false,
+    triggerType: json['triggerType'] ?? 'connect',
   );
 
   void map(Set<void> Function(dynamic r) param0) {}

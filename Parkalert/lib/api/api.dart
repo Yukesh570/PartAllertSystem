@@ -89,6 +89,43 @@ class ApiService {
   // }
   // Inside your widget:
 
+  // 1. Add this helper method to your ApiService
+  Future<String?> findEmailByPhone(String fullPhoneNumber) async {
+    // Use the filter for SMS specifically
+    final url = Uri.parse("https://api.brevo.com/v3/contacts/search");
+
+    try {
+      final response = await http
+          .post(
+            url,
+            headers: {
+              "accept": "application/json",
+              "Content-Type": "application/json",
+              "api-key": apiKey,
+            },
+            body: jsonEncode({
+              "query":
+                  "SMS:\"$fullPhoneNumber\"", // Better query format for search
+            }),
+          )
+          .timeout(const Duration(seconds: 5));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        // Brevo returns contacts in a list called 'contacts'
+        if (data['contacts'] != null && data['contacts'].isNotEmpty) {
+          String foundEmail = data['contacts'][0]['email'];
+          print("🔍 Found phone owner in Brevo: $foundEmail");
+          return foundEmail;
+        }
+      }
+    } catch (e) {
+      print("⚠️ Search error: $e");
+    }
+    return null;
+  }
+
+  // 2. Update your registerUser to use the search helper
   Future registerUser({
     required String firstName,
     required String lastName,
@@ -96,9 +133,59 @@ class ApiService {
     required String phoneNumber,
     String? countryCode,
   }) async {
-    final code = countryCode;
-    print("2134123123123123=====${code}${phoneNumber}");
+    final code = countryCode ?? "";
+    final fullPhone = "$code$phoneNumber";
 
+    print("🚀 Starting Registration Force-Fix for: $fullPhone");
+
+    // --- STEP 1: FIND WHO OWNS THIS SMS ---
+    String? emailToCleanup;
+    try {
+      final searchUrl = Uri.parse("https://api.brevo.com/v3/contacts/search");
+      final searchRes = await http
+          .post(
+            searchUrl,
+            headers: {
+              "accept": "application/json",
+              "Content-Type": "application/json",
+              "api-key": apiKey,
+            },
+            body: jsonEncode({"query": "SMS:\"$fullPhone\""}),
+          )
+          .timeout(const Duration(seconds: 5));
+
+      if (searchRes.statusCode == 200) {
+        final data = jsonDecode(searchRes.body);
+        if (data['contacts'] != null && data['contacts'].isNotEmpty) {
+          emailToCleanup = data['contacts'][0]['email'];
+          print("🔍 Found contact to remove: $emailToCleanup");
+        }
+      }
+    } catch (e) {
+      print("⚠️ Search failed: $e");
+    }
+
+    // --- STEP 2: DELETE THAT OLD CONTACT ---
+    if (emailToCleanup != null) {
+      try {
+        final deleteUrl = Uri.parse(
+          "https://api.brevo.com/v3/contacts/${Uri.encodeComponent(emailToCleanup)}",
+        );
+        final delRes = await http.delete(
+          deleteUrl,
+          headers: {"api-key": apiKey},
+        );
+        print(
+          "🧹 Deleted old contact ($emailToCleanup). Status: ${delRes.statusCode}",
+        );
+        // Wait 1 second for Brevo's database to sync the deletion
+        await Future.delayed(const Duration(seconds: 1));
+      } catch (e) {
+        print("⚠️ Deletion failed: $e");
+      }
+    }
+
+    // --- STEP 3: REGISTER THE NEW USER ---
     final url = Uri.parse(brevoUrl);
     final response = await http
         .post(
@@ -109,26 +196,21 @@ class ApiService {
             "api-key": apiKey,
           },
           body: jsonEncode({
+            "email": email,
             "attributes": {
-              "email":
-                  email, //if you want to remove duplicate error put email in attribute but if you want to remove duplicate error put email outsode attribute
-
               "FIRSTNAME": firstName,
               "LASTNAME": lastName,
-              "SMS": "$code$phoneNumber",
+              "SMS": fullPhone,
             },
             "listIds": [23],
             "updateEnabled": true,
           }),
         )
-        .timeout(
-          const Duration(seconds: 10),
-          onTimeout: () {
-            throw Exception("Request timed out. Please check your internet.");
-          },
-        );
-    print("Response status: ${response.statusCode}");
-    print("Response body: ${response.body}");
+        .timeout(const Duration(seconds: 10));
+
+    print("📥 Final Response status: ${response.statusCode}");
+    print("📥 Final Response body: ${response.body}");
+
     return response;
   }
 

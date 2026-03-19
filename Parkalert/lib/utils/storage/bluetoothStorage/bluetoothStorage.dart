@@ -31,6 +31,7 @@ Future<RingerData> activeBluetooth() async {
       sound: '',
       vibration: true,
       overRideSilence: false,
+      triggerType: 'connect',
     ),
   );
   Map<String, String> data = {
