@@ -1,103 +1,213 @@
 import Foundation
 import CoreBluetooth
+import CoreLocation
 import UserNotifications
 import Flutter
-import CoreLocation
+import UIKit
 
-final class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
+class BluetoothManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate, CLLocationManagerDelegate {
     static let shared = BluetoothManager()
+    
+    private var centralManager: CBCentralManager!
+    private var methodChannel: FlutterMethodChannel?
+    private var connectedPeripherals: [UUID: CBPeripheral] = [:]
+    
+    // For fetching location on BLE event
+    private let locationManager = CLLocationManager()
+    private var pendingLocationTargetName: String?
+    private var pendingLocationConnected: Bool = false
+    private var bgTask: UIBackgroundTaskIdentifier = .invalid
 
-    private var central: CBCentralManager!
-    private var connectedPeripherals: [CBPeripheral] = []
-    private var targetName: String?
-    private var channel: FlutterMethodChannel?
-    private let notificationCenter = UNUserNotificationCenter.current()
-
-    private override init() {
+    override init() {
         super.init()
-        central = CBCentralManager(delegate: self, queue: nil, options: nil)
-        notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in }
+        centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionShowPowerAlertKey: true])
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
     }
-
+    
     func setMethodChannel(_ channel: FlutterMethodChannel?) {
-        self.channel = channel
+        self.methodChannel = channel
     }
-
-    func setTargetName(_ name: String?) {
-        self.targetName = name
-    }
-
-    // Start scanning
+    
     func startScanning() {
-        guard central.state == .poweredOn else { return }
-        // Best practice: scan for specific service UUIDs if you have them.
-        // For name-based scanning (less reliable in background):
-        central.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+        if centralManager.state == .poweredOn {
+            // Note: Background scanning requires explicit Service UUIDs in production
+            centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+        }
     }
-
-    func stopScanning() {
-        central.stopScan()
-    }
-
-    // CBCentralManagerDelegate
+    
+    // MARK: - CBCentralManagerDelegate
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        switch central.state {
-        case .poweredOn:
-            print("BLE powered on")
-            // Optionally auto-start scanning
-            // startScanning()
-        default:
-            print("BLE state: \(central.state.rawValue)")
-        }
+        if central.state == .poweredOn { startScanning() }
     }
-
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
-        advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        // Find name in advertisement or peripheral
+    
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         let advName = advertisementData[CBAdvertisementDataLocalNameKey] as? String
-        let name = advName ?? peripheral.name
-
-        guard let target = targetName, !target.isEmpty else { return }
-
-        if let name = name, name.contains(target) {
-            print("Found target peripheral: \(name)")
-            // Option: notify Flutter about discovery
-            channel?.invokeMethod("bluetoothDiscovered", arguments: ["name": name, "rssi": RSSI.intValue])
-
-            // Try to connect for connect/disconnect callbacks
-            peripheral.delegate = self
-            central.connect(peripheral, options: nil)
+        let deviceName = advName ?? peripheral.name ?? ""
+        
+        // Connect to any device we discover so we can get connect/disconnect events
+        if !deviceName.isEmpty {
+            centralManager.connect(peripheral, options: nil)
         }
     }
-
+    
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        print("Connected to: \(peripheral.name ?? "unknown")")
-        connectedPeripherals.append(peripheral)
-        channel?.invokeMethod("bluetoothConnected", arguments: peripheral.name ?? "unknown")
-        sendLocalNotification(title: "Bluetooth Connected", body: peripheral.name ?? "device")
+        let deviceName = peripheral.name ?? "Unknown"
+        connectedPeripherals[peripheral.identifier] = peripheral
+        print("Bluetooth connected: \(deviceName)")
+        
+        handleBluetoothEvent(deviceName: deviceName, isConnecting: true)
     }
-
+    
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        print("Disconnected from: \(peripheral.name ?? "unknown")")
-        if let idx = connectedPeripherals.firstIndex(where: { $0.identifier == peripheral.identifier }) {
-            connectedPeripherals.remove(at: idx)
+        let deviceName = peripheral.name ?? "Unknown"
+        connectedPeripherals.removeValue(forKey: peripheral.identifier)
+        print("Bluetooth disconnected: \(deviceName)")
+        
+        handleBluetoothEvent(deviceName: deviceName, isConnecting: false)
+        startScanning()
+    }
+    
+    // MARK: - Logic Match with Android
+    private func handleBluetoothEvent(deviceName: String, isConnecting: Bool) {
+        // Request background execution time (simulates Android's 10s foreground service)
+        bgTask = UIApplication.shared.beginBackgroundTask(expirationHandler: {
+            UIApplication.shared.endBackgroundTask(self.bgTask)
+            self.bgTask = .invalid
+        })
+        
+        // 1. Get Matching Ringer
+        guard let ringerJsonString = getMatchingRinger(deviceName: deviceName, isConnecting: isConnecting),
+              let ringerData = ringerJsonString.data(using: .utf8),
+              let jsonObject = try? JSONSerialization.jsonObject(with: ringerData, options: []) as? [String: Any] else {
+            UIApplication.shared.endBackgroundTask(self.bgTask)
+            return
         }
-        channel?.invokeMethod("bluetoothDisconnected", arguments: peripheral.name ?? "unknown")
-        sendLocalNotification(title: "Bluetooth Disconnected", body: peripheral.name ?? "device")
+        
+        let targetName = jsonObject["name"] as? String ?? ""
+        let targetSound = jsonObject["sound"] as? String ?? ""
+        let targetVibration = jsonObject["vibration"] as? String ?? "true"
+        
+        // 2. Temporarily wake up Geofence manager
+        GeofenceManager.shared.startTemporaryTracking()
+        
+        // Delay by 2 seconds to allow Geofence to update (Matching Android Handler delay)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            let isInsideGeofence = UserDefaults.standard.bool(forKey: "flutter.insideGeofence")
+            
+            self.getCurrentLocation(targetName: targetName, connected: isConnecting)
+            
+            if !isInsideGeofence {
+                self.showNotification(deviceName: deviceName, targetName: targetName, connected: isConnecting, targetSound: targetSound, targetVibration: targetVibration)
+            } else {
+                print("Inside geofence → skipping notification")
+            }
+        }
     }
-
-    private func sendLocalNotification(title: String, body: String) {
+    
+    private func getMatchingRinger(deviceName: String, isConnecting: Bool) -> String? {
+        let prefs = UserDefaults.standard
+        
+        // Flutter saves arrays as [String] in iOS UserDefaults
+        if let rawArray = prefs.stringArray(forKey: "flutter.ringers") {
+            for item in rawArray {
+                if isFullMatch(jsonString: item, deviceName: deviceName, isConnecting: isConnecting) {
+                    return item
+                }
+            }
+        } else if let rawString = prefs.string(forKey: "flutter.ringers") {
+            // Fallback for weird string encoding
+            if isFullMatch(jsonString: rawString, deviceName: deviceName, isConnecting: isConnecting) {
+                return rawString
+            }
+        }
+        return nil
+    }
+    
+    private func isFullMatch(jsonString: String, deviceName: String, isConnecting: Bool) -> Bool {
+        guard let data = jsonString.data(using: .utf8),
+              let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else { return false }
+        
+        let targetBluetooth = json["bluetooth"] as? String ?? ""
+        let triggerType = json["triggerType"] as? String ?? "Connect"
+        
+        let nameMatches = !targetBluetooth.isEmpty && deviceName.contains(targetBluetooth)
+        if !nameMatches { return false }
+        
+        let triggerMatches = (triggerType.lowercased() == "connect" && isConnecting) ||
+                             (triggerType.lowercased() == "disconnect" && !isConnecting)
+        
+        return triggerMatches
+    }
+    
+    // MARK: - Location & Notification
+    private func getCurrentLocation(targetName: String, connected: Bool) {
+        self.pendingLocationTargetName = targetName
+        self.pendingLocationConnected = connected
+        locationManager.requestLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last, let targetName = pendingLocationTargetName else { return }
+        
+        let locObj: [String: Any] = [
+            "lat": location.coordinate.latitude,
+            "lng": location.coordinate.longitude,
+            "time": Int(Date().timeIntervalSince1970 * 1000),
+            "name": targetName,
+            "status": pendingLocationConnected ? "Connected" : "Disconnected"
+        ]
+        
+        saveCurrentLocation(locObj: locObj)
+        self.pendingLocationTargetName = nil
+        
+        if bgTask != .invalid {
+            UIApplication.shared.endBackgroundTask(bgTask)
+            bgTask = .invalid
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Location fetch failed: \(error)")
+    }
+    
+    private func saveCurrentLocation(locObj: [String: Any]) {
+        let prefs = UserDefaults.standard
+        
+        do {
+            let newJsonData = try JSONSerialization.data(withJSONObject: locObj, options: [])
+            let newJsonString = String(data: newJsonData, encoding: .utf8)!
+            
+            // Append to existing array
+            var currentArr = prefs.stringArray(forKey: "flutter.currentLocation") ?? []
+            currentArr.append(newJsonString)
+            prefs.set(currentArr, forKey: "flutter.currentLocation")
+            
+            var backupArr = prefs.stringArray(forKey: "flutter.backupcurrentLocation") ?? []
+            backupArr.append(newJsonString)
+            prefs.set(backupArr, forKey: "flutter.backupcurrentLocation")
+            
+        } catch {
+            print("Failed to save location history")
+        }
+    }
+    
+    private func showNotification(deviceName: String, targetName: String, connected: Bool, targetSound: String, targetVibration: String) {
         let content = UNMutableNotificationContent()
-        content.title = title
-        content.body = body
-        content.sound = UNNotificationSound.default
-
-        let req = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-        notificationCenter.add(req) { error in if let e = error { print(e) } }
-    }
-
-    // Optional CBPeripheralDelegate methods if you need services/characteristics
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        // ...
+        content.title = connected ? targetName : targetName
+        content.body = "\(deviceName) \(connected ? "connected!" : "disconnected!")"
+        
+        if targetSound.isEmpty {
+            content.sound = UNNotificationSound.default
+        } else {
+            // Make sure your .wav files are added to the iOS project target!
+            let soundName = UNNotificationSoundName(rawValue: "\(targetSound).wav")
+            content.sound = UNNotificationSound(named: soundName)
+        }
+        
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+        UNUserNotificationCenter.current().add(request) { error in
+            if let e = error { print("Notification error: \(e)") }
+        }
     }
 }

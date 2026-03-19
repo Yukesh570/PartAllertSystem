@@ -3,138 +3,181 @@ import CoreLocation
 import UserNotifications
 import Flutter
 
-final class GeofenceManager: NSObject, CLLocationManagerDelegate {
+class GeofenceManager: NSObject, CLLocationManagerDelegate {
     static let shared = GeofenceManager()
+    
     private let locationManager = CLLocationManager()
-    private var channel: FlutterMethodChannel?
-
-    // state
+    private var methodChannel: FlutterMethodChannel?
+    
     private var isInsideZone = false
-    private let notificationCenter = UNUserNotificationCenter.current()
+    private let edgeBufferMeters = 2.0
+    
+    struct LatLng {
+        var lat: Double
+        var lng: Double
+    }
+    
+    struct Zone {
+        var name: String
+        var isOn: Bool
+        var points: [LatLng]
+    }
 
-    private override init() {
+    override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.distanceFilter = 1 // meters
         locationManager.allowsBackgroundLocationUpdates = true
         locationManager.pausesLocationUpdatesAutomatically = false
-        // Request notification permission
-        notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in }
+        // Distance filter simulates Android's 3-second smallestDisplacement
+        locationManager.distanceFilter = 1.0 
     }
 
     func setMethodChannel(_ channel: FlutterMethodChannel?) {
-        self.channel = channel
+        self.methodChannel = channel
     }
-
-    // Call this from Flutter (or native) to request permissions
+    
     func requestPermissions() {
-        // Request "when in use" then ask for Always authorization
-        locationManager.requestWhenInUseAuthorization()
-        // If you already have WhenInUse, ask for Always:
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.locationManager.requestAlwaysAuthorization()
-        }
+        locationManager.requestAlwaysAuthorization()
     }
-
-    // Start monitoring zones (zonesData is expected as [[String:Any]] from Flutter)
-    // Each zone could be: { "name": "Zone 1", "isOn": true, "points":[ { "lat":..,"lng":.. }, ... ] }
-    func updateZones(_ zonesData: [[String:Any]]) {
-        // Stop previous updates
-        locationManager.stopUpdatingLocation()
-        // We'll monitor location updates for polygon membership; optionally set circular monitors too
+    
+    // Called by BluetoothManager to wake up the geofence checker temporarily
+    func startTemporaryTracking() {
         locationManager.startUpdatingLocation()
-        // Save zones to memory
-        self.zones = zonesData
-    }
-
-    private var zones: [[String:Any]] = []
-
-    // CoreLocation delegate:
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let loc = locations.last else { return }
-        checkGeofences(location: loc)
-    }
-
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        switch status {
-        case .authorizedAlways:
-            print("GeofenceManager: Always authorized")
-        case .authorizedWhenInUse:
-            print("GeofenceManager: WhenInUse authorized (consider requesting Always)")
-        default:
-            print("GeofenceManager: Authorization changed: \(status.rawValue)")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
+            self.locationManager.stopUpdatingLocation()
         }
     }
-
-    private func checkGeofences(location: CLLocation) {
-        // Convert zones to polygon arrays and check if inside any active zone
-        var insideAny = false
-        var activeName: String? = nil
-
+    
+    // MARK: - CoreLocation Delegate
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
+        checkGeofence(location: location)
+    }
+    
+    private func checkGeofence(location: CLLocation) {
+        let zones = loadZonesFromPrefs()
+        var insideAnyZone = false
+        var activeZoneName: String? = nil
+        
         for zone in zones {
-            guard let isOn = zone["isOn"] as? Bool, isOn else { continue }
-            guard let name = zone["name"] as? String else { continue }
-            guard let points = zone["points"] as? [[String:Any]], points.count >= 3 else { continue }
-
-            // Build array of (lat, lng)
-            let polygon = points.compactMap { (p) -> (Double,Double)? in
-                if let lat = p["lat"] as? Double, let lng = p["lng"] as? Double {
-                    return (lat,lng)
-                }
-                return nil
-            }
-            if pointInPolygon(lat: location.coordinate.latitude, lon: location.coordinate.longitude, polygon: polygon) {
-                insideAny = true
-                activeName = name
+            if !zone.isOn || zone.points.count < 3 { continue }
+            
+            let insidePolygon = isPointInPolygon(lat: location.coordinate.latitude, lng: location.coordinate.longitude, polygon: zone.points)
+            let nearEdge = isNearPolygonEdge(lat: location.coordinate.latitude, lng: location.coordinate.longitude, polygon: zone.points, bufferMeters: edgeBufferMeters)
+            
+            if insidePolygon || nearEdge {
+                insideAnyZone = true
+                activeZoneName = zone.name
                 break
             }
-
-            // Optional: near-edge check (compute min distance to edges) could be added
         }
-
-        if insideAny && !isInsideZone {
-            // entered
-            isInsideZone = true
-            sendLocalNotification(title: "Entered Zone", body: activeName ?? "zone")
-            channel?.invokeMethod("enteredZone", arguments: activeName ?? "zone")
-        } else if !insideAny && isInsideZone {
-            // exited
-            isInsideZone = false
-            sendLocalNotification(title: "Exited Zone", body: "geofenced area")
-            channel?.invokeMethod("exitedZone", arguments: "geofenced area")
+        
+        if insideAnyZone && !isInsideZone {
+            methodChannel?.invokeMethod("enteredZone", arguments: activeZoneName ?? "zone")
+        } else if !insideAnyZone && isInsideZone {
+            methodChannel?.invokeMethod("exitedZone", arguments: "geofenced area")
         }
-
-        // Persist state in UserDefaults (FlutterSharedPreferences equivalent)
+        
+        isInsideZone = insideAnyZone
         UserDefaults.standard.set(isInsideZone, forKey: "flutter.insideGeofence")
     }
-
-    private func sendLocalNotification(title: String, body: String) {
-        let content = UNMutableNotificationContent()
-        content.title = title
-        content.body = body
-        content.sound = UNNotificationSound.default
-
-        let req = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-        notificationCenter.add(req) { error in
-            if let err = error { print("Notification error: \(err)") }
+    
+    // MARK: - Data Loading & Parsing
+    private func loadZonesFromPrefs() -> [Zone] {
+        var zones: [Zone] = []
+        let prefs = UserDefaults.standard
+        var jsonString = prefs.string(forKey: "flutter.zones") ?? prefs.string(forKey: "zones")
+        
+        guard let dataStr = jsonString else { return zones }
+        
+        // Handle Flutter Prefix
+        let flutterPrefix = "VGhpcyBpcyB0aGUgcHJlZml4IGZvciBhIGxpc3Qu!"
+        if dataStr.hasPrefix(flutterPrefix) {
+            jsonString = String(dataStr.dropFirst(flutterPrefix.count))
         }
+        
+        guard let jsonData = jsonString?.data(using: .utf8),
+              let jsonArray = try? JSONSerialization.jsonObject(with: jsonData, options: []) as? [[String: Any]] else {
+            return zones
+        }
+        
+        for item in jsonArray {
+            let name = item["name"] as? String ?? "zone"
+            let isOn = item["isOn"] as? Bool ?? false
+            
+            var points: [LatLng] = []
+            if let pointsArray = item["points"] as? [[String: Double]] {
+                for p in pointsArray {
+                    if let lat = p["lat"], let lng = p["lng"] {
+                        points.append(LatLng(lat: lat, lng: lng))
+                    }
+                }
+            }
+            zones.append(Zone(name: name, isOn: isOn, points: points))
+        }
+        return zones
     }
-
-    // Ray-casting point-in-polygon
-    private func pointInPolygon(lat: Double, lon: Double, polygon: [(Double,Double)]) -> Bool {
+    
+    // MARK: - Raycasting Algorithm
+    private func isPointInPolygon(lat: Double, lng: Double, polygon: [LatLng]) -> Bool {
+        if polygon.count < 3 { return false }
         var inside = false
         var j = polygon.count - 1
+        
         for i in 0..<polygon.count {
-            let xi = polygon[i].0, yi = polygon[i].1
-            let xj = polygon[j].0, yj = polygon[j].1
-            let intersect = ((yi > lon) != (yj > lon)) &&
-                (lat < (xj - xi) * (lon - yi) / (yj - yi + 0.0) + xi)
-            if intersect {
-                inside = !inside
+            let pi = polygon[i]
+            let pj = polygon[j]
+            
+            if (pi.lng > lng) != (pj.lng > lng) {
+                let intersect = (pj.lat - pi.lat) * (lng - pi.lng) / (pj.lng - pi.lng) + pi.lat
+                if lat < intersect {
+                    inside = !inside
+                }
             }
             j = i
         }
         return inside
+    }
+    
+    // MARK: - Edge Buffer
+    private func isNearPolygonEdge(lat: Double, lng: Double, polygon: [LatLng], bufferMeters: Double) -> Bool {
+        let point = LatLng(lat: lat, lng: lng)
+        for i in 0..<polygon.count {
+            let p1 = polygon[i]
+            let p2 = polygon[(i + 1) % polygon.count]
+            if distanceToLine(point: point, start: p1, end: p2) <= bufferMeters {
+                return true
+            }
+        }
+        return false
+    }
+    
+    private func distanceToLine(point: LatLng, start: LatLng, end: LatLng) -> Double {
+        let x0 = point.lat, y0 = point.lng
+        let x1 = start.lat, y1 = start.lng
+        let x2 = end.lat, y2 = end.lng
+        
+        let A = x0 - x1
+        let B = y0 - y1
+        let C = x2 - x1
+        let D = y2 - y1
+        
+        let dot = A * C + B * D
+        let lenSq = C * C + D * D
+        let param = lenSq != 0 ? dot / lenSq : -1
+        
+        var xx, yy: Double
+        if param < 0 {
+            xx = x1; yy = y1
+        } else if param > 1 {
+            xx = x2; yy = y2
+        } else {
+            xx = x1 + param * C; yy = y1 + param * D
+        }
+        
+        let dx = x0 - xx
+        let dy = y0 - yy
+        return sqrt(dx * dx + dy * dy) * 111139 // degrees to meters approx
     }
 }
