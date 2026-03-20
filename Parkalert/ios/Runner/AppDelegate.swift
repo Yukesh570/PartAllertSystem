@@ -1,6 +1,7 @@
 import Flutter
 import UIKit
 import flutter_local_notifications
+import GoogleMaps // 1. ADD THIS IMPORT
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -8,6 +9,10 @@ import flutter_local_notifications
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+  
+    // 2. ADD THIS LINE WITH YOUR ACTUAL GOOGLE MAPS API KEY
+    GMSServices.provideAPIKey("AIzaSyDrUHqW414IFDi3RMRwy0en38XOvVrXD_Y")
+
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
     let channel = FlutterMethodChannel(name: "com.parkalert/geofence_bt", binaryMessenger: controller.binaryMessenger)
     
@@ -15,22 +20,15 @@ import flutter_local_notifications
     GeofenceManager.shared.setMethodChannel(channel)
     BluetoothManager.shared.setMethodChannel(channel)
 
-    // ADD THIS: Listen for method calls from Flutter
+    // Listen for method calls from Flutter
     channel.setMethodCallHandler { (call: FlutterMethodCall, result: @escaping FlutterResult) in
         switch call.method {
         case "requestGeofencePermissions":
             GeofenceManager.shared.requestPermissions()
             result(nil)
         case "updateZones":
-            if let args = call.arguments as? [[String: Any]] {
-                GeofenceManager.shared.updateZones(args)
-            }
             result(nil)
         case "setBluetoothTarget":
-            if let args = call.arguments as? [String: Any], let name = args["name"] as? String {
-                BluetoothManager.shared.setTargetName(name)
-                BluetoothManager.shared.startScanning()
-            }
             result(nil)
         default:
             result(FlutterMethodNotImplemented)
