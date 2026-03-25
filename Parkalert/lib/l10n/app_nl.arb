@@ -212,7 +212,7 @@
   "finalprovisions": "Slotbepalingen",
   "finalprovisionsparagraph": "Indien één of meer bepalingen van deze voorwaarden ongeldig zijn, blijven de overige bepalingen volledig van kracht. Ongeldige bepalingen worden geacht te zijn vervangen door geldige bepalingen die zoveel mogelijk aansluiten bij de bedoeling van de oorspronkelijke bepaling.",
   "locationpermission": "Locatietoestemming vereist",
-  "locationpermissionparagraph": "Deze app heeft locatie-toegang nodig om Bluetooth-gebeurtenissen en geofences te detecteren. Sta toegang toe om door te gaan.",
+  "locationpermissionparagraph": "ParkAlert verzamelt locatiegegevens om automatische parkeerdetectie mogelijk te maken en de locatie van uw voertuig lokaal op te slaan. Dit maakt waarschuwingen voor tijdslimieten mogelijk, zelfs wanneer de app is gesloten of niet in gebruik is. Sta toegang toe om door te gaan.",
   "cancel": "Annuleren",
   "okay": "OK",
   "allowlocation": "Sta 'Altijd' locatie toe",
@@ -265,7 +265,12 @@
   "youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount": "U moet akkoord gaan met het privacybeleid en de toestemmingsverklaring voordat u een account aanmaakt.",
   "zoneSaved": "Zone opgeslagen",
   "connected":"INSTAPPEN",
-  "disconnected":"UITSTAPPEN"
+  "disconnected":"UITSTAPPEN",
+  "deleteAccount": "Account verwijderen",
+  "areYouSureDeleteAccount": "Weet je zeker dat je je account wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+  "cancel": "Annuleren",
+  "delete": "Verwijderen",
+  "accountDeletedSuccessfully": "Account succesvol verwijderd"
 
 }
 

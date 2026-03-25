@@ -202,7 +202,9 @@ class ApiService {
               "LASTNAME": lastName,
               "SMS": fullPhone,
             },
-            "listIds": [23],
+            "listIds": [23], //michel
+
+            // "listIds": [2],
             "updateEnabled": true,
           }),
         )
@@ -331,6 +333,27 @@ class ApiService {
       return data;
     } else {
       throw Exception("❌ Failed: ${response.statusCode} - ${response.body}");
+    }
+  }
+
+  Future<http.Response> deleteUser({required String email}) async {
+    // Replace this with your actual Brevo API Key
+
+    // Brevo requires the email to be part of the URL, and it must be URL-encoded
+    final url = Uri.parse(
+      'https://api.brevo.com/v3/contacts/${Uri.encodeComponent(email)}',
+    );
+
+    try {
+      final response = await http.delete(
+        url,
+        headers: {'accept': 'application/json', 'api-key': apiKey},
+      );
+
+      return response;
+    } catch (e) {
+      print("Error deleting user from Brevo: $e");
+      rethrow;
     }
   }
 }

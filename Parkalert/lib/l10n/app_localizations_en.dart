@@ -645,7 +645,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get locationpermission => 'Location Permission Needed';
 
   @override
-  String get locationpermissionparagraph => 'This app requires location access to detect Bluetooth events and geofences. Please allow access to continue.';
+  String get locationpermissionparagraph => 'ParkAlert collects location data to enable automatic parking detection and save your vehicle\'s location locally . This allows for time-limit alerts even when the app is closed or not in use. Please allow access to continue.';
 
   @override
   String get cancel => 'Cancel';
@@ -805,4 +805,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get disconnected => 'Disconnected';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get areYouSureDeleteAccount => 'Are you sure you want to delete your account? This action cannot be undone.';
+
+  @override
+  String get accountDeletedSuccessfully => 'Account deleted successfully';
 }

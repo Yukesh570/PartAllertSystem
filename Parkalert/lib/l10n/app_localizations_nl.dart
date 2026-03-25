@@ -645,7 +645,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get locationpermission => 'Locatietoestemming vereist';
 
   @override
-  String get locationpermissionparagraph => 'Deze app heeft locatie-toegang nodig om Bluetooth-gebeurtenissen en geofences te detecteren. Sta toegang toe om door te gaan.';
+  String get locationpermissionparagraph => 'ParkAlert verzamelt locatiegegevens om automatische parkeerdetectie mogelijk te maken en de locatie van uw voertuig lokaal op te slaan. Dit maakt waarschuwingen voor tijdslimieten mogelijk, zelfs wanneer de app is gesloten of niet in gebruik is. Sta toegang toe om door te gaan.';
 
   @override
   String get cancel => 'Annuleren';
@@ -805,4 +805,13 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get disconnected => 'UITSTAPPEN';
+
+  @override
+  String get deleteAccount => 'Account verwijderen';
+
+  @override
+  String get areYouSureDeleteAccount => 'Weet je zeker dat je je account wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.';
+
+  @override
+  String get accountDeletedSuccessfully => 'Account succesvol verwijderd';
 }

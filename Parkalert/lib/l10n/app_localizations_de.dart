@@ -645,7 +645,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get locationpermission => 'Standortberechtigung erforderlich';
 
   @override
-  String get locationpermissionparagraph => 'Diese App benötigt Standortzugriff, um Bluetooth-Ereignisse und Geofencing zu erkennen. Bitte erteilen Sie die Berechtigung, um fortzufahren.';
+  String get locationpermissionparagraph => 'ParkAlert erfasst Standortdaten, um die automatische Parkerkennung zu aktivieren und den Standort Ihres Fahrzeugs lokal zu speichern. Dies ermöglicht Zeitlimit-Warnungen, auch wenn die App geschlossen ist oder nicht verwendet wird. Bitte erlauben Sie den Zugriff, um fortzufahren.';
 
   @override
   String get cancel => 'Abbrechen';
@@ -805,4 +805,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get disconnected => 'Getrennt';
+
+  @override
+  String get deleteAccount => 'Konto löschen';
+
+  @override
+  String get areYouSureDeleteAccount => 'Sind Sie sicher, dass Sie Ihr Konto löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.';
+
+  @override
+  String get accountDeletedSuccessfully => 'Konto erfolgreich gelöscht';
 }

@@ -1374,7 +1374,7 @@ abstract class AppLocalizations {
   /// No description provided for @locationpermissionparagraph.
   ///
   /// In en, this message translates to:
-  /// **'This app requires location access to detect Bluetooth events and geofences. Please allow access to continue.'**
+  /// **'ParkAlert collects location data to enable automatic parking detection and save your vehicle\'s location locally . This allows for time-limit alerts even when the app is closed or not in use. Please allow access to continue.'**
   String get locationpermissionparagraph;
 
   /// No description provided for @cancel.
@@ -1694,6 +1694,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Disconnected'**
   String get disconnected;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Account'**
+  String get deleteAccount;
+
+  /// No description provided for @areYouSureDeleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your account? This action cannot be undone.'**
+  String get areYouSureDeleteAccount;
+
+  /// No description provided for @accountDeletedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deleted successfully'**
+  String get accountDeletedSuccessfully;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -212,7 +212,7 @@
   "finalprovisions": "Dispositions finales",
   "finalprovisionsparagraph": "Si une ou plusieurs dispositions de ces conditions sont invalides, les autres resteront pleinement en vigueur. Les dispositions invalides seront remplacées par des dispositions valides correspondant autant que possible à l’intention initiale.",
   "locationpermission": "Autorisation de localisation requise",
-  "locationpermissionparagraph": "Cette application nécessite l’accès à la localisation pour détecter les événements Bluetooth et les géorepérages. Veuillez autoriser l’accès pour continuer.",
+  "locationpermissionparagraph": "ParkAlert collecte des données de localisation pour activer la détection automatique du stationnement et enregistrer l'emplacement de votre véhicule localement. Cela permet de recevoir des alertes de limite de temps, même lorsque l'application est fermée ou n'est pas utilisée. Veuillez autoriser l'accès pour continuer.",
   "cancel": "Annuler",
   "okay": "OK",
   "allowlocation": "Autoriser la localisation « Tout le temps »",
@@ -265,7 +265,12 @@
   "youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount": "Vous devez accepter la politique de confidentialité et le consentement éclairé avant de créer un compte.",
   "zoneSaved": "Zone enregistrée",
   "connected":"Connecté",
-  "disconnected":"Déconnecté"
+  "disconnected":"Déconnecté",
+  "deleteAccount": "Supprimer le compte",
+  "areYouSureDeleteAccount": "Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.",
+  "cancel": "Annuler",
+  "delete": "Supprimer",
+  "accountDeletedSuccessfully": "Compte supprimé avec succès"
 
 
 }

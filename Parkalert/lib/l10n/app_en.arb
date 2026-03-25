@@ -267,7 +267,7 @@
  
  "locationpermission":"Location Permission Needed",
  
-  "locationpermissionparagraph":"This app requires location access to detect Bluetooth events and geofences. Please allow access to continue.",
+  "locationpermissionparagraph":"ParkAlert collects location data to enable automatic parking detection and save your vehicle's location locally . This allows for time-limit alerts even when the app is closed or not in use. Please allow access to continue.",
  
  
   "cancel":"Cancel",
@@ -322,5 +322,10 @@
   "youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount":"You must agree to Privacy Policy and Inform consent before creating account.",
   "zoneSaved":"Zone Saved",
   "connected":"Connected",
-  "disconnected":"Disconnected"
+  "disconnected":"Disconnected",
+  "deleteAccount": "Delete Account",
+	"areYouSureDeleteAccount": "Are you sure you want to delete your account? This action cannot be undone.",
+	"cancel": "Cancel",
+	"delete": "Delete",
+	"accountDeletedSuccessfully": "Account deleted successfully"
 }

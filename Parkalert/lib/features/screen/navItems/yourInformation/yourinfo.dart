@@ -6,6 +6,8 @@ import 'package:Parkalert/features/controllers/main_controller.dart';
 import 'package:Parkalert/features/controllers/pagger.dart';
 import 'package:Parkalert/features/screen/helperWidget/Button.dart';
 import 'package:Parkalert/features/screen/helperWidget/backgroundCirlce.dart';
+import 'package:Parkalert/features/screen/information/information.dart';
+import 'package:Parkalert/features/screen/splash_screen.dart';
 import 'package:Parkalert/l10n/app_localizations.dart';
 import 'package:Parkalert/navigationButton.dart';
 import 'package:flutter/material.dart';
@@ -77,15 +79,135 @@ class _YourinfoState extends State<Yourinfo> {
     }
   }
 
-  // New method to handle the cancellation of editing
+  // Method to handle the cancellation of editing
   void _cancelEditing() {
-    // 1. Revert text field content back to saved data
     _loadUserData();
-    // 2. Toggle editing mode off
     setState(() {
       _isEditing = false;
     });
   }
+
+  // --- DELETE ACCOUNT LOGIC ---
+  Future<void> _deleteAccount(AppLocalizations loc) async {
+    setState(() => _isLoading = true);
+    try {
+      // 1. Call the API to delete the user
+      final response = await apiService.deleteUser(
+        email: _emailController.text,
+      );
+
+      if (response.statusCode == 200 ||
+          response.statusCode == 204 ||
+          response.statusCode == 202) {
+        // ==========================================
+        // 🛑 LOGOUT LOGIC STARTS HERE
+        // ==========================================
+
+        final box = GetStorage();
+
+        // 2a. Temporarily save the language so it doesn't reset to default
+        final savedLanguage = box.read('languagecode');
+
+        // 2b. Wipe all user data (isRegistered, userData, etc.)
+        await box.erase();
+
+        // 2c. Put the language back
+        if (savedLanguage != null) {
+          await box.write('languagecode', savedLanguage);
+        }
+        Get.offAll(
+          () => Information(
+            onLocaleChange: (locale) {
+              Get.updateLocale(locale);
+            },
+          ),
+        );
+
+        // 3. Show Success Message
+        Future.delayed(const Duration(milliseconds: 500), () {
+          Get.snackbar(
+            "Success",
+            loc.accountDeletedSuccessfully,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+            duration: const Duration(seconds: 3),
+            isDismissible: true,
+          );
+        });
+
+        // ==========================================
+      } else {
+        final errorData = jsonDecode(response.body);
+        final errorMessage = errorData['message'] ?? "Unknown error";
+        Get.snackbar(
+          loc.error,
+          errorMessage,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        loc.error,
+        loc.nointernetconnection,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _showDeleteConfirmation(BuildContext context, AppLocalizations loc) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: dark ? Colors.grey[900] : Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Text(
+            loc.deleteAccount,
+            style: TextStyle(
+              color: dark ? Colors.white : Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            loc.areYouSureDeleteAccount,
+            style: TextStyle(color: dark ? Colors.white70 : Colors.black87),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                loc.cancel,
+                style: const TextStyle(color: Colors.blue, fontSize: 16),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+                _deleteAccount(loc); // Trigger deletion
+              },
+              child: Text(
+                loc.delete,
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  // ----------------------------
 
   Widget _buildInfoCard(
     String label,
@@ -100,15 +222,9 @@ class _YourinfoState extends State<Yourinfo> {
       color: dark ? Colors.grey[850] : Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       elevation: 3,
-      margin: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 2,
-      ), // reduced vertical margin
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: 6,
-          horizontal: 16,
-        ), // reduced vertical padding
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -120,13 +236,12 @@ class _YourinfoState extends State<Yourinfo> {
                 color: dark ? Colors.white : Colors.black,
               ),
             ),
-            const SizedBox(height: 6), // small gap between label and text field
+            const SizedBox(height: 6),
             _isEditing
                 ? TextFormField(
                     controller: controller,
                     keyboardType: keyboardType,
                     readOnly: readOnly,
-
                     cursorColor: dark ? Colors.blueAccent : Colors.blue,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
@@ -168,7 +283,6 @@ class _YourinfoState extends State<Yourinfo> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Label
             Text(
               "$label:",
               style: TextStyle(
@@ -178,8 +292,6 @@ class _YourinfoState extends State<Yourinfo> {
               ),
             ),
             const SizedBox(height: 4),
-
-            // Phone input
             _isEditing
                 ? TextFormField(
                     controller: controller,
@@ -187,8 +299,7 @@ class _YourinfoState extends State<Yourinfo> {
                     cursorColor: dark ? Colors.blueAccent : Colors.blue,
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      prefixText:
-                          selectedCountryPrefix + " ", // <-- Show prefix here
+                      prefixText: selectedCountryPrefix + " ",
                       suffixIcon: IconButton(
                         icon: Icon(
                           Icons.arrow_drop_down,
@@ -251,12 +362,6 @@ class _YourinfoState extends State<Yourinfo> {
     final loc = AppLocalizations.of(context);
     if (loc == null) return const Center(child: CircularProgressIndicator());
 
-    // NOTE: Ensure these localization keys are available in your .arb files:
-    // "firstName", "lastName", "email", "phoneNo", "noInformationAvailable",
-    // "save", "informationSaved", "yourInformationHasBeenUpdated", "yourInformation"
-
-    // Widget usage:
-
     Future<void> _saveUserData(AppLocalizations loc) async {
       print(
         "==================================================${selectedCountryPrefix}",
@@ -286,8 +391,8 @@ class _YourinfoState extends State<Yourinfo> {
           final box = GetStorage();
           box.write('userData', newUserData);
           Get.snackbar(
-            loc.informationSaved,
-            loc.yourInformationHasBeenUpdated,
+            loc.informationSaved, // Ensure you have this key
+            loc.yourInformationHasBeenUpdated, // Ensure you have this key
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.green,
             colorText: Colors.white,
@@ -303,10 +408,7 @@ class _YourinfoState extends State<Yourinfo> {
           controller.alertPage();
         } else {
           final errorData = jsonDecode(response.body);
-
           final errorMessage = errorData['message'] ?? "Unknown error";
-          final code = errorData['code'] ?? "Unknown code";
-
           final metadataList =
               (errorData['metadata']?['duplicate_identifiers']
                   as List<dynamic>?) ??
@@ -315,35 +417,26 @@ class _YourinfoState extends State<Yourinfo> {
           if (metadataList.contains("email")) {
             Get.snackbar(
               loc.error,
-              loc.emailAlreadyExists,
+              loc.emailAlreadyExists, // Ensure you have this key
               snackPosition: SnackPosition.BOTTOM,
               backgroundColor: Colors.red,
               colorText: Colors.white,
               duration: const Duration(seconds: 2),
-              animationDuration: const Duration(milliseconds: 200),
-              snackStyle: SnackStyle.FLOATING,
               margin: const EdgeInsets.all(12),
               borderRadius: 8,
-              forwardAnimationCurve: Curves.easeOutBack,
-              reverseAnimationCurve: Curves.easeInBack,
             );
           } else if (metadataList.contains("SMS")) {
             Get.snackbar(
               loc.error,
-              loc.phoneAlreadyExists,
+              loc.phoneAlreadyExists, // Ensure you have this key
               snackPosition: SnackPosition.BOTTOM,
               backgroundColor: Colors.red,
               colorText: Colors.white,
               duration: const Duration(seconds: 2),
-              animationDuration: const Duration(milliseconds: 200),
-              snackStyle: SnackStyle.FLOATING,
               margin: const EdgeInsets.all(12),
               borderRadius: 8,
-              forwardAnimationCurve: Curves.easeOutBack,
-              reverseAnimationCurve: Curves.easeInBack,
             );
           } else {
-            print("Error saving user data: $errorMessage");
             Get.snackbar(
               loc.error,
               errorMessage,
@@ -351,18 +444,8 @@ class _YourinfoState extends State<Yourinfo> {
               backgroundColor: Colors.red,
               colorText: Colors.white,
               duration: const Duration(seconds: 2),
-              animationDuration: const Duration(milliseconds: 200),
-              snackStyle: SnackStyle.FLOATING,
               margin: const EdgeInsets.all(12),
               borderRadius: 8,
-              forwardAnimationCurve: Curves.easeOutBack,
-              reverseAnimationCurve: Curves.easeInBack,
-            );
-            Get.snackbar(
-              loc.error,
-              errorMessage,
-              backgroundColor: Colors.red,
-              colorText: Colors.white,
             );
           }
         }
@@ -380,7 +463,7 @@ class _YourinfoState extends State<Yourinfo> {
           colorText: Colors.white,
         );
       } finally {
-        setState(() => _isLoading = false); // stop loading
+        setState(() => _isLoading = false);
       }
     }
 
@@ -389,14 +472,13 @@ class _YourinfoState extends State<Yourinfo> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         drawerEnableOpenDragGesture: true,
-
         backgroundColor: dark ? Colors.black : Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
           title: Text(
-            loc.yourInformation,
+            loc.yourInformation, // Ensure you have this key
             style: TextStyle(
               fontWeight: FontWeight.bold,
               color: dark ? Colors.white : Colors.black,
@@ -405,20 +487,16 @@ class _YourinfoState extends State<Yourinfo> {
           leading: Builder(
             builder: (context) {
               if (_isEditing) {
-                // Show Cancel button when editing
                 return IconButton(
                   onPressed: _cancelEditing,
                   icon: Icon(
                     Icons.close,
                     color: dark ? Colors.redAccent : Colors.red,
-                    size: 28, // ↑ Increase icon size (default is 24)
+                    size: 28,
                   ),
-                  iconSize: 28,
-                  padding: const EdgeInsets.all(8), // optional, adjust tap area
-                  tooltip: "cancel",
+                  tooltip: loc.cancel, // Uses localization
                 );
               } else {
-                // Show Drawer Menu icon when not editing
                 return IconButton(
                   onPressed: () => Scaffold.of(context).openDrawer(),
                   icon: Icon(
@@ -431,7 +509,7 @@ class _YourinfoState extends State<Yourinfo> {
           ),
           actions: [
             _isEditing
-                ? const SizedBox.shrink() // No icon when editing
+                ? const SizedBox.shrink()
                 : IconButton(
                     icon: Icon(
                       Icons.edit,
@@ -449,10 +527,9 @@ class _YourinfoState extends State<Yourinfo> {
         body: SafeArea(
           minimum: const EdgeInsets.only(bottom: 12.0),
           child: GestureDetector(
-            behavior:
-                HitTestBehavior.opaque, // important: allows taps on empty space
+            behavior: HitTestBehavior.opaque,
             onTap: () {
-              FocusScope.of(context).unfocus(); // dismiss keyboard
+              FocusScope.of(context).unfocus();
             },
             child: Stack(
               children: [
@@ -461,12 +538,10 @@ class _YourinfoState extends State<Yourinfo> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
-                  child:
-                      userData.isEmpty &&
-                          !_isEditing // Show 'No info' only if not editing
+                  child: userData.isEmpty && !_isEditing
                       ? Center(
                           child: Text(
-                            loc.noInformationAvailable,
+                            loc.noInformationAvailable, // Ensure you have this key
                             style: TextStyle(
                               color: dark ? Colors.white : Colors.black,
                               fontSize: 16,
@@ -493,36 +568,69 @@ class _YourinfoState extends State<Yourinfo> {
                             padding: EdgeInsets.zero,
                             children: [
                               _buildInfoCard(
-                                loc.firstName,
+                                loc.firstName, // Ensure you have this key
                                 _firstNameController,
                                 dark,
                                 readOnly: false,
                               ),
                               const SizedBox(height: 6),
                               _buildInfoCard(
-                                loc.lastName,
+                                loc.lastName, // Ensure you have this key
                                 _lastNameController,
                                 dark,
                                 readOnly: false,
                               ),
                               const SizedBox(height: 6),
-
                               _buildInfoCard(
-                                loc.email,
+                                loc.email, // Ensure you have this key
                                 _emailController,
                                 dark,
                                 keyboardType: TextInputType.emailAddress,
                                 readOnly: true,
                               ),
                               const SizedBox(height: 6),
-
-                              // I've used 'phoneNo' for the localization key here, assuming it exists
                               _buildInfophoneCard(
-                                loc.phoneNo,
+                                loc.phoneNo, // Ensure you have this key
                                 _phoneController,
                                 dark,
                                 keyboardType: TextInputType.phone,
                               ),
+
+                              // --- DELETE ACCOUNT BUTTON ---
+                              const SizedBox(height: 30),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 8.0,
+                                ),
+                                child: OutlinedButton.icon(
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.red,
+                                    side: const BorderSide(color: Colors.red),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 14,
+                                    ),
+                                  ),
+                                  onPressed: _isLoading
+                                      ? null
+                                      : () => _showDeleteConfirmation(
+                                          context,
+                                          loc,
+                                        ),
+                                  icon: const Icon(Icons.delete_forever),
+                                  label: Text(
+                                    loc.deleteAccount,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
                             ],
                           ),
                         ),
@@ -543,7 +651,7 @@ class _YourinfoState extends State<Yourinfo> {
                           icon: Icons.arrow_back,
                           onPressed: () {
                             if (_isEditing) {
-                              _loadUserData(); // Revert changes by reloading
+                              _loadUserData();
                               setState(() => _isEditing = false);
                             } else {
                               drawerCtrl.goBack();
@@ -556,7 +664,7 @@ class _YourinfoState extends State<Yourinfo> {
                         const SizedBox(width: 30),
                         if (_isEditing)
                           buildSaveButton(
-                            text: loc.save,
+                            text: loc.save, // Ensure you have this key
                             onPressed: _isLoading
                                 ? null
                                 : () {
@@ -564,7 +672,7 @@ class _YourinfoState extends State<Yourinfo> {
                                     _saveUserData(loc);
                                   },
                             child: _isLoading
-                                ? SizedBox(
+                                ? const SizedBox(
                                     width: 24,
                                     height: 24,
                                     child: CircularProgressIndicator(
@@ -577,7 +685,7 @@ class _YourinfoState extends State<Yourinfo> {
                           )
                         else
                           buildMainButton(
-                            text: loc.main,
+                            text: loc.main, // Ensure you have this key
                             onPressed: () => controller.alertPage(),
                             context: context,
                           ),
