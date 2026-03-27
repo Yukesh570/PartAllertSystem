@@ -651,7 +651,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get cancel => 'Annuleren';
 
   @override
-  String get okay => 'OK';
+  String get okay => 'Continue';
 
   @override
   String get allowlocation => 'Sta \'Altijd\' locatie toe';

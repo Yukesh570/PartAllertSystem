@@ -214,7 +214,7 @@
   "locationpermission": "Standortberechtigung erforderlich",
   "locationpermissionparagraph": "ParkAlert erfasst Standortdaten, um die automatische Parkerkennung zu aktivieren und den Standort Ihres Fahrzeugs lokal zu speichern. Dies ermöglicht Zeitlimit-Warnungen, auch wenn die App geschlossen ist oder nicht verwendet wird. Bitte erlauben Sie den Zugriff, um fortzufahren.",
   "cancel": "Abbrechen",
-  "okay": "OK",
+  "okay": "Continue",
   "allowlocation": "„Immer erlauben“ aktivieren",
   "allowlocationparagraph": "Um Bluetooth-Ereignisse und Geofencing auch bei geschlossener App zu erkennen, aktivieren Sie in den Einstellungen die Option „Immer erlauben“.",
   "opensettings": "Einstellungen öffnen",

@@ -651,7 +651,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancel => 'Cancel';
 
   @override
-  String get okay => 'Okay';
+  String get okay => 'Continue';
 
   @override
   String get allowlocation => 'Allow \'All the time\' Location';

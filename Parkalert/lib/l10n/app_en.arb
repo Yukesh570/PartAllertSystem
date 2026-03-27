@@ -271,7 +271,7 @@
  
  
   "cancel":"Cancel",
-  "okay":"Okay",
+  "okay":"Continue",
   "allowlocation":"Allow 'All the time' Location",
   "allowlocationparagraph":"To detect Bluetooth events and geofences even when the app is closed, please enable 'Allow all the time' in Settings.",
   "opensettings":"Open Settings",

@@ -651,7 +651,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get cancel => 'Annuler';
 
   @override
-  String get okay => 'OK';
+  String get okay => 'Continue';
 
   @override
   String get allowlocation => 'Autoriser la localisation « Tout le temps »';

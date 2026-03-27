@@ -275,18 +275,20 @@ class _LocationHistoryState extends State<LocationHistory> {
     try {
       // 1. Get last known location (cached, fast)
       Position? lastKnown = await Geolocator.getLastKnownPosition();
-
       if (lastKnown != null) {
         _moveCameraTo(LatLng(lastKnown.latitude, lastKnown.longitude));
       }
 
-      // 2. Get fresh location in background (might take a bit)
+      // 2. Get fresh location with a STRICT TIMEOUT
       Position fresh = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
+        timeLimit: const Duration(seconds: 8), // Added timeout
       );
       _moveCameraTo(LatLng(fresh.latitude, fresh.longitude));
     } catch (e) {
       print("Error getting location: $e");
+      // If it fails or times out, ensure any loading state is set to false here
+      // Example: setState(() { _isLoading = false; });
     }
   }
 

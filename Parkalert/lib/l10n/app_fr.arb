@@ -214,7 +214,7 @@
   "locationpermission": "Autorisation de localisation requise",
   "locationpermissionparagraph": "ParkAlert collecte des données de localisation pour activer la détection automatique du stationnement et enregistrer l'emplacement de votre véhicule localement. Cela permet de recevoir des alertes de limite de temps, même lorsque l'application est fermée ou n'est pas utilisée. Veuillez autoriser l'accès pour continuer.",
   "cancel": "Annuler",
-  "okay": "OK",
+  "okay": "Continue",
   "allowlocation": "Autoriser la localisation « Tout le temps »",
   "allowlocationparagraph": "Pour détecter les événements Bluetooth et les géorepérages même lorsque l’application est fermée, activez « Autoriser tout le temps » dans les paramètres.",
   "opensettings": "Ouvrir les paramètres",

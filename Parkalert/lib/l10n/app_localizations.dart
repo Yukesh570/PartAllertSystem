@@ -1386,7 +1386,7 @@ abstract class AppLocalizations {
   /// No description provided for @okay.
   ///
   /// In en, this message translates to:
-  /// **'Okay'**
+  /// **'Continue'**
   String get okay;
 
   /// No description provided for @allowlocation.

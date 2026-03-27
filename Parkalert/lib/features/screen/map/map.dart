@@ -331,12 +331,14 @@ class _MappageState extends State<Mappage> {
         _moveCameraTo(LatLng(lastKnown.latitude, lastKnown.longitude));
       }
 
-      // 2. Get fresh location in background (might take a bit)
+      // 2. Get fresh location with a 10-second timeout ✅
       Position fresh = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
+        timeLimit: const Duration(seconds: 10), // 👈 ADD THIS LINE
       );
       _moveCameraTo(LatLng(fresh.latitude, fresh.longitude));
     } catch (e) {
+      // This will now catch the timeout error and stop the spinner
       print("Error getting location: $e");
     }
   }

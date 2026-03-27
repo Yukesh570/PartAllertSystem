@@ -651,7 +651,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get cancel => 'Abbrechen';
 
   @override
-  String get okay => 'OK';
+  String get okay => 'Continue';
 
   @override
   String get allowlocation => '„Immer erlauben“ aktivieren';

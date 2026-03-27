@@ -214,7 +214,7 @@
   "locationpermission": "Locatietoestemming vereist",
   "locationpermissionparagraph": "ParkAlert verzamelt locatiegegevens om automatische parkeerdetectie mogelijk te maken en de locatie van uw voertuig lokaal op te slaan. Dit maakt waarschuwingen voor tijdslimieten mogelijk, zelfs wanneer de app is gesloten of niet in gebruik is. Sta toegang toe om door te gaan.",
   "cancel": "Annuleren",
-  "okay": "OK",
+  "okay": "Continue",
   "allowlocation": "Sta 'Altijd' locatie toe",
   "allowlocationparagraph": "Om Bluetooth-gebeurtenissen en geofences te detecteren, zelfs wanneer de app gesloten is, schakel 'Altijd toestaan' in bij Instellingen.",
   "opensettings": "Open instellingen",

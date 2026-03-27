@@ -93,21 +93,21 @@ class _PermissionGateState extends State<PermissionGate>
             style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
           ),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(ctx);
-                _checkingPermissions = false;
-              },
-              child: Text(
-                loc.cancel,
-                style: TextStyle(
-                  color: isDark ? Colors.white : Colors.black,
+            // TextButton(
+            //   onPressed: () {
+            //     Navigator.pop(ctx);
+            //     _checkingPermissions = false;
+            //   },
+            //   child: Text(
+            //     loc.cancel,
+            //     style: TextStyle(
+            //       color: isDark ? Colors.white : Colors.black,
 
-                  fontSize: 18, // 👈 Bigger text
-                  fontWeight: FontWeight.w600, // 👈 Semi-bold
-                ),
-              ),
-            ),
+            //       fontSize: 18, // 👈 Bigger text
+            //       fontWeight: FontWeight.w600, // 👈 Semi-bold
+            //     ),
+            //   ),
+            // ),
             TextButton(
               onPressed: () {
                 Navigator.pop(ctx);
