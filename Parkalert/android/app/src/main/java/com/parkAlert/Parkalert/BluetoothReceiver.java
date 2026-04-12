@@ -42,8 +42,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
         if (device == null || device.getName() == null) return;
         boolean isConnecting = BluetoothDevice.ACTION_ACL_CONNECTED.equals(action);
         String matchingRingerJson = getMatchingRinger(context, device, isConnecting);
-        // 1. Get the matching ringer JSON instead of just a boolean
-        // String matchingRingerJson = getMatchingRinger(context, device);
 
         if (matchingRingerJson != null) { 
             if (!hasRequiredPermissions(context)) {
@@ -79,50 +77,46 @@ public class BluetoothReceiver extends BroadcastReceiver {
         }
     }
 
-    // RENAMED AND UPDATED TO RETURN STRING
     private String getMatchingRinger(Context context, BluetoothDevice device, boolean isConnecting) {
-    SharedPreferences prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
-    Object rawData = prefs.getAll().get("flutter.ringers");
-    String connectedName = device.getName();
+        SharedPreferences prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
+        Object rawData = prefs.getAll().get("flutter.ringers");
+        String connectedName = device.getName();
 
-    if (rawData == null) return null;
+        if (rawData == null) return null;
 
-    try {
-        if (rawData instanceof Set) {
-            for (String ringerJson : (Set<String>) rawData) {
-                if (isFullMatch(ringerJson, connectedName, isConnecting)) return ringerJson;
-            }
-        } else if (rawData instanceof String) {
-            String dataString = (String) rawData;
-            if (dataString.contains("![")) {
-                String jsonInside = dataString.substring(dataString.indexOf("![") + 2, dataString.lastIndexOf("]"));
-                String[] items = jsonInside.split("\",\"");
-                for (String item : items) {
-                    String cleanJson = item.replaceFirst("^\"", "").replaceFirst("\"$", "").replace("\\\"", "\"");
-                    if (isFullMatch(cleanJson, connectedName, isConnecting)) return cleanJson;
+        try {
+            if (rawData instanceof Set) {
+                for (String ringerJson : (Set<String>) rawData) {
+                    if (isFullMatch(ringerJson, connectedName, isConnecting)) return ringerJson;
                 }
-            } else {
-                if (isFullMatch(dataString, connectedName, isConnecting)) return dataString;
+            } else if (rawData instanceof String) {
+                String dataString = (String) rawData;
+                if (dataString.contains("![")) {
+                    String jsonInside = dataString.substring(dataString.indexOf("![") + 2, dataString.lastIndexOf("]"));
+                    String[] items = jsonInside.split("\",\"");
+                    for (String item : items) {
+                        String cleanJson = item.replaceFirst("^\"", "").replaceFirst("\"$", "").replace("\\\"", "\"");
+                        if (isFullMatch(cleanJson, connectedName, isConnecting)) return cleanJson;
+                    }
+                } else {
+                    if (isFullMatch(dataString, connectedName, isConnecting)) return dataString;
+                }
             }
+        } catch (Exception e) {
+            Log.e("BluetoothReceiver", "Error: " + e.getMessage());
         }
-    } catch (Exception e) {
-        Log.e("BluetoothReceiver", "Error: " + e.getMessage());
-    }
-    return null;
+        return null;
     }
 
-    // New Helper to check both Name and TriggerType
     private boolean isFullMatch(String json, String deviceName, boolean isConnecting) {
         try {
             JSONObject jsonObject = new JSONObject(json);
             String targetBluetooth = jsonObject.optString("bluetooth", "");
             String triggerType = jsonObject.optString("triggerType", "Connect");
 
-            // 1. Check if name matches
             boolean nameMatches = !targetBluetooth.isEmpty() && deviceName.contains(targetBluetooth);
             if (!nameMatches) return false;
 
-            // 2. Check if Trigger Type matches event
             boolean triggerMatches = (triggerType.equalsIgnoreCase("Connect") && isConnecting) ||
                                     (triggerType.equalsIgnoreCase("Disconnect") && !isConnecting);
 
@@ -158,7 +152,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
     }
 
     private void handleBluetoothEvent(Context context, BluetoothDevice device, boolean connected, String ringerJson) {
-        new android.os.Handler(context.getMainLooper()).postDelayed(new Runnable() {
+        new android.os.Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 SharedPreferences prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
@@ -166,10 +160,16 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
                 if (ringerJson == null || ringerJson.isEmpty()) return;
 
+                // 1. Trigger Flutter MethodChannel
+                if (channel != null) {
+                    new android.os.Handler(Looper.getMainLooper()).post(() -> {
+                        channel.invokeMethod("triggerAlarmPopup", ringerJson);
+                    });
+                }
+
+                // 2. Local Android Notification Logic
                 try {
                     JSONObject jsonObject = new JSONObject(ringerJson);
-                    String triggerType = jsonObject.optString("triggerType", "Connect");
-                 
                     String targetName = jsonObject.optString("name", "");
                     String targetSound = jsonObject.optString("sound", "");
                     String targetVibration = jsonObject.optString("vibration", "true");
@@ -187,9 +187,9 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 } catch (JSONException e) {
                     Log.e("BluetoothReceiver", "JSON Error: " + e.getMessage());
                 }
-            }
-        }, 2000); 
-    }
+            } // Closing run()
+        }, 2000); // Closing postDelayed
+    } // Closing handleBluetoothEvent
 
     private void getCurrentLocation(Context context, String targetName, boolean connected) {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
@@ -267,7 +267,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        String title = connected ? targetName  : targetName ;
+        String title = connected ? targetName : targetName;
         String text = deviceName + (connected ? " connected!" : " disconnected!");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
