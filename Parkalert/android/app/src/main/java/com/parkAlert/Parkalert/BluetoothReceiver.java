@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,7 +28,7 @@ import android.location.Location;
 import android.os.Looper;
 import android.media.AudioManager;
 import java.util.Set;
-
+import android.os.PowerManager;
 public class BluetoothReceiver extends BroadcastReceiver {
 
     public static final String CHANNEL_ID = "bluetooth_channel";
@@ -38,12 +39,70 @@ public class BluetoothReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         Log.d("BluetoothReceiver", "Received action: " + action);
 
+        // ==========================================
+        // 1. HANDLE NATIVE SNOOZE BUTTON
+        // ==========================================
+        if ("ACTION_SNOOZE".equals(action)) {
+            int notifId = intent.getIntExtra("notifId", 999);
+            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            nm.cancel(notifId); // Clear current notification
+
+            String ringerJson = intent.getStringExtra("ringerJson");
+            String deviceName = intent.getStringExtra("deviceName");
+            boolean connected = intent.getBooleanExtra("connected", true);
+
+            // Schedule Native Alarm for 10 seconds (Change to 300000 for 5 mins)
+            AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            Intent alarmIntent = new Intent(context, BluetoothReceiver.class);
+            alarmIntent.setAction("ACTION_TRIGGER_ALARM");
+            alarmIntent.putExtra("ringerJson", ringerJson);
+            alarmIntent.putExtra("deviceName", deviceName);
+            alarmIntent.putExtra("connected", connected);
+
+            PendingIntent pi = PendingIntent.getBroadcast(context, 123, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 300000, pi);
+            } else {
+                am.setExact(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 300000, pi);
+            }
+            Log.d("BluetoothReceiver", "Snoozed NATIVELY for 5 minutes");
+            return;
+        }
+
+        // ==========================================
+        // 2. HANDLE NATIVE QUIT BUTTON
+        // ==========================================
+        if ("ACTION_QUIT".equals(action)) {
+            int notifId = intent.getIntExtra("notifId", 999);
+            NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            nm.cancel(notifId);
+            Log.d("BluetoothReceiver", "Quit clicked - Notification cleared");
+            return;
+        }
+
+        // ==========================================
+        // 3. HANDLE ALARM WAKEUP (After Snooze)
+        // ==========================================
+        if ("ACTION_TRIGGER_ALARM".equals(action)) {
+            String ringerJson = intent.getStringExtra("ringerJson");
+            String deviceName = intent.getStringExtra("deviceName");
+            boolean connected = intent.getBooleanExtra("connected", true);
+            
+            // Re-fire the unified notification
+            parseAndShowNotification(context, deviceName, connected, ringerJson);
+            return;
+        }
+
+        // ==========================================
+        // 4. NORMAL BLUETOOTH CONNECTION LOGIC
+        // ==========================================
         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
         if (device == null || device.getName() == null) return;
         boolean isConnecting = BluetoothDevice.ACTION_ACL_CONNECTED.equals(action);
         String matchingRingerJson = getMatchingRinger(context, device, isConnecting);
 
-        if (matchingRingerJson != null) { 
+        if (matchingRingerJson != null) {
             if (!hasRequiredPermissions(context)) {
                 Log.e("BluetoothReceiver", "Permissions missing, cannot start service");
                 return;
@@ -59,19 +118,13 @@ public class BluetoothReceiver extends BroadcastReceiver {
             if (BluetoothDevice.ACTION_ACL_CONNECTED.equals(action)) {
                 new android.os.Handler(Looper.getMainLooper()).postDelayed(() -> {
                     context.stopService(serviceIntent);
-                    Log.d("BluetoothReceiver", "GeofenceForegroundService stopped after 7s");
                 }, 7000L);
-
                 handleBluetoothEvent(context, device, true, matchingRingerJson);
 
             } else if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-                Log.d("BluetoothReceiver", "Disconnected: " + device.getName());
-
                 new android.os.Handler(Looper.getMainLooper()).postDelayed(() -> {
                     context.stopService(serviceIntent);
-                    Log.d("BluetoothReceiver", "GeofenceForegroundService stopped after 10s");
                 }, 10000L);
-
                 handleBluetoothEvent(context, device, false, matchingRingerJson);
             }
         }
@@ -121,7 +174,6 @@ public class BluetoothReceiver extends BroadcastReceiver {
                                     (triggerType.equalsIgnoreCase("Disconnect") && !isConnecting);
 
             if (triggerMatches) {
-                Log.d("BluetoothReceiver", "Full Match Found! Name: " + targetBluetooth + " Trigger: " + triggerType);
                 return true;
             }
         } catch (JSONException e) {
@@ -133,74 +185,79 @@ public class BluetoothReceiver extends BroadcastReceiver {
     private boolean hasRequiredPermissions(Context context) {
         boolean foregroundService = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            foregroundService = ActivityCompat.checkSelfPermission(context, Manifest.permission.FOREGROUND_SERVICE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED;
+            foregroundService = ActivityCompat.checkSelfPermission(context, Manifest.permission.FOREGROUND_SERVICE_LOCATION) == PackageManager.PERMISSION_GRANTED;
         }
 
-        boolean location = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED;
+        boolean location = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
         boolean background = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            background = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED;
+            background = ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED;
         }
 
         return foregroundService && location && background;
     }
 
     private void handleBluetoothEvent(Context context, BluetoothDevice device, boolean connected, String ringerJson) {
-        new android.os.Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                SharedPreferences prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
-                boolean isInsideGeofence = prefs.getBoolean("flutter.insideGeofence", false);
+        new android.os.Handler(Looper.getMainLooper()).postDelayed(() -> {
+            SharedPreferences prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE);
+            boolean isInsideGeofence = prefs.getBoolean("flutter.insideGeofence", false);
 
-                if (ringerJson == null || ringerJson.isEmpty()) return;
+            if (ringerJson == null || ringerJson.isEmpty()) return;
 
-                // 1. Trigger Flutter MethodChannel
-                if (channel != null) {
-                    new android.os.Handler(Looper.getMainLooper()).post(() -> {
-                        channel.invokeMethod("triggerAlarmPopup", ringerJson);
-                    });
+            // ✅ Trigger UI to update if app is open
+            if (channel != null) {
+                new android.os.Handler(Looper.getMainLooper()).post(() -> {
+                    java.util.Map<String, Object> args = new java.util.HashMap<>();
+                    args.put("ringerJson", ringerJson);
+                    args.put("deviceName", device.getName());
+                    args.put("connected", connected);
+                    channel.invokeMethod("triggerAlarmPopup", args);
+                });
+            }
+
+            try {
+                JSONObject jsonObject = new JSONObject(ringerJson);
+                String targetName = jsonObject.optString("name", "");
+                getCurrentLocation(context, targetName, connected);
+
+                if (!isInsideGeofence) {
+                    // ✅ Call the new Unified Notification
+                    parseAndShowNotification(context, device.getName(), connected, ringerJson);
+                } else {
+                    Log.d("BluetoothReceiver", "Inside geofence → skipping notification");
                 }
 
-                // 2. Local Android Notification Logic
-                try {
-                    JSONObject jsonObject = new JSONObject(ringerJson);
-                    String targetName = jsonObject.optString("name", "");
-                    String targetSound = jsonObject.optString("sound", "");
-                    String targetVibration = jsonObject.optString("vibration", "true");
-                    String targetOverSilent = jsonObject.optString("overRideSilence", "false");
+            } catch (JSONException e) {
+                Log.e("BluetoothReceiver", "JSON Error: " + e.getMessage());
+            }
+        }, 2000);
+    }
 
-                    Log.d("BluetoothReceiver", "Processing event for Ringer: " + targetName);
-                    getCurrentLocation(context, targetName, connected);
+    private void parseAndShowNotification(Context context, String deviceName, boolean connected, String ringerJson) {
+        try {
+            JSONObject jsonObject = new JSONObject(ringerJson);
+            String targetName = jsonObject.optString("name", "");
+            String targetSound = jsonObject.optString("sound", "");
+            String targetVibration = jsonObject.optString("vibration", "true");
+            String targetOverSilent = jsonObject.optString("overRideSilence", "false");
 
-                    if (!isInsideGeofence) {
-                        showNotification(context, device.getName(), targetName, connected, targetSound, targetVibration, targetOverSilent);
-                    } else {
-                        Log.d("BluetoothReceiver", "Inside geofence → skipping notification");
-                    }
-
-                } catch (JSONException e) {
-                    Log.e("BluetoothReceiver", "JSON Error: " + e.getMessage());
-                }
-            } // Closing run()
-        }, 2000); // Closing postDelayed
-    } // Closing handleBluetoothEvent
+            showUnifiedNotification(context, deviceName, connected, ringerJson, targetName, targetSound, targetVibration, targetOverSilent);
+        } catch (JSONException e) {
+            Log.e("BluetoothReceiver", "Parse Error: " + e.getMessage());
+        }
+    }
 
     private void getCurrentLocation(Context context, String targetName, boolean connected) {
         FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
         if (!hasRequiredPermissions(context)) return;
 
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(location -> {
-                    if (location != null) {
-                        saveCurrentLocation(context, location, targetName, connected);
-                    }
-                });
+        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+                saveCurrentLocation(context, location, targetName, connected);
+            }
+        });
     }
 
     private void saveCurrentLocation(Context context, Location location, String targetName, boolean connected) {
@@ -219,15 +276,21 @@ public class BluetoothReceiver extends BroadcastReceiver {
 
             prefs.edit().putString("flutter.currentLocation", locationsArray.toString()).apply();
             prefs.edit().putString("flutter.backupcurrentLocation", locationsArray.toString()).apply();
-
         } catch (JSONException e) {
             Log.e("BluetoothReceiver", "Failed to save location: " + e.getMessage());
         }
     }
 
-    private void showNotification(Context context, String deviceName, String targetName, boolean connected,
-                                  String targetSound, String targetVibration, String targetOverSilent) {
+    // ==========================================
+    // 5. THE UNIFIED NATIVE NOTIFICATION
+    // ==========================================
+    // ==========================================
+    // 5. THE UNIFIED NATIVE NOTIFICATION
+    // ==========================================
+    private void showUnifiedNotification(Context context, String deviceName, boolean connected, String ringerJson,
+                                         String targetName, String targetSound, String targetVibration, String targetOverSilent) {
 
+        int NOTIFICATION_ID = 999;
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Uri soundUri = null;
@@ -252,7 +315,7 @@ public class BluetoothReceiver extends BroadcastReceiver {
                 }
                 if (soundUri != null) {
                     AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                            .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                            .setUsage(AudioAttributes.USAGE_ALARM) 
                             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                             .build();
                     channel.setSound(soundUri, audioAttributes);
@@ -261,23 +324,47 @@ public class BluetoothReceiver extends BroadcastReceiver {
             }
         }
 
-        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                context, 0, launchIntent != null ? launchIntent : new Intent(),
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
+        // INTENT: SNOOZE
+        Intent snoozeIntent = new Intent(context, BluetoothReceiver.class);
+        snoozeIntent.setAction("ACTION_SNOOZE");
+        snoozeIntent.putExtra("ringerJson", ringerJson);
+        snoozeIntent.putExtra("deviceName", deviceName);
+        snoozeIntent.putExtra("connected", connected);
+        snoozeIntent.putExtra("notifId", NOTIFICATION_ID);
+        PendingIntent snoozePI = PendingIntent.getBroadcast(context, 1, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
+        // INTENT: QUIT
+        Intent quitIntent = new Intent(context, BluetoothReceiver.class);
+        quitIntent.setAction("ACTION_QUIT");
+        quitIntent.putExtra("notifId", NOTIFICATION_ID);
+        PendingIntent quitPI = PendingIntent.getBroadcast(context, 2, quitIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // INTENT: OPEN APP ON TAP
+        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        launchIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        launchIntent.putExtra("from_notification", true);
+        launchIntent.putExtra("ringerJson", ringerJson);
+        launchIntent.putExtra("deviceName", deviceName);
+        launchIntent.putExtra("connected", connected);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, launchIntent != null ? launchIntent : new Intent(), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         String title = connected ? targetName : targetName;
         String text = deviceName + (connected ? " connected!" : " disconnected!");
 
+        // BUILD UNIFIED NOTIFICATION
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(context.getApplicationInfo().icon)
                 .setContentTitle(title)
                 .setContentText(text)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
+                .setPriority(NotificationCompat.PRIORITY_MAX) 
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setOngoing(true) 
+                .setAutoCancel(false)
+                .setContentIntent(pendingIntent)
+                // ❌ DELETED: .setFullScreenIntent() -> This stops the app from force-opening!
+                .addAction(0, "SNOOZE (5min)", snoozePI) 
+                .addAction(0, "QUIT", quitPI); 
 
+        // OVERRIDE SILENT MODE
         AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int currentMode = audioManager.getRingerMode();
 
@@ -293,6 +380,14 @@ public class BluetoothReceiver extends BroadcastReceiver {
             }
         }
 
-        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+        // ✅ TURN ON THE SCREEN (So they can see the notification on the lock screen)
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        if (pm != null && !pm.isInteractive()) {
+            @SuppressWarnings("deprecation")
+            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "ParkAlarm:WakeLock");
+            wl.acquire(4000); // Light up screen for 4 seconds
+        }
+
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 }

@@ -72,7 +72,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get termsandconditions => 'I agree to the Terms and Conditions';
 
   @override
-  String get inform => 'I want to be kept informed about ParkAlert';
+  String get inform => 'I want to be kept informed about ParkAlarm';
 
   @override
   String get language => 'Select Language';
@@ -171,7 +171,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get yourInformation => 'Your information';
 
   @override
-  String get howParkAlertWorks => 'How ParkAlert works';
+  String get howParkAlertWorks => 'How ParkAlarm works';
 
   @override
   String get frequentlyAskedQuestions => 'Frequently asked questions';
@@ -225,7 +225,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get alllocation => 'All location';
 
   @override
-  String get setnoalertzones => 'Set no-alert zones';
+  String get setnoalertzones => 'Set no-Alarm zones';
 
   @override
   String get parkedhistory => 'Parked History';
@@ -234,7 +234,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get theuserjourney => 'The User Journey';
 
   @override
-  String get theuserjourneyparagraph => 'When you first open the Parkalert app, you will be taken through a startup wizard to set up your account and your first alarm.';
+  String get theuserjourneyparagraph => 'When you first open the ParkAlarm app, you will be taken through a startup wizard to set up your account and your first alarm.';
 
   @override
   String get permissionsAndRegistration => 'Permissions & Registration';
@@ -255,31 +255,76 @@ class AppLocalizationsEn extends AppLocalizations {
   String get landingpage => 'Landing Page';
 
   @override
-  String get landingpageparagraph => 'After registration, the landing page is always the \"My Alerts\" page.';
+  String get landingpageparagraph => 'After registration, the landing page is always the \"My Alarms\" page.';
 
   @override
   String get alarmsetup => 'Alarm Setup';
 
   @override
-  String get createalert => 'Create Alert';
+  String get createalert => 'Create an Alarm';
 
   @override
-  String get createalertparagraph1 => 'On the \"My Alerts\" page, clicking the';
+  String get createalertparagraph1 => 'Do this inside the car, because you need to connect to your vehicle’s Bluetooth device. Open the menu and select ';
 
   @override
-  String get createalertparagraph2 => 'icon opens the \"Create Alert\" form';
+  String get onthemyparkingalarmspagetapthe => 'On the';
+
+  @override
+  String get pagetapthe => 'pagetapthe';
+
+  @override
+  String get createalertparagraph2 => 'button to create an alarm. You then create one alarm for registering your car and one alarm for deregistering your car. Give your alarm a name, for example ';
+
+  @override
+  String get connectcar => 'Connect car';
+
+  @override
+  String get or => 'or';
+
+  @override
+  String get till => 'jusqu\'à';
+
+  @override
+  String get disconnectcar => ' Disconnect car.';
+
+  @override
+  String get chooseasoundforyouralarm => 'Choose a sound for your alarm.';
+
+  @override
+  String get connecttoyourbluetoothdevice => 'Connect to your Bluetooth device.';
+
+  @override
+  String get choosevibrationorsound => 'Choose vibration or sound.';
+
+  @override
+  String get enableIgnoresilentmode => 'Enable';
+
+  @override
+  String get ignoresilentmode => 'Ignore silent mode.';
+
+  @override
+  String get onlythenwillyoualwaysbeabletohearthealarm => 'Only then will you always be able to hear the alarm Finally, choose either';
+
+  @override
+  String get important => 'Important';
+
+  @override
+  String get forthealarmtoregisteryourcarchoosedisconnect => 'For the alarm to register your car, choose';
+
+  @override
+  String get forthealarmtoderegisteryourcarchooseconnect => 'For the alarm to deregister your car, choose';
 
   @override
   String get fillindetails => 'Fill in Details';
 
   @override
-  String get fillindetailsparagraph => 'Here, you will give your alert a custom name (not related to a location),select a Bluetooth device (your car), and choose a notification sound.';
+  String get fillindetailsparagraph => 'Here, you will give your Alarm a custom name (not related to a location),select a Bluetooth device (your car), and choose a notification sound.';
 
   @override
-  String get activatealert => 'Activate Alert';
+  String get activatealert => 'Activate Alarm';
 
   @override
-  String get activatealertparagraph => 'The newly created alert appears as a box on the \"My Alerts\" page.The alert is not active until you click the separate Connect button on its box.';
+  String get activatealertparagraph => 'The newly created Alarm appears as a box on the \"My Alarms\" page.The Alarm is not active until you click the separate Connect button on its box.';
 
   @override
   String get coreoperationallogic => 'Core Operational Logic';
@@ -291,13 +336,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bluetoothdisconnected => 'Bluetooth Disconnected';
 
   @override
-  String get bluetoothdisconnectedparagraph => 'User has left the car, Parkalert is activated.';
+  String get bluetoothdisconnectedparagraph => 'The user has left the car. ParkAlarm is activated and will trigger an Alarm reminding the user to register the car. With the first Alarm, a pop-up appears on the screen where the user can turn off the alarm or snooze it if they want to receive another reminder later.';
 
   @override
   String get bluetoothconnected => 'Bluetooth Connected';
 
   @override
-  String get bluetoothconnectedparagraph => 'User has returned, Parkalert is deactivated.';
+  String get bluetoothconnectedparagraph => 'The user has returned to the car. ParkAlarm is activated and triggers an Alarm reminding the user to deregister the car. A pop-up also appears on the screen where the user can turn off the alarm and deregister the car, or snooze the Alarm if they want to deregister later. By snoozing, the user will receive a reminder every 5 minutes until the alarm is turned off.';
 
   @override
   String get thenandnowoverview => 'Then and now, an overview of all activities';
@@ -306,7 +351,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get geofencing => 'Geofencing (Freezones)';
 
   @override
-  String get freezonesparagraph => 'This feature allows you to define \"no alert zones\" to prevent alerts in familiar locations.No time duration is needed for a Freezone.';
+  String get freezonesparagraph => 'This feature allows you to define \"no Alarm zones\" to prevent Alarms in familiar locations.No time duration is needed for a Freezone.';
 
   @override
   String get creatingandactivatingfreezone => 'Creating and Activating a Freezone';
@@ -333,7 +378,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get creatingandactivating6 => 'Once the shape is complete, click the ✓ (tick icon) to save it.';
 
   @override
-  String get creatingandactivating7 => 'Go back to the \"Set Alert Zone\" screen and click the Connect button on the box to activate your Freezone.';
+  String get creatingandactivating7 => 'Go back to the \"Set Alarm Zone\" screen and click the Connect button on the box to activate your Freezone.';
 
   @override
   String get managingafreezone => 'Managing a Freezone';
@@ -342,7 +387,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get managingafreezonepragraph => 'You can edit, rename, or delete your Freezones anytime from the Freezones screen.Only one zone can be activated at a time to avoid conflicts.';
 
   @override
-  String get managingafreezonefreezonepragraph => 'This feature allows you to define no alert zones to prevent alerts in familiar locations. No time duration is needed for a Freezone.';
+  String get managingafreezonefreezonepragraph => 'This feature allows you to define no Alarm zones to prevent Alarms in familiar locations. No time duration is needed for a Freezone.';
 
   @override
   String get activitiesandhistory => 'Activities and History';
@@ -378,7 +423,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get locationdata => 'Location data:';
 
   @override
-  String get locationdatatext => 'To alert you about parking zones and restrictions';
+  String get locationdatatext => 'To Alarm you about parking zones and restrictions';
 
   @override
   String get devicedata => 'Device Data';
@@ -645,7 +690,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get locationpermission => 'Location Permission Needed';
 
   @override
-  String get locationpermissionparagraph => 'ParkAlert collects location data to enable automatic parking detection and save your vehicle\'s location locally . This allows for time-limit alerts even when the app is closed or not in use. Please allow access to continue.';
+  String get locationpermissionparagraph => 'ParkAlarm collects location data to enable automatic parking detection and save your vehicle\'s location locally . This allows for time-limit Alarms even when the app is closed or not in use. Please allow access to continue.';
 
   @override
   String get cancel => 'Cancel';
@@ -666,7 +711,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exitapp => 'Exit App';
 
   @override
-  String get exitappparagraph => 'Are you sure you want to exit ParkAlert?';
+  String get exitappparagraph => 'Are you sure you want to exit ParkAlarm?';
 
   @override
   String get exit => 'Exit';
@@ -814,4 +859,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountDeletedSuccessfully => 'Account deleted successfully';
+
+  @override
+  String get actionRequired => 'Action Required';
+
+  @override
+  String get triggerevent => 'Trigger Event';
+
+  @override
+  String get whentoremindyou => 'When to remind you?';
+
+  @override
+  String get whenileavethecar => 'When I leave the car';
+
+  @override
+  String get alertswhenbluetoothdisconnects => 'Alerts when Bluetooth disconnects.';
+
+  @override
+  String get whenireturntothecar => 'When I return to the car';
+
+  @override
+  String get alertswhenbluetoothreconnects => 'Alerts when Bluetooth reconnects.';
 }

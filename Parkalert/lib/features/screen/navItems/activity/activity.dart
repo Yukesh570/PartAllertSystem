@@ -22,47 +22,29 @@ class Activity extends StatefulWidget {
 
 class _ActivityState extends State<Activity> {
   @override
-  // void loadAndSetRingers() async {
-  //   List<RingerData> savedRingers = await loadRingers();
-  //   setState(() {
-  //     ringersListdemo = savedRingers
-  //         .map((data) => Ringers(ringerData: data))
-  //         .toList();
-  //     ringersList = savedRingers
-  //         .map((data) => Ringers(ringerData: data))
-  //         .toList();
-  //   });
-  //   print("ringersListactivity: $ringersListdemo");
-  // }
   Widget build(BuildContext context) {
-    MainController controller = Get.put(MainController());
+    final MainController controller = Get.put(MainController());
     final drawerCtrl = Get.find<DrawerControllerX>();
-
-    // print("aactivtyyyyyyyyy $ringersList");
-    // print("ringersListactivity: $ringersListdemo");
 
     final dark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context);
     if (loc == null) {
-      // This means localization isn't yet loaded or context is not in a localized widget tree
       return const Center(child: CircularProgressIndicator());
     }
+
     return PageWrapper(
       routeName: '/activity',
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         drawerEnableOpenDragGesture: false,
-
-        backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
-
+        backgroundColor: dark ? Colors.black : Colors.white,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
-
           title: Text(
             loc.activity,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           leading: Builder(
             builder: (context) => IconButton(
@@ -73,215 +55,179 @@ class _ActivityState extends State<Activity> {
         ),
         drawer: const navButton(),
         body: SafeArea(
-          minimum: const EdgeInsets.only(bottom: 12.0),
-
           child: Stack(
             children: [
+              // Background
               Positioned.fill(
                 child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
               ),
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 27),
 
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-
-                    children: [
-                      const SizedBox(height: 25),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 15,
-                        ), // smaller padding
-
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 255, 255, 255),
-                          borderRadius: BorderRadius.circular(50),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            loc.allActivitiesAndLocations,
-                            style: TextStyle(
-                              fontSize: 17,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
+              // Main Layout
+              Column(
+                children: [
+                  // ✅ SCROLLABLE AREA
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 27,
+                        vertical: 10,
                       ),
-                      const SizedBox(height: 25),
-
-                      ClipRRect(
-                        child: Container(
-                          height:
-                              230, // 👈 set the height to your desired value
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 10,
-                          ),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: AppColors.alert3,
-                            borderRadius: BorderRadius.circular(25),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: Colors.black.withOpacity(0.2),
-                            //     spreadRadius: 2,
-                            //     blurRadius: 5,
-                            //     offset: const Offset(0, 3),
-                            //   ),
-                            // ],
-                          ),
-
-                          child: GestureDetector(
-                            onTap: () {
-                              controller.activityHistory();
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment
-                                  .center, // center horizontally
-                              mainAxisAlignment:
-                                  MainAxisAlignment.center, // align to top
-
-                              children: [
-                                Text(
-                                  loc.allactivities,
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-
-                                Expanded(
-                                  child: Transform.translate(
-                                    offset: const Offset(
-                                      14,
-                                      -15,
-                                    ), // 👈 shift upward by 10 pixels
-
-                                    child: Transform.scale(
-                                      scale: 2.0,
-
-                                      child: Image.asset(
-                                        "assets/logos/allactivity.png",
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                                  ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const SizedBox(height: 15),
+                          // Header Pill
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 15,
+                            ),
+                            decoration: BoxDecoration(
+                              color: dark ? Colors.grey[850] : Colors.white,
+                              borderRadius: BorderRadius.circular(50),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.2),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
                                 ),
                               ],
                             ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 25),
-                      Container(
-                        height: 230, // 👈 set the height to your desired value
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 20,
-                        ),
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: AppColors.alert2,
-                          borderRadius: BorderRadius.circular(25),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            controller.locationHistory();
-                          },
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment
-                                .center, // center horizontally
-                            mainAxisAlignment:
-                                MainAxisAlignment.center, // align to top
-
-                            children: [
-                              Text(
-                                loc.alllocation,
+                            child: Center(
+                              child: Text(
+                                loc.allActivitiesAndLocations,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 17,
                                   fontWeight: FontWeight.w700,
-                                  color: Colors.white,
+                                  color: dark ? Colors.white : Colors.black,
                                 ),
                               ),
-                              const SizedBox(height: 10),
-
-                              Expanded(
-                                child: Transform.translate(
-                                  offset: const Offset(
-                                    0,
-                                    -10,
-                                  ), // 👈 shift upward by 10 pixels
-
-                                  child: Transform.scale(
-                                    scale: 1.8,
-
-                                    child: Image.asset(
-                                      "assets/logos/location.png",
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      buildCircularIconButton(
-                        context: context,
-                        icon: Icons.arrow_back,
-                        onPressed: () {
-                          drawerCtrl.goBack(); // update drawer highlight
+                          const SizedBox(height: 25),
 
-                          if (Navigator.of(context).canPop()) {
-                            Navigator.of(context).pop();
-                          } else {
-                            // Optionally handle the case where there's no back route
-                            print("No screen to go back to");
-                          }
-                        },
+                          // ✅ CARD 1: All Activities
+                          ClipRRect(
+                            // Prevents scaled image from bleeding out on iOS
+                            borderRadius: BorderRadius.circular(25),
+                            child: Container(
+                              height: 230,
+                              padding: const EdgeInsets.all(10),
+                              decoration: const BoxDecoration(
+                                color: AppColors.alert3,
+                              ),
+                              child: GestureDetector(
+                                onTap: () => controller.activityHistory(),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      loc.allactivities,
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Expanded(
+                                      child: Transform.translate(
+                                        offset: const Offset(14, -15),
+                                        child: Transform.scale(
+                                          scale: 2.0,
+                                          child: Image.asset(
+                                            "assets/logos/allactivity.png",
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 25),
+
+                          // ✅ CARD 2: All Locations
+                          ClipRRect(
+                            // Added ClipRRect here too to prevent iOS image overflow
+                            borderRadius: BorderRadius.circular(25),
+                            child: Container(
+                              height: 230,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 20,
+                              ),
+                              decoration: const BoxDecoration(
+                                color: AppColors.alert2,
+                              ),
+                              child: GestureDetector(
+                                onTap: () => controller.locationHistory(),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      loc.alllocation,
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Expanded(
+                                      child: Transform.translate(
+                                        offset: const Offset(0, -10),
+                                        child: Transform.scale(
+                                          scale: 1.8,
+                                          child: Image.asset(
+                                            "assets/logos/location.png",
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ), // Extra padding at bottom of scroll
+                        ],
                       ),
-                      buildMainButton(
-                        text: loc.main,
-                        onPressed: () {
-                          controller.alertPage();
-                        },
-                        context: context,
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+
+                  // ✅ PINNED BOTTOM BUTTON BAR
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 12.0, top: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        buildCircularIconButton(
+                          context: context,
+                          icon: Icons.arrow_back,
+                          onPressed: () {
+                            drawerCtrl.goBack();
+                            if (Navigator.of(context).canPop()) {
+                              Navigator.of(context).pop();
+                            }
+                          },
+                        ),
+                        buildMainButton(
+                          text: loc.main,
+                          context: context,
+                          onPressed: () => controller.alertPage(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

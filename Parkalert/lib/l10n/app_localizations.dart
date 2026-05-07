@@ -228,7 +228,7 @@ abstract class AppLocalizations {
   /// No description provided for @inform.
   ///
   /// In en, this message translates to:
-  /// **'I want to be kept informed about ParkAlert'**
+  /// **'I want to be kept informed about ParkAlarm'**
   String get inform;
 
   /// No description provided for @language.
@@ -426,7 +426,7 @@ abstract class AppLocalizations {
   /// No description provided for @howParkAlertWorks.
   ///
   /// In en, this message translates to:
-  /// **'How ParkAlert works'**
+  /// **'How ParkAlarm works'**
   String get howParkAlertWorks;
 
   /// No description provided for @frequentlyAskedQuestions.
@@ -534,7 +534,7 @@ abstract class AppLocalizations {
   /// No description provided for @setnoalertzones.
   ///
   /// In en, this message translates to:
-  /// **'Set no-alert zones'**
+  /// **'Set no-Alarm zones'**
   String get setnoalertzones;
 
   /// No description provided for @parkedhistory.
@@ -552,7 +552,7 @@ abstract class AppLocalizations {
   /// No description provided for @theuserjourneyparagraph.
   ///
   /// In en, this message translates to:
-  /// **'When you first open the Parkalert app, you will be taken through a startup wizard to set up your account and your first alarm.'**
+  /// **'When you first open the ParkAlarm app, you will be taken through a startup wizard to set up your account and your first alarm.'**
   String get theuserjourneyparagraph;
 
   /// No description provided for @permissionsAndRegistration.
@@ -594,7 +594,7 @@ abstract class AppLocalizations {
   /// No description provided for @landingpageparagraph.
   ///
   /// In en, this message translates to:
-  /// **'After registration, the landing page is always the \"My Alerts\" page.'**
+  /// **'After registration, the landing page is always the \"My Alarms\" page.'**
   String get landingpageparagraph;
 
   /// No description provided for @alarmsetup.
@@ -606,20 +606,110 @@ abstract class AppLocalizations {
   /// No description provided for @createalert.
   ///
   /// In en, this message translates to:
-  /// **'Create Alert'**
+  /// **'Create an Alarm'**
   String get createalert;
 
   /// No description provided for @createalertparagraph1.
   ///
   /// In en, this message translates to:
-  /// **'On the \"My Alerts\" page, clicking the'**
+  /// **'Do this inside the car, because you need to connect to your vehicle’s Bluetooth device. Open the menu and select '**
   String get createalertparagraph1;
+
+  /// No description provided for @onthemyparkingalarmspagetapthe.
+  ///
+  /// In en, this message translates to:
+  /// **'On the'**
+  String get onthemyparkingalarmspagetapthe;
+
+  /// No description provided for @pagetapthe.
+  ///
+  /// In en, this message translates to:
+  /// **'pagetapthe'**
+  String get pagetapthe;
 
   /// No description provided for @createalertparagraph2.
   ///
   /// In en, this message translates to:
-  /// **'icon opens the \"Create Alert\" form'**
+  /// **'button to create an alarm. You then create one alarm for registering your car and one alarm for deregistering your car. Give your alarm a name, for example '**
   String get createalertparagraph2;
+
+  /// No description provided for @connectcar.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect car'**
+  String get connectcar;
+
+  /// No description provided for @or.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get or;
+
+  /// No description provided for @till.
+  ///
+  /// In en, this message translates to:
+  /// **'jusqu\'à'**
+  String get till;
+
+  /// No description provided for @disconnectcar.
+  ///
+  /// In en, this message translates to:
+  /// **' Disconnect car.'**
+  String get disconnectcar;
+
+  /// No description provided for @chooseasoundforyouralarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a sound for your alarm.'**
+  String get chooseasoundforyouralarm;
+
+  /// No description provided for @connecttoyourbluetoothdevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to your Bluetooth device.'**
+  String get connecttoyourbluetoothdevice;
+
+  /// No description provided for @choosevibrationorsound.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose vibration or sound.'**
+  String get choosevibrationorsound;
+
+  /// No description provided for @enableIgnoresilentmode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable'**
+  String get enableIgnoresilentmode;
+
+  /// No description provided for @ignoresilentmode.
+  ///
+  /// In en, this message translates to:
+  /// **'Ignore silent mode.'**
+  String get ignoresilentmode;
+
+  /// No description provided for @onlythenwillyoualwaysbeabletohearthealarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Only then will you always be able to hear the alarm Finally, choose either'**
+  String get onlythenwillyoualwaysbeabletohearthealarm;
+
+  /// No description provided for @important.
+  ///
+  /// In en, this message translates to:
+  /// **'Important'**
+  String get important;
+
+  /// No description provided for @forthealarmtoregisteryourcarchoosedisconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'For the alarm to register your car, choose'**
+  String get forthealarmtoregisteryourcarchoosedisconnect;
+
+  /// No description provided for @forthealarmtoderegisteryourcarchooseconnect.
+  ///
+  /// In en, this message translates to:
+  /// **'For the alarm to deregister your car, choose'**
+  String get forthealarmtoderegisteryourcarchooseconnect;
 
   /// No description provided for @fillindetails.
   ///
@@ -630,19 +720,19 @@ abstract class AppLocalizations {
   /// No description provided for @fillindetailsparagraph.
   ///
   /// In en, this message translates to:
-  /// **'Here, you will give your alert a custom name (not related to a location),select a Bluetooth device (your car), and choose a notification sound.'**
+  /// **'Here, you will give your Alarm a custom name (not related to a location),select a Bluetooth device (your car), and choose a notification sound.'**
   String get fillindetailsparagraph;
 
   /// No description provided for @activatealert.
   ///
   /// In en, this message translates to:
-  /// **'Activate Alert'**
+  /// **'Activate Alarm'**
   String get activatealert;
 
   /// No description provided for @activatealertparagraph.
   ///
   /// In en, this message translates to:
-  /// **'The newly created alert appears as a box on the \"My Alerts\" page.The alert is not active until you click the separate Connect button on its box.'**
+  /// **'The newly created Alarm appears as a box on the \"My Alarms\" page.The Alarm is not active until you click the separate Connect button on its box.'**
   String get activatealertparagraph;
 
   /// No description provided for @coreoperationallogic.
@@ -666,7 +756,7 @@ abstract class AppLocalizations {
   /// No description provided for @bluetoothdisconnectedparagraph.
   ///
   /// In en, this message translates to:
-  /// **'User has left the car, Parkalert is activated.'**
+  /// **'The user has left the car. ParkAlarm is activated and will trigger an Alarm reminding the user to register the car. With the first Alarm, a pop-up appears on the screen where the user can turn off the alarm or snooze it if they want to receive another reminder later.'**
   String get bluetoothdisconnectedparagraph;
 
   /// No description provided for @bluetoothconnected.
@@ -678,7 +768,7 @@ abstract class AppLocalizations {
   /// No description provided for @bluetoothconnectedparagraph.
   ///
   /// In en, this message translates to:
-  /// **'User has returned, Parkalert is deactivated.'**
+  /// **'The user has returned to the car. ParkAlarm is activated and triggers an Alarm reminding the user to deregister the car. A pop-up also appears on the screen where the user can turn off the alarm and deregister the car, or snooze the Alarm if they want to deregister later. By snoozing, the user will receive a reminder every 5 minutes until the alarm is turned off.'**
   String get bluetoothconnectedparagraph;
 
   /// No description provided for @thenandnowoverview.
@@ -696,7 +786,7 @@ abstract class AppLocalizations {
   /// No description provided for @freezonesparagraph.
   ///
   /// In en, this message translates to:
-  /// **'This feature allows you to define \"no alert zones\" to prevent alerts in familiar locations.No time duration is needed for a Freezone.'**
+  /// **'This feature allows you to define \"no Alarm zones\" to prevent Alarms in familiar locations.No time duration is needed for a Freezone.'**
   String get freezonesparagraph;
 
   /// No description provided for @creatingandactivatingfreezone.
@@ -750,7 +840,7 @@ abstract class AppLocalizations {
   /// No description provided for @creatingandactivating7.
   ///
   /// In en, this message translates to:
-  /// **'Go back to the \"Set Alert Zone\" screen and click the Connect button on the box to activate your Freezone.'**
+  /// **'Go back to the \"Set Alarm Zone\" screen and click the Connect button on the box to activate your Freezone.'**
   String get creatingandactivating7;
 
   /// No description provided for @managingafreezone.
@@ -768,7 +858,7 @@ abstract class AppLocalizations {
   /// No description provided for @managingafreezonefreezonepragraph.
   ///
   /// In en, this message translates to:
-  /// **'This feature allows you to define no alert zones to prevent alerts in familiar locations. No time duration is needed for a Freezone.'**
+  /// **'This feature allows you to define no Alarm zones to prevent Alarms in familiar locations. No time duration is needed for a Freezone.'**
   String get managingafreezonefreezonepragraph;
 
   /// No description provided for @activitiesandhistory.
@@ -840,7 +930,7 @@ abstract class AppLocalizations {
   /// No description provided for @locationdatatext.
   ///
   /// In en, this message translates to:
-  /// **'To alert you about parking zones and restrictions'**
+  /// **'To Alarm you about parking zones and restrictions'**
   String get locationdatatext;
 
   /// No description provided for @devicedata.
@@ -1374,7 +1464,7 @@ abstract class AppLocalizations {
   /// No description provided for @locationpermissionparagraph.
   ///
   /// In en, this message translates to:
-  /// **'ParkAlert collects location data to enable automatic parking detection and save your vehicle\'s location locally . This allows for time-limit alerts even when the app is closed or not in use. Please allow access to continue.'**
+  /// **'ParkAlarm collects location data to enable automatic parking detection and save your vehicle\'s location locally . This allows for time-limit Alarms even when the app is closed or not in use. Please allow access to continue.'**
   String get locationpermissionparagraph;
 
   /// No description provided for @cancel.
@@ -1416,7 +1506,7 @@ abstract class AppLocalizations {
   /// No description provided for @exitappparagraph.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to exit ParkAlert?'**
+  /// **'Are you sure you want to exit ParkAlarm?'**
   String get exitappparagraph;
 
   /// No description provided for @exit.
@@ -1712,6 +1802,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Account deleted successfully'**
   String get accountDeletedSuccessfully;
+
+  /// No description provided for @actionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Action Required'**
+  String get actionRequired;
+
+  /// No description provided for @triggerevent.
+  ///
+  /// In en, this message translates to:
+  /// **'Trigger Event'**
+  String get triggerevent;
+
+  /// No description provided for @whentoremindyou.
+  ///
+  /// In en, this message translates to:
+  /// **'When to remind you?'**
+  String get whentoremindyou;
+
+  /// No description provided for @whenileavethecar.
+  ///
+  /// In en, this message translates to:
+  /// **'When I leave the car'**
+  String get whenileavethecar;
+
+  /// No description provided for @alertswhenbluetoothdisconnects.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts when Bluetooth disconnects.'**
+  String get alertswhenbluetoothdisconnects;
+
+  /// No description provided for @whenireturntothecar.
+  ///
+  /// In en, this message translates to:
+  /// **'When I return to the car'**
+  String get whenireturntothecar;
+
+  /// No description provided for @alertswhenbluetoothreconnects.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts when Bluetooth reconnects.'**
+  String get alertswhenbluetoothreconnects;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

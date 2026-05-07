@@ -98,6 +98,7 @@
 import 'dart:io' show Platform;
 
 import 'package:Parkalert/features/screen/helperWidget/appColor.dart';
+import 'package:Parkalert/services/notificatoinService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_classic/flutter_blue_classic.dart';
 import 'package:android_intent_plus/android_intent.dart';
@@ -230,7 +231,13 @@ class _PairedDevicesDialogState extends State<PairedDevicesDialog> {
                   return ListTile(
                     title: Text(device.name ?? "Unknown"),
                     subtitle: Text(device.address ?? "No address"),
-                    onTap: () => Navigator.pop(context, device),
+                    onTap: () {
+                      // 1. Pop the dialog and return the device
+                      Navigator.pop(context, device);
+
+                      // 2. Start the 5-minute Alarm Logic here 🔔
+                      // Since this is a "Connection" event, we show the popup immediately.
+                    },
                   );
                 },
               ),

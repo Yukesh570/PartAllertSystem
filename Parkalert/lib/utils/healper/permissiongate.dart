@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
 import 'package:Parkalert/features/screen/information/information.dart';
+import 'package:Parkalert/services/notificatoinService.dart'; // ✅ IMPORT ADDED HERE
 
 class PermissionGate extends StatefulWidget {
   final bool isRegistered;
@@ -78,7 +79,7 @@ class _PermissionGateState extends State<PermissionGate>
       barrierDismissible: false,
       builder: (ctx) {
         final isDark = Theme.of(ctx).brightness == Brightness.dark;
-        final loc = AppLocalizations.of(ctx); // ✅ add this line
+        final loc = AppLocalizations.of(ctx);
         if (loc == null) {
           return const Center(child: CircularProgressIndicator());
         }
@@ -93,21 +94,6 @@ class _PermissionGateState extends State<PermissionGate>
             style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
           ),
           actions: [
-            // TextButton(
-            //   onPressed: () {
-            //     Navigator.pop(ctx);
-            //     _checkingPermissions = false;
-            //   },
-            //   child: Text(
-            //     loc.cancel,
-            //     style: TextStyle(
-            //       color: isDark ? Colors.white : Colors.black,
-
-            //       fontSize: 18, // 👈 Bigger text
-            //       fontWeight: FontWeight.w600, // 👈 Semi-bold
-            //     ),
-            //   ),
-            // ),
             TextButton(
               onPressed: () {
                 Navigator.pop(ctx);
@@ -117,9 +103,8 @@ class _PermissionGateState extends State<PermissionGate>
                 loc.okay,
                 style: TextStyle(
                   color: isDark ? Colors.blue[300] : Colors.blue,
-
-                  fontSize: 18, // 👈 Bigger text
-                  fontWeight: FontWeight.w600, // 👈 Semi-bold
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -154,7 +139,7 @@ class _PermissionGateState extends State<PermissionGate>
         builder: (ctx) {
           final isDark = Theme.of(context).brightness == Brightness.dark;
 
-          final loc = AppLocalizations.of(ctx); // ✅ add this line
+          final loc = AppLocalizations.of(ctx);
           if (loc == null) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -170,16 +155,6 @@ class _PermissionGateState extends State<PermissionGate>
               style: TextStyle(color: isDark ? Colors.white : Colors.black),
             ),
             actions: [
-              // TextButton(
-              //   onPressed: () {
-              //     Navigator.pop(ctx);
-              //     _checkingPermissions = false;
-              //   },
-              //   child: Text(
-              //     loc.cancel,
-              //     style: TextStyle(color: isDark ? Colors.white : Colors.black),
-              //   ),
-              // ),
               TextButton(
                 onPressed: () {
                   Navigator.pop(ctx);
@@ -190,9 +165,8 @@ class _PermissionGateState extends State<PermissionGate>
                   loc.opensettings,
                   style: TextStyle(
                     color: isDark ? Colors.blue[300] : Colors.blue,
-
-                    fontSize: 18, // 👈 Bigger text
-                    fontWeight: FontWeight.w600, // 👈 Semi-bold
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -202,6 +176,54 @@ class _PermissionGateState extends State<PermissionGate>
       );
       return;
     }
+
+    if (!mounted) {
+      _checkingPermissions = false;
+      return;
+    }
+
+    // ✅ Step 4: Show Alarm/Notification Explanation Dialog
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        final isDark = Theme.of(ctx).brightness == Brightness.dark;
+        final loc = AppLocalizations.of(ctx);
+
+        return AlertDialog(
+          backgroundColor: isDark ? Colors.grey[900] : Colors.white,
+          title: Text(
+            // NOTE: Add this to your AppLocalizations later!
+            "Enable ParkAlarm Alerts",
+            style: TextStyle(color: isDark ? Colors.white : Colors.black),
+          ),
+          content: Text(
+            // NOTE: Add this to your AppLocalizations later!
+            "To remind you about the parking, ParkAlarm needs permission to send high-priority notifications and alarms when you disconnect from your car.",
+            style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(ctx);
+              },
+              child: Text(
+                loc?.okay ?? "Okay",
+                style: TextStyle(
+                  color: isDark ? Colors.blue[300] : Colors.blue,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    // ✅ Step 5: Actually request the alarm/notification permissions now that they understand why
+    await NotificationServicepop().requestPermissions();
+    await requestDoNotDisturbPermission();
 
     // ✅ All permissions granted → unlock home
     if (mounted) setState(() => _ready = true);

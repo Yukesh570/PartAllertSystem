@@ -88,20 +88,8 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final loc = AppLocalizations.of(context);
-    print("--- Ringer Details ---");
-    print("Index: ${widget.ringerData?.index}");
-    print("Name: ${widget.ringerData?.name}");
-    print("Bluetooth: ${widget.ringerData?.bluetooth}");
-    print("Trigger Type: ${widget.ringerData?.triggerType}");
-    print("Sound: ${widget.ringerData?.sound}");
-    print("Is On: ${widget.ringerData?.isOn}");
-    print("Vibration: ${widget.ringerData?.vibration}");
-    print("Override Silence: ${widget.ringerData?.overRideSilence}");
-    print("Date/Time: ${widget.ringerData?.date} ${widget.ringerData?.time}");
-    print("-----------------------");
 
     if (loc == null) {
-      // This means localization isn't yet loaded or context is not in a localized widget tree
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     if (overrideSilentMode) {
@@ -110,19 +98,16 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
     final MainController controller = Get.put(MainController());
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
-
       child: PageWrapper(
         routeName: '/alertSettingEdit',
         child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          drawerEnableOpenDragGesture: false,
-
-          backgroundColor: dark ? Colors.black : Colors.white, // 👈 Add this
+          resizeToAvoidBottomInset:
+              true, // ✅ Essential for iOS keyboard handling
+          backgroundColor: dark ? Colors.black : Colors.white,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
-
             title: Text(
               (() {
                 try {
@@ -135,426 +120,316 @@ class _AlertSettingEditState extends State<AlertSettingEdit> {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             leading: Builder(
-              builder: (context) {
-                return IconButton(
-                  icon: Icon(
-                    Icons.menu,
-                    color: dark ? Colors.white : Colors.black,
-                  ),
-
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                );
-              },
+              builder: (context) => IconButton(
+                icon: Icon(
+                  Icons.menu,
+                  color: dark ? Colors.white : Colors.black,
+                ),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              ),
             ),
           ),
           drawer: const navButton(),
-
           body: SafeArea(
-            minimum: const EdgeInsets.only(bottom: 12.0),
-
             child: Stack(
               children: [
-                // Background pattern (simplified for demonstration)
                 Positioned.fill(
                   child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
                 ),
-
-                // Main content
-                Padding(
-                  padding: const EdgeInsets.only(
-                    top: 0,
-                    bottom: 0,
-                    right: 20,
-                    left: 20,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Container(
-                      height: 670,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 2.0,
-                        horizontal: 20.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: dark
-                            ? const Color.fromARGB(255, 20, 20, 20)
-                            : AppColors.alertHeaderBackground,
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
+                Column(
+                  children: [
+                    Expanded(
                       child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // "Set your Alert" and "My Alerts" text
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                                vertical: 4.0,
-                              ),
-                              child: Text(
+                        // ✅ Single scroll view logic
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        child: Container(
+                          padding: const EdgeInsets.all(20.0),
+                          decoration: BoxDecoration(
+                            color: dark
+                                ? const Color.fromARGB(255, 20, 20, 20)
+                                : AppColors.alertHeaderBackground,
+                            borderRadius: BorderRadius.circular(15.0),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
                                 loc.setyouralarm,
                                 style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0,
-                                vertical: 4.0,
-                              ),
-                              child: Text(
+                              Text(
                                 loc.myalarms,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 16.0),
+                              const SizedBox(height: 16.0),
 
-                            // Main alert settings card
-                            Container(
-                              padding: const EdgeInsets.all(16.0),
-                              height: 550,
-
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: dark
-                                    ? const Color.fromARGB(255, 44, 44, 44)
-                                    : AppColors.cardBackground,
-                                borderRadius: BorderRadius.circular(25.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    spreadRadius: 2,
-                                    blurRadius: 10,
-                                    offset: const Offset(0, 5),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  // Alert 1 Header
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0,
-                                      horizontal: 16.0,
+                              // Main Card
+                              Container(
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                  color: dark
+                                      ? const Color.fromARGB(255, 44, 44, 44)
+                                      : AppColors.cardBackground,
+                                  borderRadius: BorderRadius.circular(25.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      spreadRadius: 2,
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 5),
                                     ),
-
-                                    child: Text(
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
                                       loc.editalarm,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
                                       ),
-                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
-                                  const SizedBox(height: 20.0),
-
-                                  // Name, Bluetooth device, Sound sections
-                                  buildAlertFormRow(
-                                    context: context,
-                                    icon: Icons.person_outline,
-                                    text: loc.name,
-                                    controller: _nameController,
-                                    onTap: () {
-                                      /* Handle tap */
-                                    },
-                                    readOnly: false,
-                                  ),
-                                  const SizedBox(height: 15.0),
-                                  buildAlertFormRow(
-                                    context: context,
-                                    icon: Icons.bluetooth,
-                                    text: loc.bluetoothdevice,
-                                    onTap: () async {
-                                      final device =
-                                          await showDialog<
-                                            flutter_blue_classic.BluetoothDevice
-                                          >(
-                                            context: context,
-                                            builder: (_) =>
-                                                PairedDevicesDialog(),
-                                          );
-                                      if (device != null) {
-                                        _bluetoothDeviceController.text =
-                                            device.name ?? "Unknown Device";
-                                      }
-                                    },
-                                    controller: _bluetoothDeviceController,
-                                  ),
-                                  const SizedBox(height: 15.0),
-                                  buildAlertFormRow(
-                                    context: context,
-                                    icon: Icons.music_note,
-                                    text: loc.sound,
-                                    controller: soundController,
-                                    onTap: () {
-                                      showSoundPicker(
+                                    const SizedBox(height: 20.0),
+                                    buildAlertFormRow(
+                                      context: context,
+                                      icon: Icons.person_outline,
+                                      text: loc.name,
+                                      controller: _nameController,
+                                      onTap: () {
+                                        /* Handle tap */
+                                      },
+                                      readOnly: false,
+                                    ),
+                                    const SizedBox(height: 15.0),
+                                    buildAlertFormRow(
+                                      context: context,
+                                      icon: Icons.bluetooth,
+                                      text: loc.bluetoothdevice,
+                                      controller: _bluetoothDeviceController,
+                                      onTap: () async {
+                                        final device =
+                                            await showDialog<
+                                              flutter_blue_classic.BluetoothDevice
+                                            >(
+                                              context: context,
+                                              builder: (_) =>
+                                                  PairedDevicesDialog(),
+                                            );
+                                        if (device != null) {
+                                          _bluetoothDeviceController.text =
+                                              device.name ?? "Unknown Device";
+                                        }
+                                      },
+                                    ),
+                                    const SizedBox(height: 15.0),
+                                    buildAlertFormRow(
+                                      context: context,
+                                      icon: Icons.music_note,
+                                      text: loc.sound,
+                                      controller: soundController,
+                                      onTap: () => showSoundPicker(
                                         context: context,
                                         controller: soundController,
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(height: 15.0),
-
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.vibration_rounded,
-                                        color: AppColors.iconColor,
-                                        size: 30,
                                       ),
-                                      const SizedBox(width: 15.0),
-                                      Switch(
-                                        value: _inform,
-                                        onChanged: (value) =>
-                                            setState(() => _inform = value),
-                                        activeColor: Colors.white,
-                                        activeTrackColor: AppColors.iconColor,
-                                        inactiveThumbColor: Colors.white,
-                                        inactiveTrackColor:
-                                            Colors.grey.shade400,
-                                        trackOutlineColor:
-                                            WidgetStatePropertyAll(
-                                              Colors.transparent,
-                                            ),
-                                      ),
-                                      const SizedBox(width: 15.0),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.volume_up,
-                                        color: AppColors.iconColor,
-                                        size: 30,
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Text(
-                                        loc.overrideSilentMode,
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Switch(
-                                        value: overrideSilentMode,
-                                        onChanged: (value) => setState(() {
-                                          overrideSilentMode = value;
-                                        }),
-
-                                        activeColor: Colors.white,
-                                        activeTrackColor: AppColors.iconColor,
-                                        inactiveThumbColor: Colors.white,
-                                        inactiveTrackColor:
-                                            Colors.grey.shade400,
-                                        trackOutlineColor:
-                                            WidgetStatePropertyAll(
-                                              Colors.transparent,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 50.0),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      color: dark
-                                          ? Colors.grey[850]
-                                          : Colors
-                                                .grey[200], // Background of the unselected area
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.05),
-                                          blurRadius: 5,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
                                     ),
-                                    child: Column(
+                                    const SizedBox(height: 15.0),
+
+                                    // Vibration Switch
+                                    Row(
                                       children: [
-                                        // CONNECT BUTTON
-                                        GestureDetector(
-                                          onTap: () => setState(
-                                            () => _isConnectSelected = true,
-                                          ),
-                                          child: Container(
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 12,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              // If selected, show the highlight color
-                                              color: _isConnectSelected
-                                                  ? (dark
-                                                        ? Colors.blueGrey[800]
-                                                        : const Color(
-                                                            0xFFDDE3F9,
-                                                          ))
-                                                  : Colors.transparent,
-                                              borderRadius:
-                                                  const BorderRadius.vertical(
-                                                    top: Radius.circular(20.0),
-                                                  ),
-                                            ),
-                                            child: Text(
-                                              "Connect",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: _isConnectSelected
-                                                    ? (dark
-                                                          ? Colors.white
-                                                          : const Color(
-                                                              0xFF4A5C7D,
-                                                            ))
-                                                    : Colors.grey,
-                                              ),
-                                            ),
-                                          ),
+                                        const Icon(
+                                          Icons.vibration_rounded,
+                                          color: AppColors.iconColor,
+                                          size: 30,
                                         ),
-                                        // DIVIDER LINE
-                                        Divider(
-                                          height: 1,
-                                          color: dark
-                                              ? Colors.grey[700]
-                                              : Colors.grey[300],
-                                        ),
-                                        // DISCONNECT BUTTON
-                                        GestureDetector(
-                                          onTap: () => setState(
-                                            () => _isConnectSelected = false,
-                                          ),
-                                          child: Container(
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 12,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              // If selected, show the highlight color
-                                              color: !_isConnectSelected
-                                                  ? (dark
-                                                        ? Colors.blueGrey[800]
-                                                        : const Color(
-                                                            0xFFDDE3F9,
-                                                          ))
-                                                  : Colors.transparent,
-                                              borderRadius:
-                                                  const BorderRadius.vertical(
-                                                    bottom: Radius.circular(
-                                                      20.0,
-                                                    ),
-                                                  ),
-                                            ),
-                                            child: Text(
-                                              "Disconnect",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                                color: !_isConnectSelected
-                                                    ? (dark
-                                                          ? Colors.white
-                                                          : const Color(
-                                                              0xFF4A5C7D,
-                                                            ))
-                                                    : Colors.grey,
-                                              ),
-                                            ),
-                                          ),
+                                        const SizedBox(width: 15.0),
+                                        Switch(
+                                          value: _inform,
+                                          onChanged: (v) =>
+                                              setState(() => _inform = v),
+                                          activeTrackColor: AppColors.iconColor,
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
+                                    // Silent Mode Switch
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.volume_up,
+                                          color: AppColors.iconColor,
+                                          size: 30,
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: Text(
+                                            loc.overrideSilentMode,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                        Switch(
+                                          value: overrideSilentMode,
+                                          onChanged: (v) => setState(
+                                            () => overrideSilentMode = v,
+                                          ),
+                                          activeTrackColor: AppColors.iconColor,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 30.0),
+
+                                    // ✅ Connection Selection UI (Connect/Disconnect)
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: dark
+                                            ? Colors.grey[850]
+                                            : Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(
+                                          20.0,
+                                        ),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          _buildToggleButton(
+                                            "Connect",
+                                            _isConnectSelected,
+                                            dark,
+                                            true,
+                                          ),
+                                          Divider(
+                                            height: 1,
+                                            color: dark
+                                                ? Colors.grey[700]
+                                                : Colors.grey[300],
+                                          ),
+                                          _buildToggleButton(
+                                            "Disconnect",
+                                            !_isConnectSelected,
+                                            dark,
+                                            false,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 20.0,
-                            ), // Space before bottom navigation
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-                // Bottom navigation buttons
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 12.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        buildCircularIconButton(
-                          context: context,
 
-                          icon: Icons.arrow_back,
-                          onPressed: () async {
-                            drawerCtrl.goBack(); // update drawer highlight
+                    // ✅ Bottom Buttons Bar (Always pinned to bottom)
+                    Container(
+                      color: dark ? Colors.black : Colors.white,
+                      padding: const EdgeInsets.only(bottom: 12.0, top: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          buildCircularIconButton(
+                            context: context,
+                            icon: Icons.arrow_back,
+                            onPressed: () {
+                              drawerCtrl.goBack();
+                              if (Navigator.of(context).canPop())
+                                Navigator.of(context).pop();
+                            },
+                          ),
+                          buildMainButton(
+                            text: loc.main,
+                            context: context,
+                            onPressed: () => controller.alertPage(),
+                          ),
+                          checkAlertButton(
+                            context: context,
+                            onPressed: () async {
+                              final String name = _nameController.text.trim();
+                              final String bluetoothDevice =
+                                  _bluetoothDeviceController.text.trim();
+                              final String sound = soundController.text.trim();
 
-                            if (Navigator.of(context).canPop()) {
-                              Navigator.of(context).pop();
-                            } else {
-                              // Optionally handle the case where there's no back route
-                              print("No screen to go back to");
-                            }
-                          },
-                        ),
-                        buildMainButton(
-                          text: loc.main,
-                          onPressed: () {
-                            controller.alertPage();
-                          },
-                          context: context,
-                        ),
-                        checkAlertButton(
-                          context: context,
-                          onPressed: () async {
-                            final String name = _nameController.text.trim();
-                            final String bluetoothDevice =
-                                _bluetoothDeviceController.text.trim();
-                            final String sound = soundController.text.trim();
-                            if (name.isNotEmpty &&
-                                // bluetoothDevice.isNotEmpty &&
-                                sound.isNotEmpty) {
-                              await updateRingers(
-                                widget.ringerData!.index,
-                                null,
-                                name,
-                                bluetoothDevice,
-                                sound,
-                              );
-                              await vibrationOption(
-                                widget.ringerData!.index,
-                                _inform,
-                              );
-                              triggerTypeOption(
-                                widget.ringerData!.index,
-                                _isConnectSelected ? "Connect" : "Disconnect",
-                                context,
-                              );
-                              await overRideSilence(
-                                widget.ringerData!.index,
-                                overrideSilentMode,
-                                context,
-                              );
-
-                              await activeBluetooth();
-                              controller.alertPage();
-                            }
-                          },
-                        ),
-                      ],
+                              if (name.isNotEmpty && sound.isNotEmpty) {
+                                await updateRingers(
+                                  widget.ringerData!.index,
+                                  null,
+                                  name,
+                                  bluetoothDevice,
+                                  sound,
+                                );
+                                await vibrationOption(
+                                  widget.ringerData!.index,
+                                  _inform,
+                                );
+                                triggerTypeOption(
+                                  widget.ringerData!.index,
+                                  _isConnectSelected ? "Connect" : "Disconnect",
+                                  context,
+                                );
+                                await overRideSilence(
+                                  widget.ringerData!.index,
+                                  overrideSilentMode,
+                                  context,
+                                );
+                                await activeBluetooth();
+                                controller.alertPage();
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ✅ Helper method to keep UI consistent and fluid
+  Widget _buildToggleButton(
+    String label,
+    bool isSelected,
+    bool dark,
+    bool isTop,
+  ) {
+    return GestureDetector(
+      onTap: () => setState(() => _isConnectSelected = isTop),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? (dark ? Colors.blueGrey[800] : const Color(0xFFDDE3F9))
+              : Colors.transparent,
+          borderRadius: isTop
+              ? const BorderRadius.vertical(top: Radius.circular(20.0))
+              : const BorderRadius.vertical(bottom: Radius.circular(20.0)),
+        ),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: isSelected
+                ? (dark ? Colors.white : const Color(0xFF4A5C7D))
+                : Colors.grey,
           ),
         ),
       ),

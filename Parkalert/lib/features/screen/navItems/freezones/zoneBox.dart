@@ -411,7 +411,7 @@ class ZoneBoxState extends State<ZoneBox> {
                     _timeBox(_initialTimeController, colordark),
                     const SizedBox(width: 15),
                     Text(
-                      "TILL",
+                      "${loc.till} ",
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,

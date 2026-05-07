@@ -4,6 +4,7 @@ import 'package:Parkalert/features/screen/map/map.dart';
 import 'package:Parkalert/features/screen/navItems/activity/activity.dart';
 import 'package:Parkalert/features/screen/navItems/activity/allActivities.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alert.dart';
+import 'package:Parkalert/features/screen/navItems/alert/alertSetUp.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alertSettingEdit.dart';
 import 'package:Parkalert/features/screen/navItems/alert/alertSettings.dart';
 import 'package:Parkalert/features/screen/navItems/changelanguage/changelanguage.dart';
@@ -33,13 +34,17 @@ class MainController extends GetxController {
     ); // ✅ use () => Alert() for better route stack handling
   }
 
+  void alertSetUpPage() {
+    final drawerCtrl = Get.find<DrawerControllerX>();
+    drawerCtrl.changeRoute('/alertSetUp');
+    Get.to(() => const TriggerSelectionScreen());
+  }
+
+  // Route for direct access to settings/edits
   void alertSettingPage() {
     final drawerCtrl = Get.find<DrawerControllerX>();
-    drawerCtrl.changeRoute('/alertSetting'); // Set current route
-
-    Get.to(
-      () => AlertSetting(),
-    ); // ✅ use () => Alert() for better route stack handling
+    drawerCtrl.changeRoute('/alertSetting');
+    Get.to(() => const AlertSetting());
   }
 
   void alertSettingeEditingPage(RingerData ringerData) {

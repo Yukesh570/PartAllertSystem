@@ -72,7 +72,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get termsandconditions => 'Ik ga akkoord met de algemene voorwaarden';
 
   @override
-  String get inform => 'Ik wil op de hoogte blijven van ParkAlert';
+  String get inform => 'Ik wil op de hoogte blijven van ParkAlarm';
 
   @override
   String get language => 'Selecteer taal';
@@ -171,7 +171,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get yourInformation => 'Jouw informatie';
 
   @override
-  String get howParkAlertWorks => 'Hoe ParkAlert werkt';
+  String get howParkAlertWorks => 'Hoe ParkAlarm werkt';
 
   @override
   String get frequentlyAskedQuestions => 'Veelgestelde vragen';
@@ -234,7 +234,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get theuserjourney => 'De gebruikersreis';
 
   @override
-  String get theuserjourneyparagraph => 'Wanneer je de ParkAlert-app voor het eerst opent, word je begeleid door een startwizard om je account en je eerste alarm in te stellen.';
+  String get theuserjourneyparagraph => 'Wanneer je de ParkAlarm-app voor het eerst opent, word je begeleid door een startwizard om je account en je eerste alarm in te stellen.';
 
   @override
   String get permissionsAndRegistration => 'Toestemmingen en registratie';
@@ -267,7 +267,52 @@ class AppLocalizationsNl extends AppLocalizations {
   String get createalertparagraph1 => 'Op de pagina \'Mijn alarmen\' opent een klik op het';
 
   @override
+  String get onthemyparkingalarmspagetapthe => 'Tik op de pagina ';
+
+  @override
+  String get pagetapthe => ' op de knop ';
+
+  @override
   String get createalertparagraph2 => 'icoon het formulier \'Alarm aanmaken\'.';
+
+  @override
+  String get connectcar => 'Auto verbinden';
+
+  @override
+  String get or => ' of ';
+
+  @override
+  String get till => 'TOT';
+
+  @override
+  String get disconnectcar => ' Auto ontkoppelen.';
+
+  @override
+  String get chooseasoundforyouralarm => 'Kies een geluid voor uw alarm';
+
+  @override
+  String get connecttoyourbluetoothdevice => 'Connect to your Bluetooth device.';
+
+  @override
+  String get choosevibrationorsound => 'Kies trillen of geluid.';
+
+  @override
+  String get enableIgnoresilentmode => 'Schakel ';
+
+  @override
+  String get ignoresilentmode => 'Stille modus negeren in.';
+
+  @override
+  String get onlythenwillyoualwaysbeabletohearthealarm => 'Alleen dan kunt u het alarm altijd horen. Kies ten slotte voor';
+
+  @override
+  String get important => 'Belangrijk';
+
+  @override
+  String get forthealarmtoregisteryourcarchoosedisconnect => 'Kies voor het alarm om uw auto te registreren voor';
+
+  @override
+  String get forthealarmtoderegisteryourcarchooseconnect => 'Kies voor het alarm om uw auto af te melden voor';
 
   @override
   String get fillindetails => 'Vul gegevens in';
@@ -291,13 +336,13 @@ class AppLocalizationsNl extends AppLocalizations {
   String get bluetoothdisconnected => 'Bluetooth verbroken';
 
   @override
-  String get bluetoothdisconnectedparagraph => 'De gebruiker heeft de auto verlaten, ParkAlert is geactiveerd.';
+  String get bluetoothdisconnectedparagraph => 'De gebruiker heeft de auto verlaten. ParkAlarm is geactiveerd en zal een melding geven om de gebruiker eraan te herinneren de auto te registreren. Bij de eerste melding verschijnt er een pop-up op het scherm waarin de gebruiker het alarm kan uitschakelen of kan sluimeren (snooze) als hij later nog een herinnering wil ontvangen.';
 
   @override
   String get bluetoothconnected => 'Bluetooth verbonden';
 
   @override
-  String get bluetoothconnectedparagraph => 'De gebruiker is teruggekeerd, ParkAlert is gedeactiveerd.';
+  String get bluetoothconnectedparagraph => 'De gebruiker is teruggekeerd naar de auto. ParkAlarm is geactiveerd en geeft een melding om de gebruiker eraan te herinneren de auto af te melden. Er verschijnt ook een pop-up op het scherm waarin de gebruiker het alarm kan uitschakelen en de auto kan afmelden, of de melding kan sluimeren (snooze) als hij later wil afmelden. Door te sluimeren ontvangt de gebruiker elke 5 minuten een herinnering totdat het alarm wordt uitgeschakeld.';
 
   @override
   String get thenandnowoverview => 'Toen en nu, een overzicht van alle activiteiten';
@@ -645,7 +690,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get locationpermission => 'Locatietoestemming vereist';
 
   @override
-  String get locationpermissionparagraph => 'ParkAlert verzamelt locatiegegevens om automatische parkeerdetectie mogelijk te maken en de locatie van uw voertuig lokaal op te slaan. Dit maakt waarschuwingen voor tijdslimieten mogelijk, zelfs wanneer de app is gesloten of niet in gebruik is. Sta toegang toe om door te gaan.';
+  String get locationpermissionparagraph => 'ParkAlarm verzamelt locatiegegevens om automatische parkeerdetectie mogelijk te maken en de locatie van uw voertuig lokaal op te slaan. Dit maakt waarschuwingen voor tijdslimieten mogelijk, zelfs wanneer de app is gesloten of niet in gebruik is. Sta toegang toe om door te gaan.';
 
   @override
   String get cancel => 'Annuleren';
@@ -666,7 +711,7 @@ class AppLocalizationsNl extends AppLocalizations {
   String get exitapp => 'App afsluiten';
 
   @override
-  String get exitappparagraph => 'Weet je zeker dat je ParkAlert wilt afsluiten?';
+  String get exitappparagraph => 'Weet je zeker dat je ParkAlarm wilt afsluiten?';
 
   @override
   String get exit => 'Afsluiten';
@@ -814,4 +859,25 @@ class AppLocalizationsNl extends AppLocalizations {
 
   @override
   String get accountDeletedSuccessfully => 'Account succesvol verwijderd';
+
+  @override
+  String get actionRequired => 'Actie vereist';
+
+  @override
+  String get triggerevent => 'Activeringsgebeurtenis';
+
+  @override
+  String get whentoremindyou => 'Wanneer herinneren?';
+
+  @override
+  String get whenileavethecar => 'Als ik de auto verlaat';
+
+  @override
+  String get alertswhenbluetoothdisconnects => 'Waarschuwt als Bluetooth de verbinding verbreekt.';
+
+  @override
+  String get whenireturntothecar => 'Als ik terugkeer naar de auto';
+
+  @override
+  String get alertswhenbluetoothreconnects => 'Waarschuwt als Bluetooth opnieuw verbinding maakt.';
 }

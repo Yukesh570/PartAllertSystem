@@ -72,7 +72,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get termsandconditions => 'Ich stimme den Allgemeinen Geschäftsbedingungen zu';
 
   @override
-  String get inform => 'Ich möchte über ParkAlert informiert werden';
+  String get inform => 'Ich möchte über ParkAlarm informiert werden';
 
   @override
   String get language => 'Sprache auswählen';
@@ -171,7 +171,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get yourInformation => 'Deine Informationen';
 
   @override
-  String get howParkAlertWorks => 'Wie ParkAlert funktioniert';
+  String get howParkAlertWorks => 'Wie ParkAlarm funktioniert';
 
   @override
   String get frequentlyAskedQuestions => 'Häufig gestellte Fragen';
@@ -234,7 +234,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get theuserjourney => 'Die Nutzerreise';
 
   @override
-  String get theuserjourneyparagraph => 'Wenn du die ParkAlert-App zum ersten Mal öffnest, wirst du durch einen Einrichtungsassistenten geführt, um dein Konto und deinen ersten Alarm zu konfigurieren.';
+  String get theuserjourneyparagraph => 'Wenn du die ParkAlarm-App zum ersten Mal öffnest, wirst du durch einen Einrichtungsassistenten geführt, um dein Konto und deinen ersten Alarm zu konfigurieren.';
 
   @override
   String get permissionsAndRegistration => 'Berechtigungen und Registrierung';
@@ -267,7 +267,52 @@ class AppLocalizationsDe extends AppLocalizations {
   String get createalertparagraph1 => 'Auf der Seite „Meine Alarme“ öffnet ein Klick auf das';
 
   @override
+  String get onthemyparkingalarmspagetapthe => 'Auf der Seite ';
+
+  @override
+  String get pagetapthe => ' tippen Sie auf die Schaltfläche ';
+
+  @override
   String get createalertparagraph2 => 'Symbol das Formular „Alarm erstellen“.';
+
+  @override
+  String get connectcar => 'Auto verbinden';
+
+  @override
+  String get or => ' oder ';
+
+  @override
+  String get till => 'bis';
+
+  @override
+  String get disconnectcar => ' Auto trennen.';
+
+  @override
+  String get chooseasoundforyouralarm => 'Wählen Sie einen Ton für Ihren Alarm';
+
+  @override
+  String get connecttoyourbluetoothdevice => 'Connect to your Bluetooth device.';
+
+  @override
+  String get choosevibrationorsound => 'Wählen Sie Vibration oder Ton.';
+
+  @override
+  String get enableIgnoresilentmode => 'Aktivieren Sie ';
+
+  @override
+  String get ignoresilentmode => 'Stummschaltung ignorieren.';
+
+  @override
+  String get onlythenwillyoualwaysbeabletohearthealarm => 'Nur dann können Sie den Alarm immer hören. Wählen Sie schließlich entweder';
+
+  @override
+  String get important => 'Wichtig';
+
+  @override
+  String get forthealarmtoregisteryourcarchoosedisconnect => 'Wählen Sie für den Alarm zur Registrierung Ihres Autos';
+
+  @override
+  String get forthealarmtoderegisteryourcarchooseconnect => 'Wählen Sie für den Alarm zur Abmeldung Ihres Autos';
 
   @override
   String get fillindetails => 'Details eingeben';
@@ -291,13 +336,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get bluetoothdisconnected => 'Bluetooth getrennt';
 
   @override
-  String get bluetoothdisconnectedparagraph => 'Der Benutzer hat das Auto verlassen, ParkAlert ist aktiviert.';
+  String get bluetoothdisconnectedparagraph => 'Der Benutzer hat das Auto verlassen. ParkAlarm ist aktiviert und löst einen Alarm aus, um den Benutzer daran zu erinnern, das Fahrzeug zu registrieren. Mit dem ersten Alarm erscheint ein Pop-up auf dem Bildschirm, über das der Benutzer den Alarm ausschalten oder die Schlummerfunktion (Snooze) wählen kann, wenn er später eine weitere Erinnerung erhalten möchte.';
 
   @override
   String get bluetoothconnected => 'Bluetooth verbunden';
 
   @override
-  String get bluetoothconnectedparagraph => 'Der Benutzer ist zurückgekehrt, ParkAlert ist deaktiviert.';
+  String get bluetoothconnectedparagraph => 'Der Benutzer ist zum Auto zurückgekehrt. ParkAlarm ist aktiviert und löst einen Alarm aus, um den Benutzer daran zu erinnern, das Fahrzeug abzumelden. Auf dem Bildschirm erscheint zudem ein Pop-up, über das der Benutzer den Alarm ausschalten und das Auto abmelden oder die Schlummerfunktion (Snooze) wählen kann, um sich später abzumelden. Durch die Schlummerfunktion erhält der Benutzer alle 5 Minuten eine Erinnerung, bis der Alarm ausgeschaltet wird.';
 
   @override
   String get thenandnowoverview => 'Damals und heute – eine Übersicht aller Aktivitäten';
@@ -510,7 +555,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get servicedescriptionparagraph => 'ParkAlarm ist eine mobile Anwendung, die Benutzern hilft, Parkzeiten zu verwalten und Benachrichtigungen über Parkzonen und -beschränkungen zu erhalten. Unsere Dienste umfassen:';
 
   @override
-  String get servicedescription1 => 'Standortbasierte Parkwarnungen';
+  String get servicedescription1 => 'Standortbasierte Park der Alarm';
 
   @override
   String get servicedescription2 => 'Benachrichtigungen über Parkzonen und -zeiten';
@@ -645,7 +690,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get locationpermission => 'Standortberechtigung erforderlich';
 
   @override
-  String get locationpermissionparagraph => 'ParkAlert erfasst Standortdaten, um die automatische Parkerkennung zu aktivieren und den Standort Ihres Fahrzeugs lokal zu speichern. Dies ermöglicht Zeitlimit-Warnungen, auch wenn die App geschlossen ist oder nicht verwendet wird. Bitte erlauben Sie den Zugriff, um fortzufahren.';
+  String get locationpermissionparagraph => 'ParkAlarm erfasst Standortdaten, um die automatische Parkerkennung zu aktivieren und den Standort Ihres Fahrzeugs lokal zu speichern. Dies ermöglicht Zeitlimit-der Alarm, auch wenn die App geschlossen ist oder nicht verwendet wird. Bitte erlauben Sie den Zugriff, um fortzufahren.';
 
   @override
   String get cancel => 'Abbrechen';
@@ -666,7 +711,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get exitapp => 'App beenden';
 
   @override
-  String get exitappparagraph => 'Sind Sie sicher, dass Sie ParkAlert beenden möchten?';
+  String get exitappparagraph => 'Sind Sie sicher, dass Sie ParkAlarm beenden möchten?';
 
   @override
   String get exit => 'Beenden';
@@ -792,7 +837,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get phoneAlreadyExists => 'Telefonnummer existiert bereits';
 
   @override
-  String get warning => 'Warnung';
+  String get warning => 'der Alarm';
 
   @override
   String get youMustAgreeToPrivacyPolicyAndInformConsentBeforeCreatingAccount => 'Sie müssen der Datenschutzrichtlinie und der Einverständniserklärung zustimmen, bevor Sie ein Konto erstellen.';
@@ -814,4 +859,25 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get accountDeletedSuccessfully => 'Konto erfolgreich gelöscht';
+
+  @override
+  String get actionRequired => 'Aktion erforderlich';
+
+  @override
+  String get triggerevent => 'Auslösendes Ereignis';
+
+  @override
+  String get whentoremindyou => 'Wann erinnern?';
+
+  @override
+  String get whenileavethecar => 'Wenn ich das Auto verlasse';
+
+  @override
+  String get alertswhenbluetoothdisconnects => 'Warnt, wenn die Bluetooth-Verbindung getrennt wird.';
+
+  @override
+  String get whenireturntothecar => 'Wenn ich zum Auto zurückkehre';
+
+  @override
+  String get alertswhenbluetoothreconnects => 'Warnt, wenn Bluetooth sich wieder verbindet.';
 }

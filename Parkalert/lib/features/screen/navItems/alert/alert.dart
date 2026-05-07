@@ -115,7 +115,6 @@ class _AlertState extends State<Alert> {
     // printAllSharedPreferences();
 
     final dark = Theme.of(context).brightness == Brightness.dark;
-    bool isOn = false;
     final loc = AppLocalizations.of(context);
     if (loc == null) {
       // This means localization isn't yet loaded or context is not in a localized widget tree
@@ -195,75 +194,59 @@ class _AlertState extends State<Alert> {
           ),
           drawer: const navButton(),
           body: SafeArea(
-            minimum: const EdgeInsets.only(bottom: 12.0),
             child: Stack(
               children: [
                 Positioned.fill(
                   child: CustomPaint(painter: BackgroundCirclesPainter(dark)),
                 ),
-                // other children here...
+
+                // Main content
                 Padding(
-                  padding: const EdgeInsets.only(
-                    top: 0,
-                    bottom: 0,
-                    right: 22,
-                    left: 22,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 22),
                   child: Container(
                     width: double.infinity,
-                    height: 690,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 2.0,
-                      horizontal: 10.0,
-                    ),
+                    // ✅ REMOVED: height: 690 (Fixed the sizing issue)
+                    padding: const EdgeInsets.all(10.0),
                     decoration: BoxDecoration(
                       color: dark
                           ? const Color.fromARGB(255, 34, 34, 34)
-                          : const Color.fromARGB(255, 255, 255, 255),
+                          : Colors.white,
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // "Set your Alert" and "My Alerts" text
+                        // Headers
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0,
-                            vertical: 4.0,
-                          ),
-                          child: Text(
-                            loc.setupyourparkingalarms,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                loc.setupyourparkingalarms,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              Text(
+                                loc.myparkingalarms,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0,
-                            vertical: 4.0,
-                          ),
-                          child: Text(
-                            loc.myparkingalarms,
 
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16.0),
-                        if (ringersList.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0,
-                              vertical: 4.0,
-                            ),
+                        const SizedBox(height: 10),
 
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 200.0),
-                              child: Center(
+                        // The Ringers List
+                        Expanded(
+                          child: Obx(() {
+                            if (ringersList.isEmpty) {
+                              return Center(
                                 child: Text(
                                   loc.noringers,
                                   style: const TextStyle(
@@ -271,52 +254,38 @@ class _AlertState extends State<Alert> {
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
-
-                        // Main alert settings card
-                        Expanded(
-                          child: Obx(
-                            () => SingleChildScrollView(
-                              child: Column(
-                                children: ringersList
-                                    .map(
-                                      (ringer) => (Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: ringer,
-                                      )),
-                                    )
-                                    .toList(),
-                              ),
-                            ),
-                          ),
+                              );
+                            }
+                            return ListView.builder(
+                              // ✅ Use ListView instead of SingleChildScrollView for better iOS performance
+                              padding: const EdgeInsets.only(
+                                bottom: 80,
+                              ), // Space for the floating button
+                              itemCount: ringersList.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 5.0,
+                                  ),
+                                  child: ringersList[index],
+                                );
+                              },
+                            );
+                          }),
                         ),
-                        const SizedBox(
-                          height: 20.0,
-                        ), // Space before bottom navigation
                       ],
                     ),
                   ),
                 ),
-                // Bottom navigation buttons
+
+                // Fixed Floating "Add" Button
                 Align(
-                  alignment: Alignment.bottomCenter,
+                  alignment: Alignment.bottomRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 20.0,
-                      right: 20.0,
-                    ), // padding from bottom and left
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end, // align to left
-                      children: [
-                        buildCircularAddbButton(
-                          context: context,
-                          onPressed: () {
-                            controller.alertSettingPage();
-                          },
-                        ),
-                      ],
+                    padding: const EdgeInsets.all(30.0), // Spacing from edge
+                    child: buildCircularAddbButton(
+                      context: context,
+                      onPressed: () => controller.alertSetUpPage(),
                     ),
                   ),
                 ),

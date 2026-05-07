@@ -215,31 +215,120 @@ class _WorkingState extends State<Working> {
                                 ),
                               ),
                               TextSpan(text: "${loc.createalertparagraph1}"),
+                              TextSpan(
+                                text: "${loc.parkingalarms}.",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+
+                                  color: dark ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              TextSpan(
+                                text: " ${loc.onthemyparkingalarmspagetapthe} ",
+                              ),
+                              TextSpan(
+                                text: "${loc.myparkingalarms} ",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+
+                                  color: dark ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              TextSpan(text: "${loc.pagetapthe} "),
                               WidgetSpan(
                                 alignment: PlaceholderAlignment.middle,
                                 child: buildCircleText("+", dark),
                               ),
-                              TextSpan(text: "${loc.createalertparagraph2}\n"),
+                              TextSpan(text: " ${loc.createalertparagraph2} "),
+                              TextSpan(
+                                text: "${loc.connectcar} ",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+
+                                  color: dark ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              TextSpan(text: "${loc.or} "),
+
+                              TextSpan(
+                                text: "${loc.disconnectcar}\n",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+
+                                  color: dark ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "${loc.connecttoyourbluetoothdevice}\n",
+                              ),
+                              TextSpan(
+                                text: "${loc.chooseasoundforyouralarm}\n",
+                              ),
+                              TextSpan(text: "${loc.choosevibrationorsound}\n"),
+                              TextSpan(text: "${loc.enableIgnoresilentmode} "),
+                              TextSpan(
+                                text: "${loc.ignoresilentmode}\n",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+
+                                  color: dark ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              TextSpan(
+                                text:
+                                    "${loc.onlythenwillyoualwaysbeabletohearthealarm}\n",
+                              ),
+                              TextSpan(
+                                text: "${loc.connect} ",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+
+                                  color: dark ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              TextSpan(text: "${loc.or} "),
+                              TextSpan(
+                                text: "${loc.disconnect}\n",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+
+                                  color: dark ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              TextSpan(
+                                text: "${loc.important}: ",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+
+                                  color: dark ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              TextSpan(
+                                text:
+                                    "${loc.forthealarmtoregisteryourcarchoosedisconnect} ",
+                              ),
+                              TextSpan(
+                                text: "${loc.connect} \n",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+
+                                  color: dark ? Colors.white : Colors.black,
+                                ),
+                              ),
+                              TextSpan(
+                                text:
+                                    "${loc.forthealarmtoderegisteryourcarchooseconnect} ",
+                              ),
+                              TextSpan(
+                                text: "${loc.disconnect}\n",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+
+                                  color: dark ? Colors.white : Colors.black,
+                                ),
+                              ),
                             ],
                           ),
-                          TextSpan(
-                            text: "${loc.fillindetails}: ",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-
-                              color: dark ? Colors.white : Colors.black,
-                            ),
-                          ),
-                          TextSpan(text: "${loc.fillindetailsparagraph}\n"),
-                          TextSpan(
-                            text: "${loc.activatealert}: ",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-
-                              color: dark ? Colors.white : Colors.black,
-                            ),
-                          ),
-                          TextSpan(text: "${loc.activatealertparagraph}\n\n"),
 
                           // Core Logic
                           TextSpan(
